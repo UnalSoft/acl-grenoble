@@ -4,12 +4,12 @@
  * and open the template in the editor.
  */
 
-package com.unsoft.acl_grenoble.centre;
+package com.unsoft.acl_grenoble.model.dao;
 
 /**
  *
  * @author juanmanuelmartinezromero
  */
-public class CentreDeLoisirs {
-   private String nomCentre;
+public class DAOUtilisateur {
+   
 }

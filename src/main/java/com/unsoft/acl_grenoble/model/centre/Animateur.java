@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.unsoft.acl_grenoble.centre;
+package com.unsoft.acl_grenoble.model.centre;
 
 import java.util.List;
 

@@ -4,12 +4,12 @@
  * and open the template in the editor.
  */
 
-package com.unsoft.acl_grenoble.centre;
+package com.unsoft.acl_grenoble.controller;
 
 /**
  *
  * @author juanmanuelmartinezromero
  */
-public enum Competence {
+public class ControlUtilisateur {
    
 }

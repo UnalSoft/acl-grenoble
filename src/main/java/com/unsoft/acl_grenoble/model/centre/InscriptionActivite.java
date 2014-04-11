@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.unsoft.acl_grenoble.centre;
+package com.unsoft.acl_grenoble.model.centre;
 
-import com.unsoft.acl_grenoble.utilisateur.Enfant;
+import com.unsoft.acl_grenoble.model.utilisateur.Enfant;
 
 /**
  *
