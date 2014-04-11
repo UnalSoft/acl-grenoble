@@ -4,13 +4,18 @@
  */
 package com.unsoft.acl_grenoble.centre;
 
+import java.util.List;
+
 /**
  *
  * @author martijua
  */
 public class Activite {
-    private int idActivite;
-    private String nomActivite;
-    private String descriptif;
-    private int nbMaxAnimateurs;
+
+   private int idActivite;
+   private int nbMaxAnimateurs;
+   private String descriptif;
+   private String nomActivite;
+   private List<Competence> competences;
+   private Theme theme;
 }

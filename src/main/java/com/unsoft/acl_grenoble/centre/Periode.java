@@ -5,6 +5,7 @@
 package com.unsoft.acl_grenoble.centre;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -14,4 +15,5 @@ public class Periode {
     private String periode;
     private Date dateDebut;
     private Date datefin;
+    private List<Periode> periodes;
 }
