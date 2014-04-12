@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import javax.sql.DataSource;
 
 /**
@@ -40,4 +41,13 @@ public class CompteDAO extends AbstractDataBaseDAO {
         }
         return compte;
     }
+    
+    public List<Compte> getComptesInactifs(){
+       throw new UnsupportedOperationException("Not supported yet.");
+   }
+   
+   public boolean activerCompte(String name){
+       throw new UnsupportedOperationException("Not supported yet.");
+   }
+    
 }
