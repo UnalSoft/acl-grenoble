@@ -1,14 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.unsoft.acl_grenoble.controller;
 
-import com.unsoft.acl_grenoble.model.dao.DAOCompte;
-import com.unsoft.acl_grenoble.model.dao.DAOResponsable;
+import com.unsoft.acl_grenoble.model.dao.CompteDAO;
+import com.unsoft.acl_grenoble.model.dao.DAOException;
+import com.unsoft.acl_grenoble.model.dao.RFamilleDAO;
+import com.unsoft.acl_grenoble.model.dao.ResponsableDAO;
 import com.unsoft.acl_grenoble.model.utilisateur.Compte;
 import com.unsoft.acl_grenoble.model.utilisateur.Responsable;
+import com.unsoft.acl_grenoble.model.utilisateur.ResponsableFamille;
 import com.unsoft.acl_grenoble.model.utilisateur.RoleEnum;
 import java.io.IOException;
 import javax.annotation.Resource;
@@ -22,7 +20,7 @@ import javax.sql.DataSource;
  *
  * @author juanmanuelmartinezromero
  */
-public class ControlUtilisateur extends HttpServlet {
+public class ControleurUtilisateur extends HttpServlet {
 
    @Resource(name = "jdbc/acl_grenoble")
    private DataSource dataSource;
@@ -37,40 +35,48 @@ public class ControlUtilisateur extends HttpServlet {
     * @throws IOException if an I/O error occurs
     */
    @Override
-   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+   protected void doPost(HttpServletRequest request, HttpServletResponse response)
            throws ServletException, IOException {
       String name = request.getParameter("user");
       String mdp = request.getParameter("motDePass");
 
-      DAOCompte DAOcompte = new DAOCompte(dataSource);
-      DAOResponsable DAOresponsable = new DAOResponsable(dataSource);
-      Compte compte = DAOcompte.getCompte(name, mdp);
-      verifierCompte(compte, DAOresponsable);      
+      CompteDAO compteDAO = new CompteDAO(dataSource);
+      ResponsableDAO responsableDAO = new ResponsableDAO(dataSource);
+       try {
+           Compte compte = compteDAO.getCompte(name, mdp);
+           verifierCompte(compte, responsableDAO, request, response);
+       } catch (DAOException ex) {
+           //TODO Page d'erreur de Base de données
+       }
    }
 
-   private void verifierCompte(Compte compte, DAOResponsable DAOresponsable) {
+   private void verifierCompte(Compte compte, ResponsableDAO DAOresponsable,
+           HttpServletRequest request, HttpServletResponse response) throws DAOException, ServletException, IOException {
       if (compte != null && compte.isActif()) {
-         //TODO Verifier le type d'utilisateur
          Responsable responsable = DAOresponsable.getResponsable(compte);
-         verifierUtilisateur(responsable);
+         verifierUtilisateur(responsable, request, response);
       } else {
          //TODO Page d'erreur (La compte n'existe pas ou n'est pas actif)
       }
    }
 
-   private void verifierUtilisateur(Responsable responsable) {
+   private void verifierUtilisateur(Responsable responsable, 
+           HttpServletRequest request, HttpServletResponse response) throws DAOException, ServletException, IOException {
       if (responsable != null) {
          //TODO faire la difference entre type d'utilisateur
          RoleEnum role = responsable.getRole();
          switch (role) {
             case R_ASSOCIATION:
                //TODO Retourner vers la page de R. Asso
+                getServletContext().getRequestDispatcher("/WEB-INF/responsableAssociation/accueilRespAsso.jsp").forward(request, response);
                break;
             case R_CENTRE:
                //TODO Retourner vers la page de R. Centre
+                getServletContext().getRequestDispatcher("/WEB-INF/responsableCentre/accueilRespCentre.jsp").forward(request, response);
                break;
             case R_PLANIFICATION:
                //TODO Retourner vers la page de R. Plan
+                getServletContext().getRequestDispatcher("/WEB-INF/responsablePlanification/accueilRespPlan.jsp").forward(request, response);
                break;
             default:
                //TODO Erreur interne BD (Page Erreur BD)
@@ -78,7 +84,10 @@ public class ControlUtilisateur extends HttpServlet {
          }
       } else {
          // Le responsable est d'une famille
-         //TODO Rediger vers la page de famille
+          RFamilleDAO rFamilleDAO = new RFamilleDAO(dataSource);
+          ResponsableFamille rFamille = rFamilleDAO.getResponsable(responsable.getCompte().getNomUtilisateur());
+         //TODO Rediger vers la page de famille   
+          getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/accueilRespFamille.jsp").forward(request, response);
       }
    }
 
