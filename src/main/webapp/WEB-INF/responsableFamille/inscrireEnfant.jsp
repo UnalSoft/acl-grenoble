@@ -1,6 +1,6 @@
 <%-- 
-    Document   : demanderCompte
-    Created on : 11 avr. 2014, 20:30:19
+    Document   : inscrireEnfant
+    Created on : 11 avr. 2014, 20:30:35
     Author     : juanmanuelmartinezromero
 --%>
 
@@ -12,6 +12,6 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+ 
     </body>
 </html>

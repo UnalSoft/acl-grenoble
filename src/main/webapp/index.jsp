@@ -17,5 +17,6 @@
             </ul>
             <input type="submit" name="Connexion"/>
         </form>
+        <jsp:forward page="WEB-INF/responsableFamille/accueilFamille.jsp"/>
     </body>
 </html>
