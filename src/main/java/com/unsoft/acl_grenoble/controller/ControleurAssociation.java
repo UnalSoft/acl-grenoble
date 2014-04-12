@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author sparrow
  */
 @WebServlet(name = "ControleurRAssociation", urlPatterns = {"/ControleurRAssociation"})
-public class ControleurRAssociation extends HttpServlet {
+public class ControleurAssociation extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
