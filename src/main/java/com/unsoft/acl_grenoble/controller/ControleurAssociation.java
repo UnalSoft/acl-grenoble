@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author sparrow
  */
-@WebServlet(name = "ControleurRAssociation", urlPatterns = {"/ControleurRAssociation"})
+@WebServlet(name = "ControleurAssociation", urlPatterns = {"/ControleurAssociation"})
 public class ControleurAssociation extends HttpServlet {
 
     /**
