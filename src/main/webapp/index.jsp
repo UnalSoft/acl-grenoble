@@ -5,9 +5,17 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>ACL Grenoble</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <h1>ACL Grenoble</h1>
+        <h2>Connexion</h2>
+        <form method="GET" action="ControlUtilisateur">
+            <ul>
+                <li> User : <input type="text" name="user"/></li>
+                <li> Mot de passe : <input type="password" name="motDePass"/></li>
+            </ul>
+            <input type="submit" name="Connexion"/>
+        </form>
     </body>
 </html>

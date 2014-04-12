@@ -11,4 +11,9 @@ package com.unsoft.acl_grenoble.model.utilisateur;
 public class Responsable extends Utilisateur {
 
     protected RoleEnum role;
+
+   public RoleEnum getRole() {
+      return role;
+   }
+    
 }
