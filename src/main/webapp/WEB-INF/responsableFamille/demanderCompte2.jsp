@@ -12,20 +12,17 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <% try{
-            int nombreEnfants = 
-                Integer.parseInt(request.getParameter("nomEnfants"));
-            }
-            catch(Exception e){
-                System.out.println(request.getParameter("nomEnfants"));
-            }    
+        <%   String nombreEnfants = (String)
+                request.getAttribute("nomEnfants");                
+             int nomEnfants = Integer.parseInt(nombreEnfants);
             %> 
         <form action="ControleurFamille" method="POST">
-            <% for(int i=1;i<=4;i++){ %>
-                Enfant nro <%= i%>:<br>
-                Prenom: <input type="text" name="prenomE" value="" />
-                Age: <input type="text" name="ageE" value="" />
+            <% for(int i=1;i<=nomEnfants;i++){ %>
+            <h3>Enfant <%= i%>:</h3>
+                Prenom: <input type="text" name=<% String.valueOf(i); %>  value="" />
+                Age: <input type="text" name=<% String.valueOf(i); %> value="" /><br/>
             <% } %>
+            <input type="submit" value="Submit" />
         </form>
     </body>
 </html>
