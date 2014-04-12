@@ -7,6 +7,7 @@
 package com.unsoft.acl_grenoble.model.dao;
 
 import com.unsoft.acl_grenoble.model.utilisateur.Compte;
+import java.util.List;
 import javax.sql.DataSource;
 
 /**
@@ -21,6 +22,14 @@ public class DAOCompte {
 
    public Compte getCompte(String name, String mdp) {
       throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+   }
+   
+   public List<Compte> getComptesInactifs(){
+       throw new UnsupportedOperationException("Not supported yet.");
+   }
+   
+   public boolean activerCompte(String name){
+       throw new UnsupportedOperationException("Not supported yet.");
    }
    
 }
