@@ -19,6 +19,26 @@ public class CompteDAO extends AbstractDataBaseDAO {
     public CompteDAO(DataSource dataSource) {
         super(dataSource);
     }
+    
+    public void addCompte(String nomUtilisateur,String motPass,int actif) throws DAOException{
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO Compte"
+                    + " VALUES (?,?,?)");
+            stmt.setString(1, nomUtilisateur);
+            stmt.setString(2, motPass);
+            stmt.setInt(3, actif);
+            stmt.execute();
+            stmt.close();
+        } catch (SQLException ex) {
+            throw new DAOException("Erreur BD " + ex.getMessage(),ex);
+        }
+        finally{
+            closeConnection(conn);
+        }
+        
+    }
 
     public Compte getCompte(String name, String mdp) throws DAOException {
         Compte compte;

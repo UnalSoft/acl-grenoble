@@ -1,16 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.unsoft.acl_grenoble.model.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 /**
@@ -44,4 +36,23 @@ public class EnfantDAO extends AbstractDataBaseDAO{
             closeConnection(conn);
         }
     }
+    
+     public void effacerEnfant(String nomResponsable, String prenomResponsable) throws DAOException {
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement("DELETE FROM enfant "
+                    + "WHERE nomFamille = ? AND prenom = ?");
+            stmt.setString(1, nomResponsable);
+            stmt.executeQuery();
+
+            stmt.close();
+            
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
+    }
+    
 }
