@@ -11,6 +11,7 @@ import com.unsoft.acl_grenoble.model.utilisateur.RoleEnum;
 import java.io.IOException;
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +21,7 @@ import javax.sql.DataSource;
  *
  * @author juanmanuelmartinezromero
  */
+@WebServlet(name = "ControleurUtilisateur", urlPatterns = {"/controleurUtilisateur"})
 public class ControleurUtilisateur extends HttpServlet {
 
    @Resource(name = "jdbc/acl_grenoble")
@@ -46,7 +48,7 @@ public class ControleurUtilisateur extends HttpServlet {
            Compte compte = compteDAO.getCompte(name, mdp);
            verifierCompte(compte, responsableDAO, request, response);
        } catch (DAOException ex) {
-           //TODO Page d'erreur de Base de données
+           getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
        }
    }
 
@@ -56,7 +58,14 @@ public class ControleurUtilisateur extends HttpServlet {
          Responsable responsable = DAOresponsable.getResponsable(compte);
          verifierUtilisateur(responsable, request, response);
       } else {
-         //TODO Page d'erreur (La compte n'existe pas ou n'est pas actif)
+          String message;
+          if (compte == null) {
+              message = "Mot de passe incorrect ou compte inexistant";
+          } else {
+              message = "Le compte n'est pas encore actif";
+          }
+          request.setAttribute("message", message);
+          getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
       }
    }
 
@@ -80,6 +89,7 @@ public class ControleurUtilisateur extends HttpServlet {
                break;
             default:
                //TODO Erreur interne BD (Page Erreur BD)
+                getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
                break;
          }
       } else {
