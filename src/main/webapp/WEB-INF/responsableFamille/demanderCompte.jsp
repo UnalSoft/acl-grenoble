@@ -14,16 +14,16 @@
     <body>
         <form method="POST" action="ControleurFamille">
             <input type="hidden" name="action" value="demander1" />
-            <h1>Information du responsable du famille</h1>
-            Prenom: <input type="text" name="prenomR" value="" />           
-            Nom: <input type="text" name="nomR" value="" />
-            Email: <input type="text" name="emailR" value="" />
-            <h1>Information de la famille</h1>
-            Nom de famille: <input type="text" name="nomF" value="" />
-            Revenu Annuel: <input type="text" name="revenuF" value="" />
-            <h1>Information des enfants</h1>
-            Nombre d'enfants: <input type="text" name="nombreE" value="" />
-            <input type="submit" name="Envoyer"/>
+            <h2>Information du responsable du famille</h2>
+            Prenom: <input type="text" name="prenomR" value="" /><br/>         
+            Nom: <input type="text" name="nomR" value="" /><br/>
+            Email: <input type="text" name="emailR" value="" /><br/>
+            <h2>Information de la famille</h2>
+            Nom de famille: <input type="text" name="nomF" value="" /><br/>
+            Revenu Annuel: <input type="text" name="revenuF" value="" /><br/>
+            <h2>Information des enfants</h2>
+            Nombre d'enfants: <input type="text" name="nombreE" value="" /><br/>
+            <input type="submit" value="Submit" />
         </form>
     </body>
 </html>

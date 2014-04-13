@@ -11,12 +11,33 @@ import javax.sql.DataSource;
  *
  * @author Edward
  */
-public class RFamilleDAO extends AbstractDataBaseDAO{
+public class RFamilleDAO extends AbstractDataBaseDAO {
 
     public RFamilleDAO(DataSource ds) {
         super(ds);
     }
-    
+
+    public void addResponsable(String nomFamille, String prenom,
+            String nomUtilisateur, String email, Double resources) throws DAOException {
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO RFamille"
+                    + " VALUES(?,?,?,?,?)");
+            stmt.setString(1, nomFamille);
+            stmt.setString(2, prenom);
+            stmt.setString(3, nomUtilisateur);
+            stmt.setString(4, email);
+            stmt.setDouble(5, resources);
+            stmt.execute();
+            stmt.close();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
+    }
+
     public ResponsableFamille getResponsable(String nomUtilisateur) throws DAOException {
         ResponsableFamille responsable;
         Connection conn = null;
@@ -28,7 +49,7 @@ public class RFamilleDAO extends AbstractDataBaseDAO{
             ResultSet rset = stmt.executeQuery();
 
             rset.next();
-            responsable = new ResponsableFamille(rset.getString("nomFamille"), rset.getString("prenom"), rset.getString("mail"), 
+            responsable = new ResponsableFamille(rset.getString("nomFamille"), rset.getString("prenom"), rset.getString("mail"),
                     rset.getFloat("ressources"));
 
             rset.close();
