@@ -19,7 +19,7 @@ public class CompteDAO extends AbstractDataBaseDAO {
     public CompteDAO(DataSource dataSource) {
         super(dataSource);
     }
-    public void addCompte(String nomUtilisateur,String motPass,short actif) throws DAOException{
+    public void addCompte(String nomUtilisateur,String motPass,int actif) throws DAOException{
         Connection conn = null;
         try {
             conn = getConnection();
@@ -27,7 +27,7 @@ public class CompteDAO extends AbstractDataBaseDAO {
                     + " VALUES (?,?,?)");
             stmt.setString(1, nomUtilisateur);
             stmt.setString(2, motPass);
-            stmt.setShort(3, actif);
+            stmt.setInt(3, actif);
             stmt.execute();
             stmt.close();
         } catch (SQLException ex) {
