@@ -12,16 +12,16 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <%   String nombreEnfants = (String)
-                request.getAttribute("nomEnfants");                
-             int nomEnfants = Integer.parseInt(nombreEnfants);
-            %> 
-        <form action="ControleurFamille" method="POST">
-            <% for(int i=1;i<=nomEnfants;i++){ %>
+        <%   String nombreEnfants = request.getParameter("nombreE");
+            int nomEnfants = Integer.parseInt(nombreEnfants);
+        %> 
+        <form method="POST" action="ControleurFamille" >
+            <input type="hidden" name="action" value="demander2" />
+            <% for (int i = 1; i <= nomEnfants; i++) {%>
             <h3>Enfant <%= i%>:</h3>
-                Prenom: <input type="text" name=<% String.valueOf(i); %>  value="" />
-                Age: <input type="text" name=<% String.valueOf(i); %> value="" /><br/>
-            <% } %>
+            Prenom: <input type="text" name="PrenomE<%=i%>"  value="" />
+            Age: <input type="text" name="AgeE<%=i%>" value="" /><br/>
+            <% }%>
             <input type="submit" value="Submit" />
         </form>
     </body>

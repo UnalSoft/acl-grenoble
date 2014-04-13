@@ -3,11 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.unsoft.acl_grenoble.controller;
 
+import com.unsoft.acl_grenoble.model.dao.CompteDAO;
+import com.unsoft.acl_grenoble.model.dao.DAOException;
+import com.unsoft.acl_grenoble.model.dao.EnfantDAO;
+import com.unsoft.acl_grenoble.model.dao.RFamilleDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,6 +26,9 @@ import javax.sql.DataSource;
  */
 @WebServlet(name = "ControleurFamille", urlPatterns = {"/ControleurFamille"})
 public class ControleurFamille extends HttpServlet {
+
+    @Resource(name = "jdbc/acl_grenoble")
+    private DataSource ds;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,7 +48,7 @@ public class ControleurFamille extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ControleurFamille</title>");            
+            out.println("<title>Servlet ControleurFamille</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet ControleurFamille at " + request.getContextPath() + "</h1>");
@@ -78,20 +85,57 @@ public class ControleurFamille extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //processRequest(request, response);
-     
+        //processRequest(request, response);     
         String action = request.getParameter("action");
-        if(action.equals("demander1")){
-            actionDemander1(request, response);
+        try {
+            if (action.equals("demander1")) {
+                actionDemander1(request, response);
+            } else if (action.equals("demander2")) {
+                RFamilleDAO rDao = new RFamilleDAO(ds);
+                EnfantDAO eDao = new EnfantDAO(ds);
+                CompteDAO cDao = new CompteDAO(ds);
+                actionDemander2(request, response, rDao, eDao, cDao);
+            }
+        } 
+        catch (DAOException e){
+            
+        } 
+     }
+    
+
+    private void actionDemander2(HttpServletRequest request,
+            HttpServletResponse response, RFamilleDAO rDao, EnfantDAO eDao,
+            CompteDAO cDao) throws DAOException {
+        int nombreEnfants = Integer.parseInt(request.getParameter("nomEnfants"));
+        String prenomR = request.getParameter("prenomR");
+        String nomR = request.getParameter("nomR");
+        String emailR = request.getParameter("emailR");
+        String nomF = request.getParameter("nomF");
+        Double revenuF = Double.parseDouble(request.getParameter("revenuF"));
+        ArrayList<String> prenomsE = new ArrayList<String>();
+        ArrayList<Integer> agesE = new ArrayList<Integer>();
+        String prenomi;
+        int agei;
+        for (int i = 1; i <= nombreEnfants; i++) {
+            prenomi = request.getParameter("PrenomE" + i);
+            agei = Integer.parseInt(request.getParameter("AgeE" + i));
         }
+        String utilisateur = prenomR + "." + nomR;
+        rDao.addResponsable(nomR, prenomR, utilisateur, emailR, revenuF);
+
     }
+
+    /**
+     * @param Http request
+     * @param Http response
+     * @throws ServletException
+     * @throws IOException treats the first demand from the view
+     */
     private void actionDemander1(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException{
-        String nomEnfants = request.getParameter("nombreE");  
-        
-        request.setAttribute("nomEnfants", nomEnfants);        
+            HttpServletResponse response) throws ServletException, IOException {
         getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/demanderCompte2.jsp").include(request, response);
     }
+
     /**
      * Returns a short description of the servlet.
      *
