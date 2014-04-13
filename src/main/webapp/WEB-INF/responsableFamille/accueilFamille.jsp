@@ -12,8 +12,13 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <jsp:forward page="demanderCompte.jsp"/>
-        <a href="inscrireEnfant.jsp">inscrire enfant</a>
-        <a href="annulerInscription.jsp">annuler inscription</a>
+        <form action="ControleurFamille" method="POST">
+            <select name="action" size="2" disabled="disabled">
+                <option>demander1</option>
+                <option>Inscrire un Enfant</option>
+                <option>Annuler une inscription</option>                
+            </select>
+            <input type="submit" value="Submit" />
+        </form>        
     </body>
 </html>
