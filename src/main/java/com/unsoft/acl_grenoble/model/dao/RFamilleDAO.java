@@ -1,6 +1,5 @@
 package com.unsoft.acl_grenoble.model.dao;
 
-import com.unsoft.acl_grenoble.model.utilisateur.Compte;
 import com.unsoft.acl_grenoble.model.utilisateur.ResponsableFamille;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -40,6 +39,24 @@ public class RFamilleDAO extends AbstractDataBaseDAO{
             closeConnection(conn);
         }
         return responsable;
+    }
+    
+    public void effacerResponsable(String nomUtilisateur) throws DAOException {
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement("DELETE FROM rFamille "
+                    + "WHERE nomUtilisateur = ?");
+            stmt.setString(1, nomUtilisateur);
+            stmt.executeQuery();
+
+            stmt.close();
+            
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
     }
     
 }

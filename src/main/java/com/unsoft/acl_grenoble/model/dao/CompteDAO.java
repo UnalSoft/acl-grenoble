@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
 
@@ -17,13 +19,13 @@ public class CompteDAO extends AbstractDataBaseDAO {
     public CompteDAO(DataSource dataSource) {
         super(dataSource);
     }
-    
+
     public Compte getCompte(String name, String mdp) throws DAOException {
         Compte compte;
         Connection conn = null;
         try {
             conn = getConnection();
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Compte"
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Compte "
                     + "WHERE nomUtilisateur = ? AND motDePass = ?");
             stmt.setString(1, name);
             stmt.setString(2, mdp);
@@ -41,13 +43,64 @@ public class CompteDAO extends AbstractDataBaseDAO {
         }
         return compte;
     }
+
+    public List<Compte> getComptesInactifs() throws DAOException {
+        List<Compte> comptes = new ArrayList<Compte>();
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            Statement st = conn.createStatement();
+            String requeteSQL = "SELECT * FROM Compte "
+                    + "WHERE actif = 0";
+            ResultSet rs = st.executeQuery(requeteSQL);
+
+            while (rs.next()) {
+                Compte compte = new Compte(rs.getString("nomUtilisateur"), rs.getString("motDePass"), rs.getBoolean("actif"));
+                comptes.add(compte);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
+        return comptes;
+    }
+
+    public boolean activerCompte(String nomUtilisateur) throws DAOException {
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement("UPDATE Compte SET actif = 1"
+                    + "WHERE nomUtilisateur = ?");
+            stmt.setString(1, nomUtilisateur);
+            ResultSet rset = stmt.executeQuery();
+
+            rset.close();
+            stmt.close();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
+        return true;
+    }
     
-    public List<Compte> getComptesInactifs(){
-       throw new UnsupportedOperationException("Not supported yet.");
-   }
-   
-   public boolean activerCompte(String name){
-       throw new UnsupportedOperationException("Not supported yet.");
-   }
+    public void effacerCompte(String nomUtilisateur) throws DAOException {
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement("DELETE FROM Compte "
+                    + "WHERE nomUtilisateur = ?");
+            stmt.setString(1, nomUtilisateur);
+            stmt.executeQuery();
+
+            stmt.close();
+            
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
+    }
     
 }
