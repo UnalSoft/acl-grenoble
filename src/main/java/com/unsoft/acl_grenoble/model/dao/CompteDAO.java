@@ -17,7 +17,7 @@ public class CompteDAO extends AbstractDataBaseDAO {
     public CompteDAO(DataSource dataSource) {
         super(dataSource);
     }
-
+    
     public Compte getCompte(String name, String mdp) throws DAOException {
         Compte compte;
         Connection conn = null;
