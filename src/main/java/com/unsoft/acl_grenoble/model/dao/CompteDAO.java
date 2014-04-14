@@ -19,8 +19,8 @@ public class CompteDAO extends AbstractDataBaseDAO {
     public CompteDAO(DataSource dataSource) {
         super(dataSource);
     }
-    
-    public void addCompte(String nomUtilisateur,String motPass,int actif) throws DAOException{
+
+    public void addCompte(String nomUtilisateur, String motPass, int actif) throws DAOException {
         Connection conn = null;
         try {
             conn = getConnection();
@@ -32,16 +32,15 @@ public class CompteDAO extends AbstractDataBaseDAO {
             stmt.execute();
             stmt.close();
         } catch (SQLException ex) {
-            throw new DAOException("Erreur BD " + ex.getMessage(),ex);
-        }
-        finally{
+            throw new DAOException("Erreur BD " + ex.getMessage(), ex);
+        } finally {
             closeConnection(conn);
         }
-        
+
     }
 
     public Compte getCompte(String name, String mdp) throws DAOException {
-        Compte compte;
+        Compte compte = null;
         Connection conn = null;
         try {
             conn = getConnection();
@@ -51,9 +50,9 @@ public class CompteDAO extends AbstractDataBaseDAO {
             stmt.setString(2, mdp);
             ResultSet rset = stmt.executeQuery();
 
-            rset.next();
-            compte = new Compte(rset.getString("nomUtilisateur"), rset.getString("motDePass"), rset.getBoolean("actif"));
-
+            if (rset.next()) {
+                compte = new Compte(rset.getString("nomUtilisateur"), rset.getString("motDePass"), rset.getBoolean("actif"));
+            }
             rset.close();
             stmt.close();
         } catch (SQLException e) {
@@ -104,7 +103,7 @@ public class CompteDAO extends AbstractDataBaseDAO {
         }
         return true;
     }
-    
+
     public void effacerCompte(String nomUtilisateur) throws DAOException {
         Connection conn = null;
         try {
@@ -115,12 +114,11 @@ public class CompteDAO extends AbstractDataBaseDAO {
             stmt.executeQuery();
 
             stmt.close();
-            
+
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
         } finally {
             closeConnection(conn);
         }
     }
-    
 }

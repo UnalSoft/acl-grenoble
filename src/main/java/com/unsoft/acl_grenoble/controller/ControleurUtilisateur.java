@@ -48,6 +48,7 @@ public class ControleurUtilisateur extends HttpServlet {
            Compte compte = compteDAO.getCompte(name, mdp);
            verifierCompte(compte, responsableDAO, request, response);
        } catch (DAOException ex) {
+           request.setAttribute("message", ex.getMessage());
            getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
        }
    }

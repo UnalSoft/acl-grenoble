@@ -39,7 +39,7 @@ public class RFamilleDAO extends AbstractDataBaseDAO {
     }
 
     public ResponsableFamille getResponsable(String nomUtilisateur) throws DAOException {
-        ResponsableFamille responsable;
+        ResponsableFamille responsable = null;
         Connection conn = null;
         try {
             conn = getConnection();
@@ -48,10 +48,10 @@ public class RFamilleDAO extends AbstractDataBaseDAO {
             stmt.setString(1, nomUtilisateur);
             ResultSet rset = stmt.executeQuery();
 
-            rset.next();
-            responsable = new ResponsableFamille(rset.getString("nomFamille"), rset.getString("prenom"), rset.getString("mail"),
-                    rset.getFloat("ressources"));
-
+            if (rset.next()) {
+                responsable = new ResponsableFamille(rset.getString("nomFamille"), rset.getString("prenom"), rset.getString("mail"),
+                        rset.getFloat("ressources"));
+            }
             rset.close();
             stmt.close();
         } catch (SQLException e) {
@@ -61,7 +61,7 @@ public class RFamilleDAO extends AbstractDataBaseDAO {
         }
         return responsable;
     }
-    
+
     public void effacerResponsable(String nomUtilisateur) throws DAOException {
         Connection conn = null;
         try {
@@ -72,12 +72,11 @@ public class RFamilleDAO extends AbstractDataBaseDAO {
             stmt.executeQuery();
 
             stmt.close();
-            
+
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
         } finally {
             closeConnection(conn);
         }
     }
-    
 }

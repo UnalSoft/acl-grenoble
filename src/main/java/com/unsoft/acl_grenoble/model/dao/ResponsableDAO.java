@@ -20,7 +20,7 @@ public class ResponsableDAO extends AbstractDataBaseDAO {
     }
 
     public Responsable getResponsable(Compte compte) throws DAOException {
-        Responsable responsable;
+        Responsable responsable = null;
         Connection conn = null;
         try {
             conn = getConnection();
@@ -29,10 +29,10 @@ public class ResponsableDAO extends AbstractDataBaseDAO {
             stmt.setString(1, compte.getNomUtilisateur());
             ResultSet rset = stmt.executeQuery();
 
-            rset.next();
-            responsable = new Responsable(rset.getString("nomFamille"), rset.getString("prenom"), rset.getString("mail"), 
-                    RoleEnum.getRole(rset.getString("role")));
-
+            if (rset.next()) {
+                responsable = new Responsable(rset.getString("nomFamille"), rset.getString("prenom"), rset.getString("mail"),
+                        RoleEnum.getRole(rset.getString("role")));
+            }
             rset.close();
             stmt.close();
         } catch (SQLException e) {

@@ -9,7 +9,7 @@
   maxIdle="3" 
   maxWait="10000" 
   name="jdbc/acl_grenoble"
-  password=""
-  username=""
+  password="martijua"
+  username="martijua"
   />  
 </Context>
