@@ -12,6 +12,12 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <h1>Recruter animateur permanent</h1>
+        <ul>
+            <li> Prenom : <input type="text" name="prenom"/></li>
+            <li> Nom : <input type="text" name="nom"/></li>
+            <li> e-Mail : <input type="text" name="email"</li>
+            <input type="checkbox" name="Competence" value="ON" />
+        </ul>        
     </body>
 </html>
