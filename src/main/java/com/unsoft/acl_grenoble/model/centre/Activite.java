@@ -18,4 +18,37 @@ public class Activite {
    private String nomActivite;
    private List<Competence> competences;
    private Theme theme;
+
+    public Activite(int idActivite, Theme theme, String nomActivite, String descriptif, int nbMaxAnimateurs) {
+        this.idActivite = idActivite;
+        this.nbMaxAnimateurs = nbMaxAnimateurs;
+        this.descriptif = descriptif;
+        this.nomActivite = nomActivite;
+        this.theme = theme;
+    }
+
+    public int getIdActivite() {
+        return idActivite;
+    }
+
+    public int getNbMaxAnimateurs() {
+        return nbMaxAnimateurs;
+    }
+
+    public String getDescriptif() {
+        return descriptif;
+    }
+
+    public String getNomActivite() {
+        return nomActivite;
+    }
+
+    public List<Competence> getCompetences() {
+        return competences;
+    }
+
+    public Theme getTheme() {
+        return theme;
+    }
+    
 }

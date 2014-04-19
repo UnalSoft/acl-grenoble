@@ -19,7 +19,7 @@ public enum Competence {
         return competence;
     }
 
-    public Competence getCompetence(String competence) {
+    public static Competence getCompetence(String competence) {
         for (Competence comp : values()) {
             if (competence.equals(comp.getName())){
                 return comp;

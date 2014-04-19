@@ -2,33 +2,24 @@ package com.unsoft.acl_grenoble.model.centre;
 
 /**
  *
- * @author juanmanuelmartinezromero
+ * @author Edward
  */
-public enum Theme {
+public class Theme {
     
-    DECOUVERTE_NATURE("Découverte de la nature"),
-    INITIATION_ENVIRONNEMENT("Initiation à l’environnement"),
-    EXPRESSION_ARTISTIQUE("Expression artistique"),
-    SPORT_COLLECTIV("Sport collectif"),
-    SPORT_EXTREME("Sport extreme"),
-    SPORT_PRECISION("Sport de précision");
-    
-    private final String theme;
+    private ThemeEnum theme;
+    private CentreDeLoisirs centre;
 
-    private Theme(String theme) {
+    public Theme(ThemeEnum theme, CentreDeLoisirs centre) {
         this.theme = theme;
+        this.centre = centre;
     }
 
-    public String getName() {
+    public CentreDeLoisirs getCentre() {
+        return centre;
+    }
+
+    public ThemeEnum getTheme() {
         return theme;
     }
-
-    public Theme getTheme(String theme) {
-        for (Theme th : values()) {
-            if (theme.equals(th.getName())){
-                return th;
-            }
-        }
-        return null;
-    }
+    
 }

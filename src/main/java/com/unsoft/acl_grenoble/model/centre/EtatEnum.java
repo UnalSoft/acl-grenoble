@@ -4,7 +4,7 @@ package com.unsoft.acl_grenoble.model.centre;
  *
  * @author juanmanuelmartinezromero
  */
-public enum EtatActivite {
+public enum EtatEnum {
 
     OUVERTE("OUVERTE"),
     FERMEE("FERMEE"),
@@ -14,7 +14,7 @@ public enum EtatActivite {
 
     private final String etat;
 
-    private EtatActivite(String etat) {
+    private EtatEnum(String etat) {
         this.etat = etat;
     }
 
@@ -22,8 +22,8 @@ public enum EtatActivite {
         return etat;
     }
 
-    public EtatActivite getEtat(String etat) {
-        for (EtatActivite et : values()) {
+    public static EtatEnum getEtat(String etat) {
+        for (EtatEnum et : values()) {
             if (etat.equals(et.getName())){
                 return et;
             }

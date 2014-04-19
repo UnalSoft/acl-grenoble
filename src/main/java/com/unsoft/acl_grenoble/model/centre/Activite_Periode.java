@@ -11,6 +11,6 @@ package com.unsoft.acl_grenoble.model.centre;
  */
 public class Activite_Periode {
    private Activite activite;
-   private EtatActivite etatActivite;
+   private EtatEnum etatActivite;
    private Periode periode;
 }

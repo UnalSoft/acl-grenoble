@@ -9,6 +9,24 @@ public class Etat {
 
    Activite activite;
    Periode periode;
-   Etat etat;
+   EtatEnum etat;
+
+    public Etat(Activite activite, Periode periode, EtatEnum etat) {
+        this.activite = activite;
+        this.periode = periode;
+        this.etat = etat;
+    }
+
+    public EtatEnum getEtat() {
+        return etat;
+    }
+
+    public Periode getPeriode() {
+        return periode;
+    }
+
+    public Activite getActivite() {
+        return activite;
+    }
 
 }
