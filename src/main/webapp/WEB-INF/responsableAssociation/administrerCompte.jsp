@@ -31,7 +31,7 @@
                 <div class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="#">Administrer Demandes de Compte</a></li>
-                        <li><a href="ControleurAssociation?action=recruter">Recruter animateur permanent</a></li>
+                        <li><a href="ControleurAssociation?action=recruterAnimateur">Recruter animateur permanent</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="disabled"><a href="#">${utilisateur}</a></li>
