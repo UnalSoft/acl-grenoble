@@ -18,8 +18,8 @@
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="responsableFamille/demanderCompte.jsp">Demander un compte</a></li>
-                        <li><a href="animateurExterne/sInscrire.jsp">S’inscrire comme animateur externe</a></li>
+                        <li><a href="ControleurFamille?action=demanderCompte">Demander un compte</a></li>
+                        <li><a href="ControleurExterne?action=sInscrire.jsp">S’inscrire comme animateur externe</a></li>
                     </ul>
                 </div>
             </div>
