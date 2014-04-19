@@ -229,14 +229,159 @@ public class ControleurAssociation extends HttpServlet {
         return true;
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }
+   // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+   /**
+    * Handles the HTTP <code>GET</code> method.
+    *
+    * @param request servlet request
+    * @param response servlet response
+    * @throws ServletException if a servlet-specific error occurs
+    * @throws IOException if an I/O error occurs
+    */
+   @Override
+   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      listCompetences(request);
+      listPeriodes(request, response);
+      getServletContext().getRequestDispatcher("/WEB-INF/responsableAssociation/recruterAnimateur.jsp").forward(request, response);
+   }
+
+   private void listPeriodes(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+      List<Periode> periodes = null;
+      try {
+         periodes = new ResponsableDAO(ds).getPeriodesDisponibilite();
+      } catch (DAOException ex) {
+         getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp")
+                 .forward(request, response);
+      }
+      request.setAttribute("periodes", periodes);
+   }
+
+   private void listCompetences(HttpServletRequest request) {
+      List<Competence> competences = Arrays.asList(Competence.values());
+      request.setAttribute("competences", competences);
+   }
+
+   /**
+    * Handles the HTTP <code>POST</code> method.
+    *
+    * @param request servlet request
+    * @param response servlet response
+    * @throws ServletException if a servlet-specific error occurs
+    * @throws IOException if an I/O error occurs
+    */
+   @Override
+   protected void doPost(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      request.setCharacterEncoding("UTF-8");
+      String prenom = request.getParameter("prenom");
+      String nom = request.getParameter("nom");
+      String email = request.getParameter("email");
+      String[] competences = request.getParameterValues("competences");
+      String[] periodes = request.getParameterValues("periodes");
+
+      boolean valide = validerChamps(prenom, nom, email, competences, periodes, request, response);
+      if (valide) {
+         //TODO Mettre l'animateur dans la bd
+         Animateur animateur = new Animateur(nom, prenom, email, valide, listCompetences(competences), listPeriodes(periodes, request, response));
+         insererAnimateur(animateur, request, response);
+      } else {
+         //TODO Show failed message in a modal way
+      }
+
+   }
+   /**
+    * Insertion d'un animateur
+    * @param animateur
+    * @param request
+    * @param response
+    * @throws ServletException
+    * @throws IOException 
+    */
+   private void insererAnimateur(Animateur animateur, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+      try {
+         new ResponsableDAO(ds).insererAnimateur(animateur);
+      } catch (DAOException ex) {
+         getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp")
+                 .forward(request, response);
+      }
+      //TODO Informer de la creation
+   }
+
+   /**
+    * Obtient une liste de periodes a partir d'une liste de noms de periodes
+    *
+    * @param periodes
+    * @return
+    */
+   private List<Periode> listPeriodes(String[] periodes, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+      List<Periode> thePeriodes = new ArrayList<Periode>(periodes.length);
+      ResponsableDAO responsableDAO = new ResponsableDAO(ds);
+      for (String periode : periodes) {
+         try {
+            thePeriodes.add(responsableDAO.getPeriode(periode));
+         } catch (DAOException ex) {
+            getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp")
+                    .forward(request, response);
+         }
+      }
+      return thePeriodes;
+   }
+
+   /**
+    * Obtient une liste de competences a partir d'une liste de noms de
+    * competences
+    *
+    * @param competences
+    * @return
+    */
+   private List<Competence> listCompetences(String[] competences) {
+      List<Competence> theCompetences = new ArrayList<Competence>(competences.length);
+      for (String competence : competences) {
+         theCompetences.add(Competence.valueOf(competence));
+      }
+      return theCompetences;
+   }
+
+   /**
+    * Valide si mettre un animateur a la bd est possible
+    *
+    * @param prenom
+    * @param nom
+    * @param email
+    * @param competences
+    * @param periodes
+    * @param request
+    * @param response
+    * @return
+    * @throws IOException
+    * @throws ServletException
+    */
+   private boolean validerChamps(String prenom, String nom, String email, String[] competences, String[] periodes, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+      boolean prenomValide = prenom.length() > 0 && prenom.length() < LONG_NOM;
+      boolean nomValide = nom.length() > 0 && nom.length() < LONG_NOM;
+      boolean emailValide = email.length() > 0 && email.length() < LONG_MAIL;
+      boolean aCompetences = competences != null;
+      boolean aDisponibilite = periodes != null;
+      boolean animateurExist = true;
+      try {
+         animateurExist = new ResponsableDAO(ds).animateurExist(nom, prenom);
+      } catch (DAOException ex) {
+         getServletContext().getRequestDispatcher("WEB-INF/erreur/erreurBD.jsp")
+                 .forward(request, response);
+      }
+      return prenomValide && nomValide && emailValide
+              && aCompetences && aDisponibilite && !animateurExist;
+   }
+
+   /**
+    * Returns a short description of the servlet.
+    *
+    * @return a String containing servlet description
+    */
+   @Override
+   public String getServletInfo() {
+      return "Controleur de l'association";
+   }// </editor-fold>
 
 }
