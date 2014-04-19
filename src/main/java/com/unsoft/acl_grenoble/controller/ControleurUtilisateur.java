@@ -15,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 /**
@@ -59,6 +60,8 @@ public class ControleurUtilisateur extends HttpServlet {
     private void verifierCompte(Compte compte, ResponsableDAO DAOresponsable,
             HttpServletRequest request, HttpServletResponse response) throws DAOException, ServletException, IOException {
         if (compte != null && compte.isActif()) {
+            HttpSession session = request.getSession();
+            session.setAttribute("utilisateur", compte.getNomUtilisateur());
             Responsable responsable = DAOresponsable.getResponsable(compte);
             verifierUtilisateur(responsable, compte.getNomUtilisateur(), request, response);
         } else {

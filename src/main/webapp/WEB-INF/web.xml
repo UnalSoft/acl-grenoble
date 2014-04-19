@@ -4,10 +4,6 @@
         <servlet-name>ControlUtilisateur</servlet-name>
         <servlet-class>com.unsoft.acl_grenoble.controller.ControleurUtilisateur</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>ControlUtilisateur</servlet-name>
-        <url-pattern>/ControlUtilisateur</url-pattern>
-    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

@@ -19,6 +19,14 @@ public abstract class Utilisateur {
         this.prenom = prenom;
         this.mail = mail;
     }
+
+    public String getNomFamille() {
+        return nomFamille;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
     
     public String getMail() {
         return mail;

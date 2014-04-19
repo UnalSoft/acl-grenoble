@@ -62,6 +62,29 @@ public class CompteDAO extends AbstractDataBaseDAO {
         }
         return compte;
     }
+    
+    public Compte getCompte(String name) throws DAOException {
+        Compte compte = null;
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Compte "
+                    + "WHERE nomUtilisateur = ?");
+            stmt.setString(1, name);
+            ResultSet rset = stmt.executeQuery();
+
+            if (rset.next()) {
+                compte = new Compte(rset.getString("nomUtilisateur"), rset.getString("motDePass"), rset.getBoolean("actif"));
+            }
+            rset.close();
+            stmt.close();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
+        return compte;
+    }
 
     public List<Compte> getComptesInactifs() throws DAOException {
         List<Compte> comptes = new ArrayList<Compte>();

@@ -31,4 +31,8 @@ public class Compte {
     public String getNomUtilisateur() {
         return nomUtilisateur;
     }
+
+    public String getMotdePass() {
+        return motdePass;
+    }
 }
