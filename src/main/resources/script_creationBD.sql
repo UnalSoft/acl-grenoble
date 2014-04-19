@@ -118,7 +118,7 @@ create table ETAT  (
 
 /* Table: COMPTE*/
 create table COMPTE  (
-   NOMUTILISATEUR       VARCHAR2(30)                    primary key,
+   NOMUTILISATEUR       VARCHAR2(40)                    primary key,
    MOTDEPASS            VARCHAR2(20)                    not null,
    ACTIF                SMALLINT						not null
 );
@@ -127,8 +127,8 @@ create table COMPTE  (
 create table UTILISATEUR  (
    NOMFAMILLE           VARCHAR2(20)                    not null,
    PRENOM               VARCHAR2(20)                    not null,
-   NOMUTILISATEUR       VARCHAR2(30)                    not null,
-   MAIL                 VARCHAR2(30)                    not null,
+   NOMUTILISATEUR       VARCHAR2(40)                    not null,
+   MAIL                 VARCHAR2(60)                    not null,
    primary key (NOMFAMILLE, PRENOM),
    foreign key (NOMUTILISATEUR) references COMPTE (NOMUTILISATEUR)
 );
@@ -139,8 +139,8 @@ create table RESPONSABLE  (
    PRENOM               VARCHAR2(20)                    not null,
    NOMCENTRE            VARCHAR2(20),
    ROLE                 VARCHAR2(20)                    not null,
-   NOMUTILISATEUR       VARCHAR2(30)					not null,
-   MAIL                 VARCHAR2(30)                    not null,
+   NOMUTILISATEUR       VARCHAR2(40)					not null,
+   MAIL                 VARCHAR2(60)                    not null,
    primary key (NOMFAMILLE, PRENOM),
    foreign key (NOMCENTRE) references CENTRELOISIRS (NOMCENTRE),
    foreign key (NOMFAMILLE, PRENOM) references UTILISATEUR (NOMFAMILLE, PRENOM),
@@ -151,8 +151,8 @@ create table RESPONSABLE  (
 create table RFAMILLE  (
    NOMFAMILLE           VARCHAR2(20)                    not null,
    PRENOM               VARCHAR2(20)                    not null,
-   NOMUTILISATEUR       VARCHAR2(30)					not null,
-   MAIL                 VARCHAR2(30)                    not null,
+   NOMUTILISATEUR       VARCHAR2(40)					not null,
+   MAIL                 VARCHAR2(60)                    not null,
    RESSOURCES           FLOAT                           not null,
    primary key (NOMFAMILLE, PRENOM),
    foreign key (NOMFAMILLE, PRENOM) references UTILISATEUR (NOMFAMILLE, PRENOM)

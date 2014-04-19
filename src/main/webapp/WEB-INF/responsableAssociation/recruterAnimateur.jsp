@@ -35,6 +35,7 @@
             </ul>
             <input type="submit" name="action" value="Recruter"/>
             <input type="reset" value="Reinitialiser" name="reinitialiser" />
+            <input type="hidden" name="action" value="insererAnimateur" />
         </form>
     </body>
 </html>

@@ -1,5 +1,6 @@
 package com.unsoft.acl_grenoble.model.dao;
 
+import com.unsoft.acl_grenoble.model.utilisateur.Compte;
 import com.unsoft.acl_grenoble.model.utilisateur.ResponsableFamille;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -52,6 +53,7 @@ public class RFamilleDAO extends AbstractDataBaseDAO {
                 responsable = new ResponsableFamille(rset.getString("nomFamille"), rset.getString("prenom"), rset.getString("mail"),
                         rset.getFloat("ressources"));
             }
+            
             rset.close();
             stmt.close();
         } catch (SQLException e) {
@@ -67,6 +69,11 @@ public class RFamilleDAO extends AbstractDataBaseDAO {
         try {
             conn = getConnection();
             PreparedStatement stmt = conn.prepareStatement("DELETE FROM rFamille "
+                    + "WHERE nomUtilisateur = ?");
+            stmt.setString(1, nomUtilisateur);
+            stmt.executeQuery();
+            
+            stmt = conn.prepareStatement("DELETE FROM utilisateur "
                     + "WHERE nomUtilisateur = ?");
             stmt.setString(1, nomUtilisateur);
             stmt.executeQuery();

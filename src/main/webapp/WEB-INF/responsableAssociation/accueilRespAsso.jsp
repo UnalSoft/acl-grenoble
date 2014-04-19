@@ -9,10 +9,9 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Accueil Responsable Association</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
-        <a href="ControleurAssociation?action=recruterAnimateur">Recruter</a>
+        <jsp:forward page="/ControleurAssociation"/>
     </body>
 </html>

@@ -44,6 +44,7 @@ public class EnfantDAO extends AbstractDataBaseDAO{
             PreparedStatement stmt = conn.prepareStatement("DELETE FROM enfant "
                     + "WHERE nomFamille = ? AND prenom = ?");
             stmt.setString(1, nomResponsable);
+            stmt.setString(2, prenomResponsable);
             stmt.executeQuery();
 
             stmt.close();
