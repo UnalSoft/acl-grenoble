@@ -43,7 +43,7 @@ public class RFamilleDAO extends AbstractDataBaseDAO {
         Connection conn = null;
         try {
             conn = getConnection();
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM RFamille"
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM RFamille "
                     + "WHERE nomUtilisateur = ?");
             stmt.setString(1, nomUtilisateur);
             ResultSet rset = stmt.executeQuery();

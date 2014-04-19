@@ -5,17 +5,17 @@ create table COMPETENCEENUM  (
 
 /* Table: ETATENUM*/
 create table ETATENUM  (
-   ETAT                 VARCHAR2(10)                    primary key
+   ETAT                 VARCHAR2(20)                    primary key
 );
 
 /* Table: ROLEENUM*/
 create table ROLEENUM  (
-   ROLE                 VARCHAR2(10)                    primary key,
+   ROLE                 VARCHAR2(20)                    primary key,
 );
 
 /* Table: THEMEENUM*/
 create table THEMEENUM  (
-   NOMTHEME             VARCHAR2(20)                    primary key
+   NOMTHEME             VARCHAR2(30)                    primary key
 );
 
 /* Table: CENTRELOISIRS*/
@@ -25,20 +25,32 @@ create table CENTRELOISIRS  (
 
 /* Table: THEME*/
 create table THEME  (
-   NOMTHEME             VARCHAR2(20)					not null,
+   NOMTHEME             VARCHAR2(30)					not null,
    NOMCENTRE            VARCHAR2(20)                    not null,
    primary key (NOMCENTRE, NOMTHEME),
    foreign key (NOMCENTRE) references CENTRELOISIRS (NOMCENTRE),
    foreign key (NOMTHEME) references THEMEENUM (NOMTHEME)
 );
 
+/* Table: PERIODE*/
+create table PERIODE  (
+   PERIODE              VARCHAR2(40)                    primary key,
+   SUPERPERIODE          VARCHAR2(40),
+   DATEDEBUT            DATE                            not null,
+   DATEFIN              DATE                            not null,
+   foreign key (NOMANIMATEUR, PRENOMANIMATEUR) references ANIMATEUR (NOMANIMATEUR, PRENOMANIMATEUR)
+);
+
+alter table PERIODE add constraint FK___PERIODE foreign key (SUPERPERIODE) references PERIODE (PERIODE);
+
 /* Table: ACTIVITE*/
+CREATE SEQUENCE idActivite_seq;
 create table ACTIVITE  (
-   IDACTIVITE           INTEGER                         primary key,
+   IDACTIVITE           INTEGER    DEFAULT idActivite_seq.nextval   primary key,
    NOMCENTRE            VARCHAR2(20)					not null,
-   NOMTHEME             VARCHAR2(20)                    not null,
-   NOM                  VARCHAR2(20)                    not null,
-   DESCRIPTIF           VARCHAR2(40)                    not null,
+   NOMTHEME             VARCHAR2(30)                    not null,
+   NOM                  VARCHAR2(30)                    not null,
+   DESCRIPTIF           VARCHAR2(200)                    not null,
    NBMAXANIM            SMALLINT                        not null,
    foreign key (NOMCENTRE, NOMTHEME) references THEME (NOMCENTRE, NOMTHEME)
 );
@@ -71,24 +83,21 @@ create table COMPETENCEANIMATEUR  (
    foreign key (COMPETENCE) references COMPETENCEENUM (COMPETENCE)
 );
 
-/* Table: PERIODE*/
-create table PERIODE  (
-   PERIODE              VARCHAR2(30)                    primary key,
-   NOMANIMATEUR         VARCHAR2(20)					not null,
-   PRENOMANIMATEUR      VARCHAR2(20)					not null,
-   SUPERPERIODE          VARCHAR2(30)					not null,
-   DATEDEBUT            DATE                            not null,
-   DATEFIN              DATE                            not null,
-   foreign key (NOMANIMATEUR, PRENOMANIMATEUR) references ANIMATEUR (NOMANIMATEUR, PRENOMANIMATEUR)
+/* Table: EST_DISPONIBLE*/
+create table EST_DISPONIBLE  (
+   NOMANIMATEUR         VARCHAR2(20)                    not null,
+   PRENOMANIMATEUR      VARCHAR2(20)                    not null,
+   PERIODE              VARCHAR2(40)                    not null,
+   primary key (NOMANIMATEUR, PRENOMANIMATEUR, PERIODE),
+   foreign key (NOMANIMATEUR, PRENOMANIMATEUR) references ANIMATEUR (NOMANIMATEUR, PRENOMANIMATEUR),
+   foreign key (PERIODE) references PERIODE (PERIODE)
 );
-
-alter table PERIODE add constraint FK___PERIODE foreign key (SUPERPERIODE) references PERIODE (PERIODE);
 
 /* Table: ASIGNATION*/
 create table ASIGNATION  (
    NOMANIMATEUR         VARCHAR2(20)                    not null,
    PRENOMANIMATEUR      VARCHAR2(20)                    not null,
-   PERIODE              VARCHAR2(30)                    not null,
+   PERIODE              VARCHAR2(40)                    not null,
    IDACTIVITE           INTEGER                         not null,
    primary key (NOMANIMATEUR, PRENOMANIMATEUR, PERIODE, IDACTIVITE),
    foreign key (NOMANIMATEUR, PRENOMANIMATEUR) references ANIMATEUR (NOMANIMATEUR, PRENOMANIMATEUR),
@@ -99,8 +108,8 @@ create table ASIGNATION  (
 /* Table: ETAT*/
 create table ETAT  (
    IDACTIVITE           INTEGER                         not null,
-   PERIODE              VARCHAR2(30)                    not null,
-   ETAT                 VARCHAR2(10)                    not null,
+   PERIODE              VARCHAR2(40)                    not null,
+   ETAT                 VARCHAR2(20)                    not null,
    primary key (IDACTIVITE, PERIODE, ETAT),
    foreign key (IDACTIVITE) references ACTIVITE (IDACTIVITE),
    foreign key (PERIODE) references PERIODE (PERIODE),
@@ -128,8 +137,8 @@ create table UTILISATEUR  (
 create table RESPONSABLE  (
    NOMFAMILLE           VARCHAR2(20)                    not null,
    PRENOM               VARCHAR2(20)                    not null,
-   NOMCENTRE            VARCHAR2(20)					not null,
-   ROLE                 VARCHAR2(10)                    not null,
+   NOMCENTRE            VARCHAR2(20),
+   ROLE                 VARCHAR2(20)                    not null,
    NOMUTILISATEUR       VARCHAR2(30)					not null,
    MAIL                 VARCHAR2(30)                    not null,
    primary key (NOMFAMILLE, PRENOM),
@@ -164,7 +173,7 @@ create table ENFANT  (
 create table INSCRIPTION  (
    IDACTIVITE           INTEGER                         not null,
    PRENOMENFANT         VARCHAR2(20)                    not null,
-   PERIODE              VARCHAR2(30)                    not null,
+   PERIODE              VARCHAR2(40)                    not null,
    primary key (IDACTIVITE, PRENOMENFANT, PERIODE),
    foreign key (IDACTIVITE) references ACTIVITE (IDACTIVITE),
    foreign key (PRENOMENFANT) references ENFANT (PRENOMENFANT),

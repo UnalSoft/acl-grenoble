@@ -21,6 +21,7 @@
         <h1 class="text-center">Capitaine le navire coule!</h1>
         <div class="alert alert-danger">ACL Grenoble connaît actuellement quelques difficultés
         avec sa base de données. S'il vous plaît revenez plus tard.
-        ${message}</div>
+        <p>${message}</p>
+        </div>
     </body>
 </html>

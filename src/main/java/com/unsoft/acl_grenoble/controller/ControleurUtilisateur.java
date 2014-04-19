@@ -60,7 +60,7 @@ public class ControleurUtilisateur extends HttpServlet {
             HttpServletRequest request, HttpServletResponse response) throws DAOException, ServletException, IOException {
         if (compte != null && compte.isActif()) {
             Responsable responsable = DAOresponsable.getResponsable(compte);
-            verifierUtilisateur(responsable, request, response);
+            verifierUtilisateur(responsable, compte.getNomUtilisateur(), request, response);
         } else {
             String message;
             if (compte == null) {
@@ -73,7 +73,7 @@ public class ControleurUtilisateur extends HttpServlet {
         }
     }
 
-    private void verifierUtilisateur(Responsable responsable,
+    private void verifierUtilisateur(Responsable responsable, String nomUtilisateur,
             HttpServletRequest request, HttpServletResponse response) throws DAOException, ServletException, IOException {
         if (responsable != null) {
             //TODO faire la difference entre type d'utilisateur
@@ -99,7 +99,7 @@ public class ControleurUtilisateur extends HttpServlet {
         } else {
             // Le responsable est d'une famille
             RFamilleDAO rFamilleDAO = new RFamilleDAO(dataSource);
-            ResponsableFamille rFamille = rFamilleDAO.getResponsable(responsable.getCompte().getNomUtilisateur());
+            ResponsableFamille rFamille = rFamilleDAO.getResponsable(nomUtilisateur);
             //TODO Rediger vers la page de famille   
             getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/accueilRespFamille.jsp").forward(request, response);
         }

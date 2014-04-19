@@ -24,7 +24,7 @@ public class ResponsableDAO extends AbstractDataBaseDAO {
         Connection conn = null;
         try {
             conn = getConnection();
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Responsable"
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Responsable "
                     + "WHERE nomUtilisateur = ?");
             stmt.setString(1, compte.getNomUtilisateur());
             ResultSet rset = stmt.executeQuery();

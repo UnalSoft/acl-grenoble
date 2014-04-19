@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.unsoft.acl_grenoble.model.centre;
 
 /**
@@ -11,5 +5,30 @@ package com.unsoft.acl_grenoble.model.centre;
  * @author juanmanuelmartinezromero
  */
 public enum EtatActivite {
-   OUVERTE,FERMEE,PRE_CONFIRMEE,CONFIRMEE,FINIE;
+
+    OUVERTE("OUVERTE"),
+    FERMEE("FERMEE"),
+    PRE_CONFIRMEE("PRE_CONFIRMEE"),
+    CONFIRMEE("CONFIRMEE"),
+    FINIE("FINIE");
+
+    private final String etat;
+
+    private EtatActivite(String etat) {
+        this.etat = etat;
+    }
+
+    public String getName() {
+        return etat;
+    }
+
+    public EtatActivite getEtat(String etat) {
+        for (EtatActivite et : values()) {
+            if (etat.equals(et.getName())){
+                return et;
+            }
+        }
+        return null;
+    }
+
 }
