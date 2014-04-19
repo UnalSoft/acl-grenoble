@@ -103,7 +103,7 @@ public class ControleurAssociation extends HttpServlet {
       boolean valide = validerChamps(prenom, nom, email, competences, periodes, request, response);
       if (valide) {
          //TODO Mettre l'animateur dans la bd
-         Animateur animateur = new Animateur(nom, prenom, email, valide, listCompetences(competences), listPeriodes(periodes, request, response));
+         Animateur animateur = new Animateur(nom, prenom, email, ANIMATEUR_INTERNE, listCompetences(competences), listPeriodes(periodes, request, response));
          insererAnimateur(animateur, request, response);
       } else {
          //TODO Show failed message in a modal way

@@ -25,6 +25,13 @@ public class ResponsableDAO extends AbstractDataBaseDAO {
       super(dataSource);
    }
 
+   /**
+    * Determine si un animateur existe dans la Base de données
+    * @param nom
+    * @param prenom
+    * @return
+    * @throws DAOException
+    */
    public boolean animateurExist(String nom, String prenom) throws DAOException {
       boolean exist = false;
       Connection conn = null;
@@ -47,10 +54,17 @@ public class ResponsableDAO extends AbstractDataBaseDAO {
       return exist;
    }
 
+   /**
+    * Obtient un periode a partir de son nom
+    *
+    * @param nomPeriode
+    * @return
+    * @throws DAOException
+    */
    public Periode getPeriode(String nomPeriode) throws DAOException {
       Periode periode = null;
       Connection conn = null;
-      System.out.println("NomPeriode = "+nomPeriode);
+      System.out.println("NomPeriode = " + nomPeriode);
       try {
          conn = getConnection();
          PreparedStatement stmt = conn.prepareStatement("SELECT * FROM PERIODE WHERE PERIODE= ?");
@@ -58,7 +72,7 @@ public class ResponsableDAO extends AbstractDataBaseDAO {
          ResultSet rset = stmt.executeQuery();
          if (rset.next()) {
             periode = new Periode(rset.getString("PERIODE"), rset.getDate("DATEDEBUT"), rset.getDate("DATEFIN"));
-            System.out.println("Periode: " +periode.nomPeriode());
+            System.out.println("Periode: " + periode.nomPeriode());
          }
          rset.close();
          stmt.close();
@@ -70,6 +84,13 @@ public class ResponsableDAO extends AbstractDataBaseDAO {
       return periode;
    }
 
+   /**
+    * Obtient un responsable a partir de sa compte
+    *
+    * @param compte
+    * @return
+    * @throws DAOException
+    */
    public Responsable getResponsable(Compte compte) throws DAOException {
       Responsable responsable = null;
       Connection conn = null;
@@ -94,6 +115,11 @@ public class ResponsableDAO extends AbstractDataBaseDAO {
       return responsable;
    }
 
+   /**
+    * Obtient une liste avec les periodes les plus generales
+    *
+    * @return @throws DAOException
+    */
    public List<Periode> getPeriodesDisponibilite() throws DAOException {
       List<Periode> periodes = new ArrayList<Periode>();
       Connection conn = null;
@@ -114,6 +140,12 @@ public class ResponsableDAO extends AbstractDataBaseDAO {
       return periodes;
    }
 
+   /**
+    * Inserte un animateur à la base de données
+    *
+    * @param animateur
+    * @throws DAOException
+    */
    public void insererAnimateur(Animateur animateur) throws DAOException {
       //TODO Mettre l'animateur
       Connection conn = null;
@@ -139,6 +171,13 @@ public class ResponsableDAO extends AbstractDataBaseDAO {
 
    }
 
+   /**
+    * Inserte les competences pour l'animateur donné
+    *
+    * @param conn
+    * @param animateur
+    * @throws DAOException
+    */
    private void insererCompetences(Connection conn, Animateur animateur) throws DAOException {
       for (Competence competence : animateur.getCompetences()) {
          try {
@@ -154,6 +193,13 @@ public class ResponsableDAO extends AbstractDataBaseDAO {
       }
    }
 
+   /**
+    * Inserte les periodes de disponibilité pour l'animateur donné
+    *
+    * @param conn
+    * @param animateur
+    * @throws DAOException
+    */
    private void insererPeriodes(Connection conn, Animateur animateur) throws DAOException {
       for (Periode periode : animateur.getPeriodes()) {
          try {
@@ -162,7 +208,7 @@ public class ResponsableDAO extends AbstractDataBaseDAO {
             PreparedStatement stmt = conn.prepareStatement(requeteSQL);
             stmt.setString(1, animateur.getNomAnimateur());
             stmt.setString(2, animateur.getPrenomAnimateur());
-            System.out.println("Periode = "+periode.nomPeriode());
+            System.out.println("Periode = " + periode.nomPeriode());
             stmt.setString(3, periode.nomPeriode());
             stmt.executeUpdate();
          } catch (SQLException ex) {
