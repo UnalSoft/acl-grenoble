@@ -13,10 +13,43 @@ import java.util.List;
  */
 public class Animateur {
 
-   private String nomAnimateur;
-   private String prenomAnimateur;
-   private String email;
-   private boolean estInterne;
-   private List<Competence> competences;
-   private List<Periode> periodes;
+   private final String nomAnimateur;
+   private final String prenomAnimateur;
+   private final String email;
+   private final boolean interne;
+   private final List<Competence> competences;
+   private final List<Periode> periodes;
+
+   public Animateur(String nomAnimateur, String prenomAnimateur, String email, boolean estInterne, List<Competence> competences, List<Periode> periodes) {
+      this.nomAnimateur = nomAnimateur;
+      this.prenomAnimateur = prenomAnimateur;
+      this.email = email;
+      this.interne = estInterne;
+      this.competences = competences;
+      this.periodes = periodes;
+   }
+
+   public String getNomAnimateur() {
+      return nomAnimateur;
+   }
+
+   public String getPrenomAnimateur() {
+      return prenomAnimateur;
+   }
+
+   public String getEmail() {
+      return email;
+   }
+
+   public boolean estInterne() {
+      return interne;
+   }
+
+   public List<Competence> getCompetences() {
+      return competences;
+   }
+
+   public List<Periode> getPeriodes() {
+      return periodes;
+   }
 }
