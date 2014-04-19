@@ -72,10 +72,10 @@
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                 <c:if test="${demande == true}">
-                                    <h4 class="modal-title" id="myModalLabel">Demande Acceptée</h4>
+                                    <h4 class="modal-title" id="myModalLabel">Accepter demande</h4>
                                 </c:if>
                                 <c:if test="${demande == false}">
-                                    <h4 class="modal-title" id="myModalLabel">Demande Refusée</h4>
+                                    <h4 class="modal-title" id="myModalLabel">Refuser demande</h4>
                                 </c:if>
                             </div>
                             <div class="modal-body">
@@ -84,11 +84,12 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Canceler</button>
-                                <input type="submit" value="Envoyer" class="btn btn-primary"/>
                                 <c:if test="${demande == true}">
+                                    <input type="submit" value="Accepter" class="btn btn-primary"/>
                                     <input type="hidden" name="action" value="accepter" />
                                 </c:if>
                                 <c:if test="${demande == false}">
+                                    <input type="submit" value="Refuser" class="btn btn-primary"/>
                                     <input type="hidden" name="action" value="refuser" />
                                 </c:if>    
                                 <input type="hidden" name="resp" value="${rFamille.getCompte().getNomUtilisateur()}" />

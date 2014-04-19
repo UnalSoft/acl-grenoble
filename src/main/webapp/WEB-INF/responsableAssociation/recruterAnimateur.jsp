@@ -29,7 +29,7 @@
                 <li><h2>Periodes de disponiblité</h2></li>
                 <div>
                     <c:forEach items="${periodes}" var="periode">
-                        <input type="checkbox" name="periodes" value="${periode.periode}" />${periode.periode}<br>    
+                        <input type="checkbox" name="periodes" value="${periode.nomPeriode()}" />${periode.nomPeriode()}<br>    
                     </c:forEach>
                 </div>
             </ul>

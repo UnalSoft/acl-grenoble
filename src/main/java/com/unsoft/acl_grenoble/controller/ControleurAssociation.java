@@ -109,6 +109,8 @@ public class ControleurAssociation extends HttpServlet {
                         //TODO Show failed message in a modal way
                     }
                 }
+            } else {
+                remplirListe(request, response);
             }
         } else {
             response.sendRedirect("index.jsp");
