@@ -71,9 +71,9 @@ public class ControleurFamille extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String attribute = request.getParameter("action");
-        if (attribute.equals("demanderCompte")){
+        if (attribute.equals("demanderCompte")) {
             getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/demanderCompte.jsp").forward(request, response);
-        }                
+        }
     }
 
     /**
@@ -98,26 +98,26 @@ public class ControleurFamille extends HttpServlet {
                 CompteDAO cDao = new CompteDAO(ds);
                 actionDemander2(request, response, rDao, eDao, cDao);
             } else if (action.equals("Inscrire un Enfant")) {
-                
+
             }
-            
-        } 
-        catch (DAOException e){
+
+        } catch (DAOException e) {
             getServletContext().getRequestDispatcher("WEB-INF/erreur/erreurBD.jsp").
                     forward(request, response);
-        } 
-     }
-    
+        }
+    }
 
     private void actionDemander2(HttpServletRequest request,
             HttpServletResponse response, RFamilleDAO rDao, EnfantDAO eDao,
             CompteDAO cDao) throws DAOException {
-        int nombreEnfants = Integer.parseInt(request.getParameter("nomEnfants"));
+
+        
         String prenomR = request.getParameter("prenomR");
         String nomR = request.getParameter("nomR");
         String emailR = request.getParameter("emailR");
         String nomF = request.getParameter("nomF");
-        Double revenuF = Double.parseDouble(request.getParameter("revenuF"));       
+        Double revenuF = Double.parseDouble(request.getParameter("revenuF"));
+        int nombreEnfants = Integer.parseInt(request.getParameter("nombreE"));
         String prenomi;
         int agei;
         for (int i = 1; i <= nombreEnfants; i++) {
@@ -126,9 +126,9 @@ public class ControleurFamille extends HttpServlet {
             eDao.addEnfant(prenomi, nomF, prenomR, nomR, agei);
         }
         String utilisateur = prenomR + "." + nomR;
-        String motPasse = nomR.charAt(0)+prenomR.charAt(prenomR.length()-1)+
-                nomR.charAt(nomR.length()-1)+prenomR.charAt(0)+"";
-        rDao.addResponsable(nomR, prenomR, utilisateur, emailR, revenuF);        
+        String motPasse = nomR.charAt(0) + prenomR.charAt(prenomR.length() - 1)
+                + nomR.charAt(nomR.length() - 1) + prenomR.charAt(0) + "";
+        rDao.addResponsable(nomR, prenomR, utilisateur, emailR, revenuF);
         cDao.addCompte(utilisateur, motPasse, 0);
     }
 
