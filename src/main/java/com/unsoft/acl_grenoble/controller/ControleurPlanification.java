@@ -5,13 +5,15 @@
  */
 package com.unsoft.acl_grenoble.controller;
 
+import com.unsoft.acl_grenoble.model.centre.Activite;
 import com.unsoft.acl_grenoble.model.centre.Animateur;
+import com.unsoft.acl_grenoble.model.centre.Competence;
 import com.unsoft.acl_grenoble.model.centre.Periode;
+import com.unsoft.acl_grenoble.model.dao.ActiviteDAO;
 import com.unsoft.acl_grenoble.model.dao.AnimateurDAO;
 import com.unsoft.acl_grenoble.model.dao.AsignationDAO;
 import com.unsoft.acl_grenoble.model.dao.DAOException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -83,7 +85,7 @@ public class ControleurPlanification extends HttpServlet {
       }
    }
    
-   List<Animateur> obtenirAnimateursDisponibles(Periode periode, boolean estInterne) throws DAOException {
+   List<Animateur> obtenirAnimateursDisponibles(Periode periode, Activite activite, boolean estInterne) throws DAOException {
        AnimateurDAO animateurDAO = new AnimateurDAO(dataSource);
        //Animateurs disponibles dans le superperiode de l'activite
        List<Animateur> animateurs = animateurDAO.getAnimateursDisp(periode.getSuperPeriode(), estInterne);
@@ -100,8 +102,34 @@ public class ControleurPlanification extends HttpServlet {
                }
            }
        }
-       return null;
+       for (Animateur animateur : animateurs) {
+           boolean valide = validerCompetences(animateur, activite);
+           if (!valide) {
+               animateurs.remove(animateur);
+           }
+       }
+       return animateurs;
    }
+   
+   private boolean validerCompetences(Animateur animateur, Activite activite) throws DAOException {
+       AnimateurDAO animateurDAO = new AnimateurDAO(dataSource);
+       ActiviteDAO activiteDAO = new ActiviteDAO(dataSource);
+        List<Competence> competencesAnimateur = animateurDAO.getCompetences(animateur.getNomAnimateur(), animateur.getPrenomAnimateur());
+        List<Competence> competencesActivite = activiteDAO.getCompetences(activite.getIdActivite());
+        for (Competence compActiv : competencesActivite){
+            boolean present = false;
+            for (Competence compAnim : competencesAnimateur) {
+                if (compActiv.equals(compAnim)) {
+                    present = true;
+                    break;
+                }
+            }
+            if (present == false) {
+                return false;
+            }
+        }
+       return true;
+    }
 
    /**
     * Returns a short description of the servlet.
