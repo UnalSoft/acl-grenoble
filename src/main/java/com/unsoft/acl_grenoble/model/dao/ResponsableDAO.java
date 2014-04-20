@@ -27,6 +27,7 @@ public class ResponsableDAO extends AbstractDataBaseDAO {
 
    /**
     * Determine si un animateur existe dans la Base de données
+    *
     * @param nom
     * @param prenom
     * @return
