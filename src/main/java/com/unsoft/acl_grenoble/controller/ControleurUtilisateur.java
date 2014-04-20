@@ -27,6 +27,7 @@ public class ControleurUtilisateur extends HttpServlet {
 
     private static final String ERROR_LOGIN = "Mot de passe incorrect ou compte inexistant";
     private static final String COMPTE_INACTIF = "Le compte n'est pas encore actif";
+    private static final String LOGOUT = "logout";
     @Resource(name = "jdbc/acl_grenoble")
     private DataSource dataSource;
 
@@ -126,7 +127,6 @@ public class ControleurUtilisateur extends HttpServlet {
             getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
         }
     }
-    private static final String LOGOUT = "logout";
 
     /**
      * Returns a short description of the servlet.

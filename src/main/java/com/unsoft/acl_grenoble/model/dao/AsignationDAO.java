@@ -28,11 +28,41 @@ public class AsignationDAO extends AbstractDataBaseDAO {
             conn = getConnection();
             Statement st = conn.createStatement();
             PreparedStatement stmt = conn.prepareStatement("SELECT P.PERIODE, P.DATEDEBUT, P.DATEFIN "
-                    + "FROM ASIGNATION, PERIODE P\n"
-                    + "WHERE NOMANIMATEUR = ?\n"
+                    + "FROM ASIGNATION A, PERIODE P\n"
+                    + "WHERE A.PERIODE = P.PERIODE"
+                    + "AND NOMANIMATEUR = ?\n"
                     + "AND PRENOMANIMATEUR = ?");
             stmt.setString(1, nomAnim);
             stmt.setString(2, prenomAnim);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Periode periode = new Periode(rs.getString("periode"), rs.getDate("dateDebut"), rs.getDate("dateFin"));
+                periodes.add(periode);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
+        return periodes;
+    }
+    
+    public List<Periode> getPeriodesAnimateurParSuperPeriode(String nomAnim, String prenomAnim, String superPeriode) throws DAOException {
+        List<Periode> periodes = new ArrayList<Periode>();
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            Statement st = conn.createStatement();
+            PreparedStatement stmt = conn.prepareStatement("SELECT P.PERIODE, P.DATEDEBUT, P.DATEFIN "
+                    + "FROM ASIGNATION, PERIODE P\n"
+                    + "WHERE A.PERIODE = P.PERIODE"
+                    + "AND NOMANIMATEUR = ?\n"
+                    + "AND PRENOMANIMATEUR = ?\n"
+                    + "AND P.SUPERPERIODE ?");
+            stmt.setString(1, nomAnim);
+            stmt.setString(2, prenomAnim);
+            stmt.setString(3, superPeriode);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {

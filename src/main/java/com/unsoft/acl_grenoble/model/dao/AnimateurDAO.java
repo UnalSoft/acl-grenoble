@@ -86,7 +86,7 @@ public class AnimateurDAO extends AbstractDataBaseDAO {
                     + "FROM EST_DISPONIBLE E, PERIODE P, ANIMATEUR A\n"
                     + "WHERE E.PERIODE = P.PERIODE\n"
                     + "AND E.NOMANIMATEUR = A.NOMANIMATEUR\n"
-                    + "AND E.PRENOMANIMATEUR = A.PRENOMANIMATEUR"
+                    + "AND E.PRENOMANIMATEUR = A.PRENOMANIMATEUR\n"
                     + "AND E.NOMANIMATEUR = ? AND E.PRENOMANIMATEUR = ?\n"
                     + "AND A.ESTINTERNE = 0");
             stmt.setString(1, nomAnim);
@@ -103,6 +103,35 @@ public class AnimateurDAO extends AbstractDataBaseDAO {
             closeConnection(conn);
         }
         return periodes;
+    }
+    
+    public List<Animateur> getAnimateursDisp(String periode, boolean estInterne) throws DAOException {
+        List<Animateur> animateurs = new ArrayList<Animateur>();
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement("SELECT A.NOMANIMATEUR, A.PRENOMANIMATEUR, "
+                    + "A.EMAIL, A.ESTINTERNE\n"
+                    + "FROM EST_DISPONIBLE E, ANIMATEUR A\n"
+                    + "AND E.NOMANIMATEUR = A.NOMANIMATEUR\n"
+                    + "AND E.PRENOMANIMATEUR = A.PRENOMANIMATEUR\n"
+                    + "AND A.ESTINTERNE = ?\n"
+                    + "AND E.PERIODE = ?");
+            stmt.setBoolean(1, estInterne);
+            stmt.setString(2, periode);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Animateur animateur = new Animateur(rs.getString("nomAnimateur"), rs.getString("prenomAnimateur"),
+                rs.getString("email"), rs.getBoolean("estInterne"));
+                animateurs.add(animateur);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
+        return animateurs;
     }
 
     public Animateur getAnimateur(String nomAnimateur, String prenomAnimateur) throws DAOException {

@@ -16,6 +16,7 @@ public class Periode {
     private final Date dateDebut;
     private final Date datefin;
     private List<Periode> periodes;
+    private String superPeriode;
 
    public Periode(String periode, Date dateDebut, Date datefin) {
       this.periode = periode;
@@ -23,7 +24,27 @@ public class Periode {
       this.datefin = datefin;
    }
 
+    public Periode(String periode, Date dateDebut, Date datefin, String superPeriode) {
+        this.periode = periode;
+        this.dateDebut = dateDebut;
+        this.datefin = datefin;
+        this.superPeriode = superPeriode;
+    }
+
    public String nomPeriode() {
       return periode;
-   }   
+   }
+
+    public Date getDateDebut() {
+        return dateDebut;
+    }
+
+    public Date getDatefin() {
+        return datefin;
+    }
+
+    public String getSuperPeriode() {
+        return superPeriode;
+    }
+   
 }
