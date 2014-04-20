@@ -36,7 +36,7 @@
             <h1 class="text-center">ACL Grenoble</h1>
         </div>
         <div class="container">
-            <form method="POST" action="controleurUtilisateur" class="form-signin" role="form">
+            <form method="POST" action="ControleurUtilisateur" class="form-signin" role="form">
                 <h2>Connexion</h2>
                 <c:if test="${message != null}">
                     <div class="alert alert-danger">${message}</div>

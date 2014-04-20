@@ -39,15 +39,15 @@ public class EtatDAO extends AbstractDataBaseDAO {
                     + "AND P.PERIODE = E.PERIODE\n"
                     + "AND A.NOMCENTRE = ?\n"
                     + "AND E.ETAT = ?");
-            stmt.setString(1, EtatEnum.PRE_CONFIRMEE.getName());
-            stmt.setString(2, nomCentre);
+            stmt.setString(1, nomCentre);
+            stmt.setString(2, EtatEnum.PRE_CONFIRMEE.getName());
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 Activite activite = new Activite(rs.getInt("idActivite"),
                         new Theme(ThemeEnum.getTheme(rs.getString("nomTheme")), new CentreDeLoisirs(rs.getString("nomCentre"))),
                         rs.getString("nom"), rs.getString("descriptif"), rs.getInt("nbMaxAnim"));
-                Periode periode = new Periode(rs.getString("periode"), rs.getDate("dateDebut"), rs.getDate("dateFin"));
+                Periode periode = new Periode(rs.getString("periode"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getString("superperiode"));
                 Etat etat = new Etat(activite, periode, EtatEnum.getEtat(rs.getString("etat")));
                 etats.add(etat);
             }

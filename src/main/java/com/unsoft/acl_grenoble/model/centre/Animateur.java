@@ -5,6 +5,7 @@
  */
 package com.unsoft.acl_grenoble.model.centre;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,6 +29,15 @@ public class Animateur {
       this.competences = competences;
       this.periodes = periodes;
    }
+
+    public Animateur(String nomAnimateur, String prenomAnimateur, String email, boolean interne) {
+      this.nomAnimateur = nomAnimateur;
+      this.prenomAnimateur = prenomAnimateur;
+      this.email = email;
+      this.interne = interne;
+      this.competences = new ArrayList<Competence>();
+      this.periodes = new ArrayList<Periode>();
+    }
 
    public String getNomAnimateur() {
       return nomAnimateur;
