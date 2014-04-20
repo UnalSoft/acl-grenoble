@@ -117,7 +117,7 @@ public class ControleurFamille extends HttpServlet {
         String emailR = request.getParameter("emailR");
         String nomF = request.getParameter("nomF");
         Double revenuF = Double.parseDouble(request.getParameter("revenuF"));
-        int nombreEnfants = Integer.parseInt(request.getParameter("nombreE"));
+        int nombreEnfants = Integer.parseInt(request.getParameter("nomEnfants"));
         String prenomi;
         int agei;
         for (int i = 1; i <= nombreEnfants; i++) {
