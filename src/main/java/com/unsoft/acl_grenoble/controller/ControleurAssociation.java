@@ -308,7 +308,6 @@ public class ControleurAssociation extends HttpServlet {
             getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp")
                     .forward(request, response);
         }
-        //TODO Informer de la creation
     }
 
     /**
@@ -370,7 +369,7 @@ public class ControleurAssociation extends HttpServlet {
         try {
             animateurExist = new ResponsableDAO(dataSource).animateurExist(nom, prenom);
         } catch (DAOException ex) {
-            getServletContext().getRequestDispatcher("WEB-INF/erreur/erreurBD.jsp")
+            getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp")
                     .forward(request, response);
         }
         return prenomValide && nomValide && emailValide
