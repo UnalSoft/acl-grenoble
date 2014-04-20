@@ -22,7 +22,7 @@ import javax.sql.DataSource;
  *
  * @author juanmanuelmartinezromero
  */
-@WebServlet(name = "ControleurUtilisateur", urlPatterns = {"/controleurUtilisateur"})
+@WebServlet(name = "ControleurUtilisateur", urlPatterns = {"/ControleurUtilisateur"})
 public class ControleurUtilisateur extends HttpServlet {
 
    private static final String ERROR_LOGIN = "Mot de passe incorrect ou compte inexistant";
@@ -114,6 +114,6 @@ public class ControleurUtilisateur extends HttpServlet {
     */
    @Override
    public String getServletInfo() {
-      return "Servlet Gerant Utilisateur Fonctions";
+      return "Servlet gerant les functions d'utilisateurs";
    }// </editor-fold>
 }

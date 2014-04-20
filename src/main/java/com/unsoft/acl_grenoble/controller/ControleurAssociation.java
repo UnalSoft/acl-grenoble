@@ -304,7 +304,6 @@ public class ControleurAssociation extends HttpServlet {
          getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp")
                  .forward(request, response);
       }
-      //TODO Informer de la creation
    }
 
    /**
