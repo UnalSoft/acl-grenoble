@@ -35,7 +35,7 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="disabled"><a href="#">${utilisateur}</a></li>
-                        <li><a href="ControleurAssociation?action=logout">Fermer la session</a></li>
+                        <li><a href="controleurUtilisateur?action=logout">Fermer la session</a></li>
                     </ul>
                 </div>
             </div>
