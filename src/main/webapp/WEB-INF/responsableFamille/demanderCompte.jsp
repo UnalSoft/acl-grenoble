@@ -41,7 +41,6 @@
                 </div>
                 <div class="form-group">
                 <h2>Information de la famille</h2>
-                Nom de famille: <input type="text" name="nomF" value="" /><br/>
                 Revenu Annuel (EUR €): <input type="text" name="revenuF" value="" /><br/> 
                 
                 </div>

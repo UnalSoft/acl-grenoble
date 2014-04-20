@@ -102,15 +102,16 @@ public class ControleurFamille extends HttpServlet {
             }
 
         } catch (DAOException e) {
-            getServletContext().getRequestDispatcher("WEB-INF/erreur/erreurBD.jsp").
+            getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").
                     forward(request, response);
         }
     }
 
     private void actionDemander2(HttpServletRequest request,
             HttpServletResponse response, RFamilleDAO rDao, EnfantDAO eDao,
-            CompteDAO cDao) throws DAOException {
+            CompteDAO cDao) throws DAOException, ServletException, IOException {
 
+        request.setCharacterEncoding("UTF-8");
         
         String prenomR = request.getParameter("prenomR");
         String nomR = request.getParameter("nomR");
@@ -118,18 +119,35 @@ public class ControleurFamille extends HttpServlet {
         String nomF = request.getParameter("nomF");
         Double revenuF = Double.parseDouble(request.getParameter("revenuF"));
         int nombreEnfants = Integer.parseInt(request.getParameter("nomEnfants"));
-        String prenomi;
-        int agei;
-        for (int i = 1; i <= nombreEnfants; i++) {
-            prenomi = request.getParameter("PrenomE" + i);
-            agei = Integer.parseInt(request.getParameter("AgeE" + i));
-            eDao.addEnfant(prenomi, nomF, prenomR, nomR, agei);
-        }
+        
+        
+        //Compte
+        
         String utilisateur = prenomR + "." + nomR;
         String motPasse = nomR.charAt(0) + prenomR.charAt(prenomR.length() - 1)
                 + nomR.charAt(nomR.length() - 1) + prenomR.charAt(0) + "";
-        rDao.addResponsable(nomR, prenomR, utilisateur, emailR, revenuF);
+        
         cDao.addCompte(utilisateur, motPasse, 0);
+        
+        //Utilisateur && Responsable
+                       
+        rDao.addResponsableFamille(nomR, prenomR, utilisateur, emailR, revenuF);
+        
+        //Enfants
+        
+        String prenomi;
+        String nomi;
+        int agei;        
+        for (int i = 1; i <= nombreEnfants; i++) {
+            prenomi = request.getParameter("PrenomE" + i);
+            nomi = request.getParameter("NomE" + i);
+            agei = Integer.parseInt(request.getParameter("AgeE" + i));
+            eDao.addEnfant(prenomi, nomi, prenomR, nomR, agei);
+        }
+        
+        getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/demand_success.jsp").include(request, response);
+        
+        
     }
 
     /**
@@ -140,6 +158,7 @@ public class ControleurFamille extends HttpServlet {
      */
     private void actionDemander1(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
         getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/demanderCompte2.jsp").include(request, response);
     }
 

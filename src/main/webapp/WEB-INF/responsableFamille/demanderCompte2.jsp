@@ -28,57 +28,92 @@
             </div>
         </nav>
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="page-header">
-                        <h1 class="text-center">Information d'enfants</h1>
-                    </div>
-                    <%   String nombreEnfants = request.getParameter("nombreE");
-                        int nomEnfants = Integer.parseInt(nombreEnfants);
-                       
-                    %> 
-                    <div class="container">
-                        <form method="POST" action="ControleurFamille" >
-                            <div class="container-fluid">
-                                <input type="hidden" name="action" value="demander2" />
-                                <% for (int i = 1; i <= nomEnfants; i++) {%>
-                                <h3>Enfant <%= i%>:</h3>
-                                Prenom: <input type="text" name="PrenomE<%=i%>"  />
-                                Age: <input type="text" name="AgeE<%=i%>"/><br/>
-                                <% }%>
-                                <input type="submit" value="Submit" />
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <dl class="dl-horizontal">
-                        <%
-                            String prenomR = request.getParameter("prenomR");
-                            String nomR = request.getParameter("nomR");
-                            String emailR = request.getParameter("emailR");
-                            String nomF = request.getParameter("nomF");
-                            String revenuF = request.getParameter("revenuF");
 
-                        %>
+
+
+            <%   String nombreEnfants = request.getParameter("nombreE");
+                int nomEnfants = Integer.parseInt(nombreEnfants);
+
+                String prenomR = request.getParameter("prenomR");
+                String nomR = request.getParameter("nomR");
+                String emailR = request.getParameter("emailR");
+                String nomF = request.getParameter("nomF");
+                String revenuF = request.getParameter("revenuF");
+
+
+            %> 
+
+            <dl class="dl-horizontal">
+
+                <h3 class="text-center">Information courante</h3>
+                <dt>Mr/Mme </strong>
+                <dd><%=prenomR%> <%=nomR%></dd>
+                <dt>Email</dt>
+                <dd><%=emailR%></dd>
+                <dt>Revenu</dt>
+                <dd>EUR <%=revenuF%></dd>
+            </dl>
+
+            <div class="page-header">
+                <h1 class="text-center">Information d'enfants</h1>
+            </div>
+
+            <div class="container">
+                <form method="POST" action="ControleurFamille" >
+                    <div class="container-fluid">
+                        <input type="hidden" name="action" value="demander2" />
                         <input type="hidden" name="prenomR" value="<%=prenomR%>" />
                         <input type="hidden" name="nomR" value="<%=nomR%>" />
                         <input type="hidden" name="emailR" value="<%=emailR%>" />
-                        <input type="hidden" name="nomF" value="<%=nomF%>" />
                         <input type="hidden" name="revenuF" value="<%=revenuF%>" />
                         <input type="hidden" name="nomEnfants" value="<%=nomEnfants%>" />
+                        <div class=".col-lg-6 .col-lg-offset-3">
+                            <form class="form-control" role="form">
+
+
+                                <% for (int i = 1; i <= nomEnfants; i++) {%>
+
+
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-8">
+                                        <h3>Enfant <%= i%>:</h3>
+                                        <label for="PrenomE<%=i%>" class="control-label">Prenom d'enfant</label>
+                                        <div >
+                                            <input type="text" class="form-control" id="PrenomE<%=i%>" name="PrenomE<%=i%>" required >
+                                        </div>
+                                        <label for="NomE<%=i%>" class="control-label">Nom d'enfant</label>
+                                        <div>
+                                            <input type="text" class="form-control" name="NomE<%=i%>" id="NomE<%=i%>" required>
+                                        </div>
+                                        <label for="AgeE<%=i%>" class="control-label">Age d'enfant</label>
+                                        <div>
+                                            <input type="number" class="form-control" id="AgeE<%=i%>" name="AgeE<%=i%>" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr class="divider">
+
+
+                                <% }%>
+
                                 
-                        <h3>Information courante</h3>
-                        <strong style="column-fill: auto">Mr <%=prenomR%> <%=nomR%></strong>
-                        <dt>Email:</dt>
-                        <dd><%=emailR%></dd>
-                        <dt>Famille Gestionnée:</dt>
-                        <dd><%=nomF%></dd>
-                        <dt>Revenu:</dt>
-                        <dd>EUR <%=revenuF%></dd>
-                    </dl>
-                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-10 col-sm-2 ">
+                                        <button type="submit" class="btn btn-default">Submit</button>
+                                    </div>
+                                </div>
+
+
+                            </form>
+
+                        </div>
+
+                    </div>
+                </form>
             </div>
+
         </div>
+
 
 </html>

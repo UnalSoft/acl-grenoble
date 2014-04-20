@@ -18,6 +18,12 @@ body {
     margin: 0 auto;
 }
 
+.form-enfant {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
 .form-table {
     padding: 30px;
 }
