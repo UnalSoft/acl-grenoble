@@ -4,6 +4,8 @@
     Author     : juanmanuelmartinezromero
 --%>
 
+<%@page import="com.unsoft.acl_grenoble.model.centre.Etat"%>
+<%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -48,14 +50,15 @@
                 <th>Date de Fin</th>
                 <th>Affecter Activité</th>
             </tr>
-            <c:forEach items="${etatsPreconfirmes}" var="etat">
-                <tr>
-                    <td>${etat.activite.nomActivite}</td>
-                    <td>${etat.periode.dateDebut}</td>
-                    <td>${etat.periode.dateFin}</td>
-                    <td><a href="ControleurAssociation?action=affecter&resp=${etat}" class="btn btn-success">Accepter</a></td>
-                </tr>
-            </c:forEach>
+            <%List<Etat> etatsPreconfirmes = (List<Etat>) request.getAttribute("etatsPreconfirmes");%>
+            <%for (Etat etat : etatsPreconfirmes) {%>
+            <tr>
+                <td><%=etat.getActivite().getNomActivite()%></td>
+                <td><%=etat.getPeriode().getDateDebut()%></td>
+                <td><%=etat.getPeriode().getDatefin()%></td>
+                <td><a href="ControleurAssociation?action=affecter&resp=${etat}" class="btn btn-success">Accepter</a></td>
+            </tr>
+            <%}%>
         </table>
     </div>         
 </html>
