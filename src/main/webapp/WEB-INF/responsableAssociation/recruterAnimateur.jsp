@@ -106,7 +106,7 @@
                                 <p>L'animateur a été inseré avec succes</p>
                             </c:if>
                             <c:if test="${creationReussi == false}">
-                                <p>L'animateur existe déjà</p>
+                                <p>L'animateur existe déjà ou L'information donnée est incorrect, veuillez verifier</p>
                             </c:if>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         </div>

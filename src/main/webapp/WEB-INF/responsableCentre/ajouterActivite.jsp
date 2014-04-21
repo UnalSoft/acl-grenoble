@@ -5,6 +5,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -55,7 +57,7 @@
                     <div class="col-sm-8">
                         <select name="Themes" class="form-control" required>
                             <c:forEach items="${themes}" var="theme">
-                                <option value="${theme}">${theme.theme.name} - ${theme.centre.nomCentre}</option>
+                                <option value="${theme}">${theme.theme.name}</option>
                             </c:forEach>
                         </select>
                     </div>
@@ -67,14 +69,12 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="descriptif" class="col-sm-4 control-label">Periodes de disponiblité</label>
-                    <c:forEach items="${periodes}" var="periode">
-                        <div class="checkbox col-sm-8">
-                            <label class="checkbox">
-                                <input type="checkbox" name="periodes" value="${periode.nomPeriode()}" />${periode.nomPeriode()}
-                            </label>
-                        </div>
-                    </c:forEach>
+                    <label for="periodes" class="col-sm-4 control-label">Periodes</label>
+                    <div class="row col-md-6 col-md-offset-4">
+                        <c:forEach items="${periodes}" var="periode">
+                            <input type="checkbox"name="periodes" value="${periode.nomPeriode()}" />${periode.nomPeriode()}<br>
+                        </c:forEach>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="nombreAnimateurs" class="col-sm-4 control-label">N. Animateurs</label>
@@ -84,13 +84,13 @@
                 </div>
                 <div class="form-group">
                     <label for="competences" class="col-sm-4 control-label">Competences</label>
-                    <c:forEach items="${competences}" var="competence">
-                        <div class="checkbox col-sm-8">
-                            <label class="checkbox">
-                                <input type="checkbox" name="competences" value="${competence.toString()}" />${competence.getName()}
+                    <div class="row col-md-6 col-md-offset-4">
+                        <c:forEach items="${competences}" var="competence">
+                            <label class="checkbox-inline">
+                                <input type="checkbox"name="competences" value="${competence.toString()}" />${competence.getName()}<br>
                             </label>
-                        </div>
-                    </c:forEach>
+                        </c:forEach>
+                    </div>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-default col-md-offset-5" name="action" value="insererAnimateur">Créer activité</button>

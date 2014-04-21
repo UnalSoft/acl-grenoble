@@ -1,18 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.unsoft.acl_grenoble.controller;
 
+import com.unsoft.acl_grenoble.model.centre.Competence;
+import com.unsoft.acl_grenoble.model.centre.Periode;
+import com.unsoft.acl_grenoble.model.centre.Theme;
+import com.unsoft.acl_grenoble.model.dao.CentreDAO;
+import com.unsoft.acl_grenoble.model.dao.DAOException;
+import com.unsoft.acl_grenoble.model.dao.ResponsableDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.List;
+import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
 
 /**
  *
@@ -21,72 +25,98 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ControleurCentre", urlPatterns = {"/ControleurCentre"})
 public class ControleurCentre extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        try {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ControleurCentre</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ControleurCentre at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        } finally {
-            out.close();
-        }
-    }
+   @Resource(name = "jdbc/acl_grenoble")
+   private DataSource dataSource;
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
+   // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+   /**
+    * Handles the HTTP <code>GET</code> method.
+    *
+    * @param request servlet request
+    * @param response servlet response
+    * @throws ServletException if a servlet-specific error occurs
+    * @throws IOException if an I/O error occurs
+    */
+   @Override
+   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      System.out.println("Get");
+   }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
+   /**
+    * Handles the HTTP <code>POST</code> method.
+    *
+    * @param request servlet request
+    * @param response servlet response
+    * @throws ServletException if a servlet-specific error occurs
+    * @throws IOException if an I/O error occurs
+    */
+   @Override
+   protected void doPost(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      System.out.println("Post");
+      HttpSession session = request.getSession();
+      String userName = (String) session.getAttribute("utilisateur");
+      if (userName != null) {
+         String action = request.getParameter("action");
+         if (action != null) {
+            request.setCharacterEncoding("UTF-8");
+         } else {
+            String utilisateur = (String) session.getAttribute("utilisateur");
+            request = listThemes(request, response, utilisateur);
+            request = listCompetences(request);
+            request = listPeriodes(request, response);
+            getServletContext().getRequestDispatcher("/WEB-INF/responsableCentre/ajouterActivite.jsp").forward(request, response);
+         }
+      }
+   }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+   private HttpServletRequest listCompetences(HttpServletRequest request) {
+      List<Competence> competences = Arrays.asList(Competence.values());
+      request.setAttribute("competences", competences);
+
+      return request;
+   }
+
+   private HttpServletRequest listPeriodes(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+      List<Periode> periodes = null;
+      try {
+         periodes = new ResponsableDAO(dataSource).getPeriodesDisponibilite();
+      } catch (DAOException ex) {
+         getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp")
+                 .forward(request, response);
+      }
+      request.setAttribute("periodes", periodes);
+      return request;
+   }
+
+   /**
+    * Obtenir les thèmes d'un centre
+    *
+    * @param request
+    * @param utilisateur
+    * @return
+    */
+   private HttpServletRequest listThemes(HttpServletRequest request,HttpServletResponse response, String utilisateur) throws ServletException, IOException {
+      List<Theme> themes = null;
+      try {
+         themes = new CentreDAO(dataSource).getThemesParUtilisateur(utilisateur);
+      } catch (DAOException ex) {
+         getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp")
+                 .forward(request, response);
+      }
+      request.setAttribute("themes", themes);
+      return request;
+   }
+
+   /**
+    * Returns a short description of the servlet.
+    *
+    * @return a String containing servlet description
+    */
+   @Override
+   public String getServletInfo() {
+      return "Servlet gerant les fonctions du responsable du centre";
+   }// </editor-fold>
 
 }
