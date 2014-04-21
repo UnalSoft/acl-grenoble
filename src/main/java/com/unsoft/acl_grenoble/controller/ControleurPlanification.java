@@ -16,6 +16,7 @@ import com.unsoft.acl_grenoble.model.dao.AsignationDAO;
 import com.unsoft.acl_grenoble.model.dao.CentreDAO;
 import com.unsoft.acl_grenoble.model.dao.DAOException;
 import com.unsoft.acl_grenoble.model.dao.EtatDAO;
+import com.unsoft.acl_grenoble.model.dao.PeriodeDAO;
 import java.io.IOException;
 import java.util.List;
 import javax.annotation.Resource;
@@ -36,6 +37,8 @@ public class ControleurPlanification extends HttpServlet {
 
    @Resource(name = "jdbc/acl_grenoble")
    private DataSource dataSource;
+   private final String AFFECTER = "affecter";
+   private final String ANIMSINTERNES = "animsInternes";
 
    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
    /**
@@ -54,7 +57,24 @@ public class ControleurPlanification extends HttpServlet {
       if (userName != null) {
          String action = request.getParameter("action");
          if (action != null) {
-
+             if (action.equals(AFFECTER)) {
+                 String idActivite = request.getParameter("idActivite");
+                 String nomPeriode = request.getParameter("periode");
+                 Activite actvitite = new ActiviteDAO(dataSource).getActivite(Integer.parseInt(idActivite));
+                 Periode periode = new PeriodeDAO(dataSource).getPeriode(nomPeriode);
+                 try {
+                     List<Animateur> animateursDisponibles = obtenirAnimateursDisponibles(periode, actvitite, true);
+                     request.setAttribute("activite", actvitite);
+                     request.setAttribute("periode", periode);
+                     request.setAttribute("animateurs", animateursDisponibles);
+                     getServletContext().getRequestDispatcher("/WEB-INF/responsablePlanification/choisirAnimateur.jsp").forward(request, response);
+                 } catch (DAOException ex) {
+                     request.setAttribute("message", ex.getMessage());
+                     getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
+                 }                 
+             } else if (action.equals(ANIMSINTERNES)) {
+                 String[] competences = request.getParameterValues("anims");
+             }
          } else {
             listerActivitesPreconfirmes(request, response);
          }
@@ -79,7 +99,7 @@ public class ControleurPlanification extends HttpServlet {
       if (userName != null) {
          String action = request.getParameter("action");
          if (action != null) {
-
+             
          } else {
             listerActivitesPreconfirmes(request, response);
          }

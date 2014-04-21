@@ -1,5 +1,6 @@
 package com.unsoft.acl_grenoble.model.dao;
 
+import com.unsoft.acl_grenoble.model.centre.Activite;
 import com.unsoft.acl_grenoble.model.centre.Competence;
 import com.unsoft.acl_grenoble.model.centre.Periode;
 import com.unsoft.acl_grenoble.model.centre.ThemeEnum;
@@ -71,6 +72,10 @@ public class ActiviteDAO extends AbstractDataBaseDAO {
 
     public boolean lierEtat(int idActivite, String periode, String etat) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Activite getActivite(int parseInt) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
