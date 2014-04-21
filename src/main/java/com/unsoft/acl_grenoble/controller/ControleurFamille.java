@@ -9,15 +9,19 @@ import com.unsoft.acl_grenoble.model.dao.CompteDAO;
 import com.unsoft.acl_grenoble.model.dao.DAOException;
 import com.unsoft.acl_grenoble.model.dao.EnfantDAO;
 import com.unsoft.acl_grenoble.model.dao.RFamilleDAO;
+import com.unsoft.acl_grenoble.model.utilisateur.Enfant;
+import com.unsoft.acl_grenoble.model.utilisateur.ResponsableFamille;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 /**
@@ -29,35 +33,6 @@ public class ControleurFamille extends HttpServlet {
 
     @Resource(name = "jdbc/acl_grenoble")
     private DataSource ds;
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        try {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ControleurFamille</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ControleurFamille at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        } finally {
-            out.close();
-        }
-    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -87,17 +62,31 @@ public class ControleurFamille extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //processRequest(request, response);     
+
         String action = request.getParameter("action");
         try {
-            if (action.equals("demander1")) {
-                actionDemander1(request, response);
-            } else if (action.equals("demander2")) {
-                RFamilleDAO rDao = new RFamilleDAO(ds);
-                EnfantDAO eDao = new EnfantDAO(ds);
-                CompteDAO cDao = new CompteDAO(ds);
-                actionDemander2(request, response, rDao, eDao, cDao);
-            } else if (action.equals("Inscrire un Enfant")) {
+            if (action != null) {
+                if (action.equals("demander1")) {
+                    actionDemander1(request, response);
+                } else if (action.equals("demander2")) {
+                    RFamilleDAO rDao = new RFamilleDAO(ds);
+                    EnfantDAO eDao = new EnfantDAO(ds);
+                    CompteDAO cDao = new CompteDAO(ds);
+                    actionDemander2(request, response, rDao, eDao, cDao);
+                }
+            } else {
+                HttpSession session = request.getSession();
+                String nomUtilisateur = (String) session.getAttribute("utilisateur");
+
+                // Le responsable est d'une famille
+                RFamilleDAO rFamilleDAO = new RFamilleDAO(ds);
+                EnfantDAO enfantDAO = new EnfantDAO(ds);
+                ResponsableFamille rFamille = rFamilleDAO.getResponsable(nomUtilisateur);
+
+                rFamille.setEnfants(enfantDAO.getListeDEnfantsParRFamille(rFamille.getNomFamille(), rFamille.getPrenom()));
+
+                //On doit faire que la liste soit visible chez web
+                remplirListeEnfantsEtActivites(request, response, rFamille.getEnfants());
 
             }
 
@@ -112,42 +101,37 @@ public class ControleurFamille extends HttpServlet {
             CompteDAO cDao) throws DAOException, ServletException, IOException {
 
         request.setCharacterEncoding("UTF-8");
-        
+
         String prenomR = request.getParameter("prenomR");
         String nomR = request.getParameter("nomR");
         String emailR = request.getParameter("emailR");
         String nomF = request.getParameter("nomF");
         Double revenuF = Double.parseDouble(request.getParameter("revenuF"));
         int nombreEnfants = Integer.parseInt(request.getParameter("nomEnfants"));
-        
-        
+
         //Compte
-        
         String utilisateur = prenomR + "." + nomR;
         String motPasse = nomR.charAt(0) + prenomR.charAt(prenomR.length() - 1)
                 + nomR.charAt(nomR.length() - 1) + prenomR.charAt(0) + "";
-        
+
         cDao.addCompte(utilisateur, motPasse, 0);
-        
+
         //Utilisateur && Responsable
-                       
         rDao.addResponsableFamille(nomR, prenomR, utilisateur, emailR, revenuF);
-        
+
         //Enfants
-        
         String prenomi;
         String nomi;
-        int agei;        
+        int agei;
         for (int i = 1; i <= nombreEnfants; i++) {
             prenomi = request.getParameter("PrenomE" + i);
             nomi = request.getParameter("NomE" + i);
             agei = Integer.parseInt(request.getParameter("AgeE" + i));
             eDao.addEnfant(prenomi, nomi, prenomR, nomR, agei);
         }
-        
+
         getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/demand_success.jsp").include(request, response);
-        
-        
+
     }
 
     /**
@@ -171,5 +155,17 @@ public class ControleurFamille extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private void remplirListeEnfantsEtActivites(HttpServletRequest request, HttpServletResponse response, List<Enfant> listEnfants) throws IOException, ServletException {
+        try {
+
+            request.setAttribute("enfants", listEnfants);
+            request.setAttribute("trolazo", true);
+            getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/inscrireEnfant.jsp").forward(request, response);
+        } catch (Exception ex) {
+            request.setAttribute("message", ex.getMessage());
+            getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
+        }
+    }
 
 }
