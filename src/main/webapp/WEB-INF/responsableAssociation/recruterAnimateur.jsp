@@ -64,7 +64,6 @@
                     </div>
                 </div>
                 <div class="form-group">
-
                     <h2>Competences</h2>
                     <c:forEach items="${competences}" var="competence">
                         <label class="checkbox-inline">
