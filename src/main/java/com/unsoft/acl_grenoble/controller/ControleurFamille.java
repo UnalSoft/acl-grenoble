@@ -5,6 +5,7 @@
  */
 package com.unsoft.acl_grenoble.controller;
 
+import com.unsoft.acl_grenoble.model.centre.InscriptionActivite;
 import com.unsoft.acl_grenoble.model.dao.CompteDAO;
 import com.unsoft.acl_grenoble.model.dao.DAOException;
 import com.unsoft.acl_grenoble.model.dao.EnfantDAO;
@@ -160,7 +161,25 @@ public class ControleurFamille extends HttpServlet {
         try {
 
             request.setAttribute("enfants", listEnfants);
-            request.setAttribute("trolazo", true);
+            
+            
+            int max = 0;
+            
+            for (Enfant each : listEnfants){
+                
+                max++;
+                
+                EnfantDAO enfantDao = new EnfantDAO(ds);
+                List<InscriptionActivite> listeActivites = 
+                        enfantDao.getListeDInscriptionsParEnfant(
+                                each.getNomEnfant(), each.getPrenomEnfant());
+                
+                request.setAttribute("activites" + max, listeActivites);
+                
+            }
+            
+            request.setAttribute("max", max);
+            
             getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/inscrireEnfant.jsp").forward(request, response);
         } catch (Exception ex) {
             request.setAttribute("message", ex.getMessage());

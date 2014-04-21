@@ -47,6 +47,33 @@ public class ActiviteDAO extends AbstractDataBaseDAO {
         }
         return competences;
     }
+    
+    public String getNomParId(int idActivite) throws DAOException{
+        String nomActivite = "InvalidName";
+        Connection conn = null;
+        
+        try {
+            conn = getConnection();
+            Statement st = conn.createStatement();
+            PreparedStatement stmt = conn.prepareStatement("SELECT nom FROM ACTIVITE "
+                    + "WHERE idActivite = ?");
+            stmt.setInt(1, idActivite);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                nomActivite = rs.getString("nom");
+                
+            }
+            
+            stmt.close();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
+        
+        return nomActivite;
+    }
 
     public List<ThemeEnum> getThemesPossibles() {
         throw new UnsupportedOperationException("Not supported yet.");

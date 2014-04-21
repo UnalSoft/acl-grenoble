@@ -1,5 +1,6 @@
 package com.unsoft.acl_grenoble.model.dao;
 
+import com.unsoft.acl_grenoble.model.centre.InscriptionActivite;
 import com.unsoft.acl_grenoble.model.utilisateur.Enfant;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,18 +15,18 @@ import javax.sql.DataSource;
  *
  * @author CANTORAA
  */
-public class EnfantDAO extends AbstractDataBaseDAO{
+public class EnfantDAO extends AbstractDataBaseDAO {
 
     public EnfantDAO(DataSource ds) {
         super(ds);
     }
-    
-    public void addEnfant(String prenomE,String nomE,String prenomR,String nomR,
-            int ageE) throws DAOException{
+
+    public void addEnfant(String prenomE, String nomE, String prenomR, String nomR,
+            int ageE) throws DAOException {
         Connection conn = null;
         try {
             conn = getConnection();
-            PreparedStatement  stmt = conn.prepareStatement("INSERT INTO ENFANT"
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO ENFANT"
                     + " VALUES(?,?,?,?,?)");
             stmt.setString(1, prenomE);
             stmt.setString(2, nomE);
@@ -36,13 +37,12 @@ public class EnfantDAO extends AbstractDataBaseDAO{
             stmt.close();
         } catch (SQLException ex) {
             throw new DAOException("BD erreur " + ex.getMessage(), ex);
-        }
-        finally{
+        } finally {
             closeConnection(conn);
         }
     }
-    
-     public void effacerEnfant(String nomResponsable, String prenomResponsable) throws DAOException {
+
+    public void effacerEnfant(String nomResponsable, String prenomResponsable) throws DAOException {
         Connection conn = null;
         try {
             conn = getConnection();
@@ -53,30 +53,33 @@ public class EnfantDAO extends AbstractDataBaseDAO{
             stmt.executeQuery();
 
             stmt.close();
-            
+
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
         } finally {
             closeConnection(conn);
         }
     }
-     
-     public List<Enfant> getListeDEnfantsParRFamille(String nomResponsable, String prenomResponsable) throws DAOException {
+
+    public List<Enfant> getListeDEnfantsParRFamille(String nomResponsable, String prenomResponsable) throws DAOException {
         List<Enfant> listEnfants = new ArrayList<Enfant>();
         Connection conn = null;
         try {
             conn = getConnection();
             PreparedStatement st = conn.prepareStatement("SELECT * FROM Enfant "
                     + "WHERE nomfamille = ? AND prenom = ?");
-            
+
             st.setString(1, nomResponsable);
             st.setString(2, prenomResponsable);
             ResultSet rs = st.executeQuery();
-                        
+
             while (rs.next()) {
                 Enfant enfant = new Enfant(rs.getString("prenomEnfant"), rs.getString("nomFamillEnfant"), rs.getInt("age"));
                 listEnfants.add(enfant);
             }
+
+            st.close();
+
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
         } finally {
@@ -84,6 +87,43 @@ public class EnfantDAO extends AbstractDataBaseDAO{
         }
         return listEnfants;
     }
-     
-    
+
+    public List<InscriptionActivite> getListeDInscriptionsParEnfant(String nomEnfant, String prenomEnfant) throws DAOException {
+        List<InscriptionActivite> listeActivites = new ArrayList<InscriptionActivite>();
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM Inscription "
+                    + "WHERE preNomEnfant = ? AND nomFamillEnfant = ?");
+
+            st.setString(1, prenomEnfant);
+            st.setString(2, nomEnfant);
+            ResultSet rs = st.executeQuery();
+
+            
+
+            while (rs.next()) {
+                InscriptionActivite inscription = new InscriptionActivite();
+                inscription.setIdActivite(rs.getInt("idActivite"));
+                inscription.setPrenomEnfant(rs.getString("preNomEnfant"));
+                inscription.setNomEnfant(rs.getString("nomFamillEnfant"));
+                inscription.setPeriode(rs.getString("periode"));
+                inscription.setNomActivite("Place Holder");
+
+                ActiviteDAO activite = new ActiviteDAO(dataSource);
+                inscription.setNomActivite(activite.getNomParId(inscription.getIdActivite()));
+                
+                listeActivites.add(inscription);
+            }
+            
+            st.close();
+
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }finally{
+            closeConnection(conn);
+        }
+        return listeActivites;
+    }
+
 }
