@@ -1,6 +1,8 @@
 package com.unsoft.acl_grenoble.model.dao;
 
+import com.unsoft.acl_grenoble.model.centre.CentreDeLoisirs;
 import com.unsoft.acl_grenoble.model.centre.Theme;
+import com.unsoft.acl_grenoble.model.centre.ThemeEnum;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,6 +24,7 @@ public class CentreDAO extends AbstractDataBaseDAO {
 
    /**
     * Obtient le nom du centre a partir du nom du responsable
+    *
     * @param responsable
     * @return
     * @throws DAOException
@@ -52,9 +55,22 @@ public class CentreDAO extends AbstractDataBaseDAO {
       try {
          conn = getConnection();
          Statement st = conn.createStatement();
-         
+         PreparedStatement stmt = conn.prepareStatement(
+                 "SELECT THEME.NOMTHEME,THEME.NOMCENTRE FROM THEME,RESPONSABLE \n"
+                 + "WHERE THEME.NOMCENTRE=RESPONSABLE.NOMCENTRE \n"
+                 + "AND RESPONSABLE.NOMUTILISATEUR=?");
+         stmt.setString(1, utilisateur);
+         ResultSet rs =stmt.executeQuery();
+         while(rs.next()){
+            Theme theme = new Theme(
+                    ThemeEnum.getTheme(rs.getString(1)), 
+                    new CentreDeLoisirs(rs.getString(2)));
+            themes.add(theme);
+         }
       } catch (SQLException e) {
          throw new DAOException("Erreur BD " + e.getMessage(), e);
+      }finally{
+         closeConnection(conn);
       }
       return themes;
    }
