@@ -111,11 +111,11 @@ public class AnimateurDAO extends AbstractDataBaseDAO {
         try {
             conn = getConnection();
             PreparedStatement stmt = conn.prepareStatement("SELECT A.NOMANIMATEUR, A.PRENOMANIMATEUR, "
-                    + "A.EMAIL, A.ESTINTERNE\n"
-                    + "FROM EST_DISPONIBLE E, ANIMATEUR A\n"
-                    + "AND E.NOMANIMATEUR = A.NOMANIMATEUR\n"
-                    + "AND E.PRENOMANIMATEUR = A.PRENOMANIMATEUR\n"
-                    + "AND A.ESTINTERNE = ?\n"
+                    + "A.EMAIL, A.ESTINTERNE "
+                    + "FROM EST_DISPONIBLE E, ANIMATEUR A "
+                    + "WHERE E.NOMANIMATEUR = A.NOMANIMATEUR "
+                    + "AND E.PRENOMANIMATEUR = A.PRENOMANIMATEUR "
+                    + "AND A.ESTINTERNE = ? "
                     + "AND E.PERIODE = ?");
             stmt.setBoolean(1, estInterne);
             stmt.setString(2, periode);

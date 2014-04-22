@@ -68,7 +68,7 @@ create table COMPETENCEACTIVITE  (
 create table ANIMATEUR  (
    NOMANIMATEUR         VARCHAR2(20)                    not null,
    PRENOMANIMATEUR      VARCHAR2(20)                    not null,
-   EMAIL                VARCHAR2(30)                    not null,
+   EMAIL                VARCHAR2(60)                    not null,
    ESTINTERNE           SMALLINT                        not null,
    primary key (NOMANIMATEUR, PRENOMANIMATEUR)
 );
@@ -110,10 +110,9 @@ create table ETAT  (
    IDACTIVITE           INTEGER                         not null,
    PERIODE              VARCHAR2(40)                    not null,
    ETAT                 VARCHAR2(20)                    not null,
-   primary key (IDACTIVITE, PERIODE, ETAT),
+   primary key (IDACTIVITE, PERIODE),
    foreign key (IDACTIVITE) references ACTIVITE (IDACTIVITE),
-   foreign key (PERIODE) references PERIODE (PERIODE),
-   foreign key (ETAT) references ETATENUM (ETAT)
+   foreign key (PERIODE) references PERIODE (PERIODE)
 );
 
 /* Table: COMPTE*/
@@ -173,9 +172,10 @@ create table ENFANT  (
 create table INSCRIPTION  (
    IDACTIVITE           INTEGER                         not null,
    PRENOMENFANT         VARCHAR2(20)                    not null,
+   NOMFAMILLENFANT      VARCHAR2(20)                    not null,
    PERIODE              VARCHAR2(40)                    not null,
-   primary key (IDACTIVITE, PRENOMENFANT, PERIODE),
+   primary key (IDACTIVITE, PRENOMENFANT, NOMFAMILLENFANT, PERIODE),
    foreign key (IDACTIVITE) references ACTIVITE (IDACTIVITE),
-   foreign key (PRENOMENFANT) references ENFANT (PRENOMENFANT),
+   foreign key (PRENOMENFANT, NOMFAMILLENFANT) references ENFANT (PRENOMENFANT, NOMFAMILLENFANT),
    foreign key (PERIODE) references PERIODE (PERIODE)
 );

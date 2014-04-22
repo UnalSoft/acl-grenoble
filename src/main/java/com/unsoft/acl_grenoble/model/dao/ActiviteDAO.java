@@ -1,8 +1,11 @@
 package com.unsoft.acl_grenoble.model.dao;
 
 import com.unsoft.acl_grenoble.model.centre.Activite;
+import com.unsoft.acl_grenoble.model.centre.CentreDeLoisirs;
 import com.unsoft.acl_grenoble.model.centre.Competence;
+import com.unsoft.acl_grenoble.model.centre.EtatEnum;
 import com.unsoft.acl_grenoble.model.centre.Periode;
+import com.unsoft.acl_grenoble.model.centre.Theme;
 import com.unsoft.acl_grenoble.model.centre.ThemeEnum;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -70,12 +73,78 @@ public class ActiviteDAO extends AbstractDataBaseDAO {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public boolean lierEtat(int idActivite, String periode, String etat) {
+    public boolean lierEtat(int idActivite, String periode, EtatEnum etat) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public Activite getActivite(int parseInt) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Activite getActivite(int idActivite) throws DAOException {
+        Activite activite = null;
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Activite "
+                    + "WHERE idActivite = ?");
+            stmt.setInt(1, idActivite);
+            ResultSet rset = stmt.executeQuery();
+
+            if (rset.next()) {
+                activite = new Activite(rset.getInt("idActivite"), 
+                new Theme(ThemeEnum.getTheme(rset.getString("nomTheme")), new CentreDeLoisirs(rset.getString("nomCentre"))),
+                rset.getString("nom"), rset.getString("descriptif"), rset.getInt("nbMaxAnim"));
+            }
+            rset.close();
+            stmt.close();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
+        return activite;
+    }
+
+    public int getnbInscris(int idActivite, String nomPeriode) throws DAOException {
+        int inscris = 0;
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(*) FROM Inscription "
+                    + "WHERE idActivite = ? AND periode = ?");
+            stmt.setInt(1, idActivite);
+            stmt.setString(2, nomPeriode);
+            ResultSet rset = stmt.executeQuery();
+
+            if (rset.next()) {
+                inscris = rset.getInt(1);
+            }
+            rset.close();
+            stmt.close();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
+        return inscris;
+    }
+
+    public void changerEtat(int idActivite, String nomPeriode, EtatEnum etatEnum) throws DAOException {
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement("UPDATE Etat "
+                    + "SET ETAT = ? "
+                    + "WHERE idActivite = ? AND periode = ?");
+            stmt.setString(1, etatEnum.getName());
+            stmt.setInt(2, idActivite);
+            stmt.setString(3, nomPeriode);
+            ResultSet rset = stmt.executeQuery();
+
+            rset.close();
+            stmt.close();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
     }
 
 }

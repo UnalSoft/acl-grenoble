@@ -28,10 +28,10 @@ public class AsignationDAO extends AbstractDataBaseDAO {
             conn = getConnection();
             Statement st = conn.createStatement();
             PreparedStatement stmt = conn.prepareStatement("SELECT P.PERIODE, P.DATEDEBUT, P.DATEFIN "
-                    + "FROM ASIGNATION A, PERIODE P\n"
-                    + "WHERE A.PERIODE = P.PERIODE"
-                    + "AND NOMANIMATEUR = ?\n"
-                    + "AND PRENOMANIMATEUR = ?");
+                    + "FROM ASIGNATION A, PERIODE P "
+                    + "WHERE A.PERIODE = P.PERIODE "
+                    + "AND A.NOMANIMATEUR = ? "
+                    + "AND A.PRENOMANIMATEUR = ?");
             stmt.setString(1, nomAnim);
             stmt.setString(2, prenomAnim);
             ResultSet rs = stmt.executeQuery();
@@ -55,11 +55,11 @@ public class AsignationDAO extends AbstractDataBaseDAO {
             conn = getConnection();
             Statement st = conn.createStatement();
             PreparedStatement stmt = conn.prepareStatement("SELECT P.PERIODE, P.DATEDEBUT, P.DATEFIN "
-                    + "FROM ASIGNATION, PERIODE P\n"
-                    + "WHERE A.PERIODE = P.PERIODE"
-                    + "AND NOMANIMATEUR = ?\n"
-                    + "AND PRENOMANIMATEUR = ?\n"
-                    + "AND P.SUPERPERIODE ?");
+                    + "FROM ASIGNATION A, PERIODE P "
+                    + "WHERE A.PERIODE = P.PERIODE "
+                    + "AND A.NOMANIMATEUR = ? "
+                    + "AND A.PRENOMANIMATEUR = ? "
+                    + "AND P.SUPERPERIODE = ?");
             stmt.setString(1, nomAnim);
             stmt.setString(2, prenomAnim);
             stmt.setString(3, superPeriode);
@@ -77,14 +77,14 @@ public class AsignationDAO extends AbstractDataBaseDAO {
         return periodes;
     }
 
-    public void assignerAnimateur(Animateur animateur, String periode, int idActivite) throws DAOException {
+    public void assignerAnimateur(String nomAnimateur, String prenomAnimateur, String periode, int idActivite) throws DAOException {
         Connection conn = null;
         try {
             conn = getConnection();
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO ASIGNATION "
                     + "VALUES(?, ?, ?, ?)");
-            stmt.setString(1, animateur.getNomAnimateur());
-            stmt.setString(2, animateur.getPrenomAnimateur());
+            stmt.setString(1, nomAnimateur);
+            stmt.setString(2, prenomAnimateur);
             stmt.setString(3, periode);
             stmt.setInt(4, idActivite);
             stmt.execute();

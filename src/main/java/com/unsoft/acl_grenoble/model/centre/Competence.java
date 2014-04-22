@@ -6,9 +6,29 @@ package com.unsoft.acl_grenoble.model.centre;
  */
 public enum Competence {
 
+    AISANCE_ORATOIRE("Aisance oratoire"),
+    APTITUDE_COMUNICATION("Aptitude à la communication"),
     CHARISME("Charisme"),
-    LEADERSHIP("Leadership");
-    
+    CAPACITE_SUPERVISER("Capacité à superviser"),
+    COLLABORATEUR("Collaborateur"),
+    COMPETITIF("Compétitif"),
+    CREATIF("Créatif"),
+    DYNAMIQUE("Dynamique"),
+    DROLE("Drôle"),
+    ESPRIT_EQUIPE("Esprit d’équipe"),
+    HABILITE_GERER_CONFLITS("Habileté à gérer des conflits"),
+    IMAGINATIF("Imaginatif"),
+    LEADERSHIP("Leadership"),
+    MOTIVATEUR("Motivateur"),
+    MOTIVE("Motivé"),
+    PEDAGOGUE("Pédagogue"),
+    PONCTUEL("Ponctuel"),
+    SENS_HUMOUR("Sens de l’humour"),
+    SOCIABLE("Sociable"),
+    STRATEGIQUE("Stratégique"),
+    SPONTANE("Spontané"),
+    VERSATILE("Versatile");
+
     private final String competence;
 
     private Competence(String competence) {
@@ -21,7 +41,7 @@ public enum Competence {
 
     public static Competence getCompetence(String competence) {
         for (Competence comp : values()) {
-            if (competence.equals(comp.getName())){
+            if (competence.equals(comp.getName())) {
                 return comp;
             }
         }

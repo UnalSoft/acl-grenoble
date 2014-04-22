@@ -7,6 +7,7 @@
 <%@page import="com.unsoft.acl_grenoble.model.centre.Etat"%>
 <%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -57,10 +58,29 @@
                     <td><%=etat.getActivite().getNomActivite()%></td>
                     <td><%=etat.getPeriode().getDateDebut()%></td>
                     <td><%=etat.getPeriode().getDatefin()%></td>
-                    <td><a href="ControleurPlanification?action=affecter&activite=<%=etat.getActivite().getIdActivite()%>&periode=<%=etat.getPeriode().nomPeriode()%>" class="btn btn-success">Affecter</a></td>
+                    <td><a href="ControleurPlanification?action=affecter&idActivite=<%=etat.getActivite().getIdActivite()%>&periode=<%=etat.getPeriode().nomPeriode()%>" class="btn btn-success">Affecter</a></td>
                 </tr>
                 <%}%>
             </table>
-        </div>   
+        </div>
+        <c:if test="${message != null}">
+            <div id="modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">Message</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>${message}</p>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                $('#modal').modal('show');
+            </script>
+        </c:if>
     </body>
 </html>
