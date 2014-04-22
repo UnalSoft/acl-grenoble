@@ -1,10 +1,13 @@
 package com.unsoft.acl_grenoble.model.dao;
 
+import com.unsoft.acl_grenoble.model.centre.Theme;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import javax.sql.DataSource;
 
 /**
@@ -41,5 +44,18 @@ public class CentreDAO extends AbstractDataBaseDAO {
          closeConnection(conn);
       }
       return centre;
+   }
+
+   public List<Theme> getThemesParUtilisateur(String utilisateur) throws DAOException {
+      List<Theme> themes = new ArrayList<Theme>();
+      Connection conn = null;
+      try {
+         conn = getConnection();
+         Statement st = conn.createStatement();
+         
+      } catch (SQLException e) {
+         throw new DAOException("Erreur BD " + e.getMessage(), e);
+      }
+      return themes;
    }
 }

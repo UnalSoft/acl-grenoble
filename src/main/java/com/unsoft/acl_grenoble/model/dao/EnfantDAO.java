@@ -1,8 +1,13 @@
 package com.unsoft.acl_grenoble.model.dao;
 
+import com.unsoft.acl_grenoble.model.utilisateur.Enfant;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import javax.sql.DataSource;
 
 /**
@@ -55,5 +60,30 @@ public class EnfantDAO extends AbstractDataBaseDAO{
             closeConnection(conn);
         }
     }
+     
+     public List<Enfant> getListeDEnfantsParRFamille(String nomResponsable, String prenomResponsable) throws DAOException {
+        List<Enfant> listEnfants = new ArrayList<Enfant>();
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM Enfant "
+                    + "WHERE nomfamille = ? AND prenom = ?");
+            
+            st.setString(1, nomResponsable);
+            st.setString(2, prenomResponsable);
+            ResultSet rs = st.executeQuery();
+                        
+            while (rs.next()) {
+                Enfant enfant = new Enfant(rs.getString("prenomEnfant"), rs.getString("nomFamillEnfant"), rs.getInt("age"));
+                listEnfants.add(enfant);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
+        return listEnfants;
+    }
+     
     
 }
