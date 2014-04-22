@@ -43,9 +43,9 @@
             </div>
         </nav>
         <div class="page-header">
-            <h1 class="text-center">Administrer Demandes de Compte</h1>
+            <h1 class="text-center">Mes enfants</h1>
         </div>
-        <div class="form-table">
+        <div class="form-table col-lg-8 col-lg-offset-2">
             <table class="table table-striped">
                 <!-- Test-->
                 <tr>
@@ -61,11 +61,16 @@
                         <td>${enf.getNomEnfant()}</td>
                         <td>${enf.getPrenomEnfant()}</td>
                         <td>${enf.getAge()}</td>
-                        
+
+                        <td><a href="ControleurFamille?action=inscrire&nom=${enf.getNomEnfant()}&prenom=${enf.getPrenomEnfant()}" class="btn btn-success">Inscrire à une nouvelle activité</a></td>
+                        <!-- Code pour montrer l'information de chaque activite dans lequel il est present -->
+
+                        <td><a href="ControleurFamille?action=gestion&nom=${enf.getNomEnfant()}&prenom=${enf.getPrenomEnfant()}" class="btn btn-info">Plus...</a></td>
+
                     </tr>
                 </c:forEach>
             </table>
         </div>
-           
+
     </body>
 </html>

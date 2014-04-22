@@ -74,6 +74,10 @@ public class ControleurFamille extends HttpServlet {
                     EnfantDAO eDao = new EnfantDAO(ds);
                     CompteDAO cDao = new CompteDAO(ds);
                     actionDemander2(request, response, rDao, eDao, cDao);
+                } else if (action.equals("inscrire")) {
+                    
+                } else if (action.equals("gestion")) {
+
                 }
             } else {
                 HttpSession session = request.getSession();
@@ -161,25 +165,24 @@ public class ControleurFamille extends HttpServlet {
         try {
 
             request.setAttribute("enfants", listEnfants);
-            
-            
+
             int max = 0;
-            
-            for (Enfant each : listEnfants){
-                
+
+            for (Enfant each : listEnfants) {
+
                 max++;
-                
+
                 EnfantDAO enfantDao = new EnfantDAO(ds);
-                List<InscriptionActivite> listeActivites = 
-                        enfantDao.getListeDInscriptionsParEnfant(
+                List<InscriptionActivite> listeActivites
+                        = enfantDao.getListeDInscriptionsParEnfant(
                                 each.getNomEnfant(), each.getPrenomEnfant());
-                
+
                 request.setAttribute("activites" + max, listeActivites);
-                
+
             }
-            
+
             request.setAttribute("max", max);
-            
+
             getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/inscrireEnfant.jsp").forward(request, response);
         } catch (Exception ex) {
             request.setAttribute("message", ex.getMessage());
