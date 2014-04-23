@@ -35,7 +35,7 @@
                         <li class="active"><a>Affecter animateurs à une activité</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li class="disabled"><a href="#">${utilisateur}</a></li>
+                        <li><a>${utilisateur}</a></li>
                         <li><a href="ControleurUtilisateur?action=logout">Fermer la session</a></li>
                     </ul>
                 </div>
@@ -73,7 +73,6 @@
                         </div>
                         <div class="modal-body">
                             <p>${message}</p>
-                            <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
                         </div>
                     </div>
                 </div>

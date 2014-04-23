@@ -10,7 +10,8 @@ public enum EtatEnum {
     FERMEE("FERMEE"),
     PRE_CONFIRMEE("PRE_CONFIRMEE"),
     CONFIRMEE("CONFIRMEE"),
-    FINIE("FINIE");
+    FINIE("FINIE"),
+    ANNULEE("ANNULEE");
 
     private final String etat;
 

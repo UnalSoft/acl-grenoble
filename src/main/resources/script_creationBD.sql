@@ -112,7 +112,8 @@ create table ETAT  (
    ETAT                 VARCHAR2(20)                    not null,
    primary key (IDACTIVITE, PERIODE),
    foreign key (IDACTIVITE) references ACTIVITE (IDACTIVITE),
-   foreign key (PERIODE) references PERIODE (PERIODE)
+   foreign key (PERIODE) references PERIODE (PERIODE),
+   foreign key (ETAT) references ETATENUM(ETAT)
 );
 
 /* Table: COMPTE*/

@@ -83,11 +83,11 @@ public class AnimateurDAO extends AbstractDataBaseDAO {
             conn = getConnection();
             Statement st = conn.createStatement();
             PreparedStatement stmt = conn.prepareStatement("SELECT P.PERIODE, P.DATEDEBUT, P.DATEFIN "
-                    + "FROM EST_DISPONIBLE E, PERIODE P, ANIMATEUR A\n"
-                    + "WHERE E.PERIODE = P.PERIODE\n"
-                    + "AND E.NOMANIMATEUR = A.NOMANIMATEUR\n"
-                    + "AND E.PRENOMANIMATEUR = A.PRENOMANIMATEUR\n"
-                    + "AND E.NOMANIMATEUR = ? AND E.PRENOMANIMATEUR = ?\n"
+                    + "FROM EST_DISPONIBLE E, PERIODE P, ANIMATEUR A "
+                    + "WHERE E.PERIODE = P.PERIODE "
+                    + "AND E.NOMANIMATEUR = A.NOMANIMATEUR "
+                    + "AND E.PRENOMANIMATEUR = A.PRENOMANIMATEUR "
+                    + "AND E.NOMANIMATEUR = ? AND E.PRENOMANIMATEUR = ? "
                     + "AND A.ESTINTERNE = 0");
             stmt.setString(1, nomAnim);
             stmt.setString(2, prenomAnim);

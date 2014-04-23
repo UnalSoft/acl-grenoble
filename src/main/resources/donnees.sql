@@ -86,7 +86,7 @@ INSERT ALL
     VALUES('MAISON des COLLINES', 'Découverte de la nature', 'Visite de la campagne', 
     'les enfants inscrits peuvent profiter des nombreux espaces verts de la Maison des Collines et d''un encadrement, par des équipes d''animation sensibilisées à la nature', 10)
   INTO ACTIVITE (NOMCENTRE, NOMTHEME, NOM, DESCRIPTIF, NBMAXANIM) 
-	  VALUES ('MAISON des COLLINES', 'Découverte de la nature', 'Tir à l’arc', 'Les activités se déroulent à St Martin d’Uriage et tour- nent autour de deux grands thèmes décidés une semaine à l’avance, par l’équipe d’animation. Les enfants sont répartis en 2 groupes d’âge.', 5)
+	  VALUES ('MAISON des COLLINES', 'Découverte de la nature', 'Tir à l''arc', 'Les activités se déroulent à St Martin d’Uriage et tour- nent autour de deux grands thèmes décidés une semaine à l’avance, par l’équipe d’animation. Les enfants sont répartis en 2 groupes d’âge.', 5)
 SELECT * FROM dual;
 
 INSERT ALL
@@ -100,12 +100,12 @@ SELECT * FROM dual;
 
 INSERT ALL
   INTO PERIODE VALUES('Découverte de la nature 04/28 - 04/30', 'Vacances de printemps 2014', DATE '2014-04-28', DATE '2014-04-30')
-  INTO PERIODE VALUES ('Tir à l’arc 04/18 - 04/28', 'Vacances de printemps 2014', DATE '2014-04-18', DATE '2014-04-28')
+  INTO PERIODE VALUES ('Tir à l''arc 04/18 - 04/28', 'Vacances de printemps 2014', DATE '2014-04-18', DATE '2014-04-28')
 SELECT * FROM dual;  
 
 INSERT ALL 
   INTO ETAT VALUES(1, 'Découverte de la nature 04/28 - 04/30', 'OUVERTE')
-  INTO ETAT VALUES (2, 'Tir à l’arc 04/18 - 04/28', 'PRE_CONFIRMEE')
+  INTO ETAT VALUES (2, 'Tir à l''arc 04/18 - 04/28', 'PRE_CONFIRMEE')
 SELECT * FROM dual;
 
 
@@ -114,15 +114,16 @@ INSERT ALL
   INTO COMPTE VALUES ('Marie.Bertrand', '1234', 1)
   INTO COMPTE VALUES ('Dominique.Perrier', '1234', 1)
   INTO COMPTE VALUES ('Paul.Henriot', '1234', 1)
+  INTO COMPTE VALUES ('Jose.Pavarotti', '1234', 1)
   INTO COMPTE VALUES ('Janine.Labrune', '1234', 0)
   INTO COMPTE VALUES ('Carine.Schmitt', '1234', 0)
 SELECT * FROM dual;
-
 INSERT ALL
   INTO UTILISATEUR VALUES ('Fuller','Richard','Richard.Fuller','Richard.Fuller@yopmail.com')
   INTO UTILISATEUR VALUES ('Bertrand','Marie','Marie.Bertrand','Marie.Bertrand@yopmail.com')
   INTO UTILISATEUR VALUES ('Perrier','Dominique','Dominique.Perrier','Dominique.Perrier@yopmail.com')
   INTO UTILISATEUR VALUES ('Henriot','Paul','Paul.Henriot','Paul.Henriot@yopmail.com')
+  INTO UTILISATEUR VALUES ('Pavarotti','Jose','Jose.Pavarotti','Jose.Pavarotti@yopmail.com')
   INTO UTILISATEUR VALUES ('Labrune','Janine','Janine.Labrune','Janine.Labrune@yopmail.com') 
   INTO UTILISATEUR VALUES ('Schmitt','Carine','Carine.Schmitt','Carine.Schmitt@yopmail.com') 
 SELECT * FROM dual;
@@ -141,6 +142,8 @@ SELECT * FROM dual;
 
 INSERT ALL
   INTO ENFANT VALUES('Daniel', 'Henriot', 'Henriot','Paul', 15)
+  INTO ENFANT VALUES('Charlie', 'Henriot', 'Henriot','Paul', 15)
+  INTO ENFANT VALUES('Jenny', 'Henriot', 'Henriot','Paul', 10)
   INTO ENFANT VALUES('Annette', 'Roulet', 'Labrune','Janine', 16)
   INTO ENFANT VALUES('Christian', 'Roulet', 'Labrune','Janine', 12)
   INTO ENFANT VALUES('John', 'Schmitt', 'Schmitt','Carine', 8)
@@ -188,7 +191,9 @@ INSERT ALL
 SELECT * FROM dual;
 
 INSERT ALL
-  INTO INSCRIPTION VALUES(21, 'Daniel', 'Henriot', 'Tir à l’arc 04/18 - 04/28')
+  INTO INSCRIPTION VALUES(2, 'Daniel', 'Henriot', 'Tir à l''arc 04/18 - 04/28')
+  INTO INSCRIPTION VALUES(2, 'Charlie', 'Henriot', 'Tir à l''arc 04/18 - 04/28')
+  INTO INSCRIPTION VALUES(2, 'Jenny', 'Henriot', 'Tir à l''arc 04/18 - 04/28')
 SELECT * FROM dual;
 
 commit;

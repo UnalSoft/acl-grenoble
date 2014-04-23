@@ -40,6 +40,8 @@ public class ControleurPlanification extends HttpServlet {
     private DataSource dataSource;
     private final String AFFECTER = "affecter";
     private final String ANIMSINTERNES = "animsInternes";
+    private final String ANIMSEXTERNES = "animsExternes";
+    private static final String ANNULER_ACTIVITE = "annulerActivite";
     private final int MIN_ENFANT_ANIMATEUR = 4;
     private final int MAX_ENFANT_ANIMATEUR = 10;
     private final String SUCCES = "Animateurs asignés à l'activivité avec succès!\nActivité Confirmée!";
@@ -62,6 +64,7 @@ public class ControleurPlanification extends HttpServlet {
             String action = request.getParameter("action");
             if (action != null) {
                 if (action.equals(AFFECTER)) {
+                    request.setCharacterEncoding("UTF-8");
                     listerAnimateursDisponibles(request, response, true);
                 }
             } else {
@@ -88,7 +91,7 @@ public class ControleurPlanification extends HttpServlet {
         if (userName != null) {
             String action = request.getParameter("action");
             if (action != null) {
-                if (action.equals(ANIMSINTERNES)) {
+                if (action.equals(ANIMSINTERNES) || action.equals(ANIMSEXTERNES)) {
                     request.setCharacterEncoding("UTF-8");
                     String[] anims = request.getParameterValues("animateurs");
                     int nbAnimateurs = 0;
@@ -99,28 +102,82 @@ public class ControleurPlanification extends HttpServlet {
                     int nbMaxAnim = Integer.parseInt(request.getParameter("nbMaxAnim"));
                     int nbAnimsDisp = Integer.parseInt(request.getParameter("nbAnimsDisp"));
 
+                    String[] animsChoisis = request.getParameterValues("animateursChoisis");
+                    if (action.equals(ANIMSEXTERNES)) {
+                        if (animsChoisis != null) {
+                            nbAnimsDisp += animsChoisis.length;
+                            nbAnimateurs += animsChoisis.length;
+                        }
+                    }
+
                     boolean besoinExtern = false;
                     boolean succes = false;
-                    if (nbAnimateurs < nbMinAnim && nbAnimateurs < nbAnimsDisp) {
-                        besoinExtern = false;
-                    } else if (nbAnimateurs < nbMinAnim && nbAnimsDisp < nbMinAnim) {
-                        besoinExtern = true;
-                    } else if (nbAnimateurs >= nbMinAnim && nbAnimateurs <= nbMaxAnim) {
+                    boolean impossible = false;
+                    boolean depasse = false;
+                    if (nbAnimateurs >= nbMinAnim && nbAnimateurs <= nbMaxAnim) {
                         succes = true;
-                    }
-                    if (!succes) {
-                        if (besoinExtern && anims != null) {
-                            request.setAttribute("animInternes", anims);
+                    } else {
+                        if (action.equals(ANIMSINTERNES)) {
+                            if (nbAnimateurs < nbMinAnim && nbAnimateurs < nbAnimsDisp) {
+                                besoinExtern = false;
+                            } else if (nbAnimateurs < nbMinAnim && nbAnimsDisp < nbMinAnim) {
+                                besoinExtern = true;
+                            }
+                        } else {
+                            besoinExtern = true;
+                            if (nbAnimateurs < nbMinAnim && nbAnimsDisp < nbMinAnim) {
+                                impossible = true;
+                            }
                         }
+                        if (nbAnimateurs > nbMaxAnim) {
+                            depasse = true;
+                        }
+                    }
+
+                    if (!succes) {
+                        if (action.equals(ANIMSINTERNES)) {
+                            if (besoinExtern && anims != null) {
+                                request.setAttribute("animInternes", anims);
+                            }
+                        } else {
+                            if (besoinExtern) {
+                                request.setAttribute("animInternes", animsChoisis);
+                                request.setAttribute("impossible", impossible);
+                            }
+                        }
+                        request.setAttribute("depasse", depasse);
                         request.setAttribute("besoinExtern", besoinExtern);
                         listerAnimateursDisponibles(request, response, !besoinExtern);
                     } else {
+                        int idActivite = Integer.parseInt(request.getParameter("idActivite"));
+                        String nomPeriode = request.getParameter("periode");
                         try {
-                            affecterAnimateurs(anims, request, response);
+                            if (nbMinAnim > 0) {
+                                if (action.equals(ANIMSINTERNES)) {
+                                    affecterAnimateurs(anims, idActivite, nomPeriode);
+                                } else {
+                                    affecterAnimateurs(anims, idActivite, nomPeriode);
+                                    affecterAnimateurs(animsChoisis, idActivite, nomPeriode);
+                                }
+                            }
+                            new ActiviteDAO(dataSource).changerEtat(idActivite, nomPeriode, EtatEnum.CONFIRMEE);
+                            request.setAttribute("message", SUCCES);
+                            listerActivitesPreconfirmes(request, response);
                         } catch (DAOException ex) {
                             request.setAttribute("message", ex.getMessage());
                             getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
                         }
+                    }
+                } else if (action.equals(ANNULER_ACTIVITE)) {
+                    int idActivite = Integer.parseInt(request.getParameter("idActivite"));
+                    String nomPeriode = request.getParameter("periode");
+                    try {
+                        new ActiviteDAO(dataSource).changerEtat(idActivite, nomPeriode, EtatEnum.ANNULEE);
+                        request.setAttribute("message", "Activité Annulée");
+                        listerActivitesPreconfirmes(request, response);
+                    } catch (DAOException ex) {
+                        request.setAttribute("message", ex.getMessage());
+                        getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
                     }
                 }
             } else {
@@ -141,7 +198,7 @@ public class ControleurPlanification extends HttpServlet {
             List<Animateur> animateursDisponibles = obtenirAnimateursDisponibles(periode, activite, estInterne);
             int nbInscris = activiteDAO.getnbInscris(activite.getIdActivite(), periode.nomPeriode());
             int nbMinAnim = (int) Math.ceil((double) nbInscris / MAX_ENFANT_ANIMATEUR);
-            int nbMaxAnim = (int) Math.ceil((double) nbInscris / MIN_ENFANT_ANIMATEUR);
+            int nbMaxAnim = nbInscris / MIN_ENFANT_ANIMATEUR;
             request.setAttribute("nbMinAnim", nbMinAnim);
             request.setAttribute("nbMaxAnim", nbMaxAnim);
             request.setAttribute("nbInscris", nbInscris);
@@ -217,9 +274,7 @@ public class ControleurPlanification extends HttpServlet {
         }
     }
 
-    private void affecterAnimateurs(String[] anims, HttpServletRequest request, HttpServletResponse response) throws DAOException, ServletException, IOException {
-        int idActivite = Integer.parseInt(request.getParameter("idActivite"));
-        String nomPeriode = request.getParameter("periode");
+    private void affecterAnimateurs(String[] anims, int idActivite, String nomPeriode) throws DAOException {
         AsignationDAO asignationDAO = new AsignationDAO(dataSource);
         for (String anim : anims) {
             String[] nomPrenom = anim.split(":");
@@ -227,9 +282,6 @@ public class ControleurPlanification extends HttpServlet {
             String prenom = nomPrenom[1];
             asignationDAO.assignerAnimateur(nom, prenom, nomPeriode, idActivite);
         }
-        new ActiviteDAO(dataSource).changerEtat(idActivite, nomPeriode, EtatEnum.CONFIRMEE);
-        request.setAttribute("message", SUCCES);
-        listerActivitesPreconfirmes(request, response);
     }
 
     /**
