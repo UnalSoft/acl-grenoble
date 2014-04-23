@@ -202,9 +202,14 @@ public class ActiviteDAO extends AbstractDataBaseDAO {
     }
 
     public List<Activite> purifyListActivites(List<Activite> listeBrut, List<Etat> listeActivitesOuverts, List<InscriptionActivite> listeInscriptionsEnfant) {
-        List<Activite> listePropre = listeBrut;
+        List<Activite> listePropre = new ArrayList<Activite>();
+        
+        for (Activite each : listeBrut) {
+            listePropre.add(each);
+        }
+        
 
-        for (Activite each : listePropre) {
+        for (Activite each : listeBrut) {
 
             boolean ouvert = false;
 

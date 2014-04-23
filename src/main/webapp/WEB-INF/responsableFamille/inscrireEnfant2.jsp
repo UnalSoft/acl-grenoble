@@ -43,29 +43,30 @@
             </div>
         </nav>
         <div class="page-header">
-            <h1 class="text-center">$Inscription d'enfant: {prenom} ${nom}</h1>
+            <h1 class="text-center">Inscription d'enfant: ${prenom} ${nom}</h1>
         </div>
         <div class="form-table col-lg-8 col-lg-offset-2">
             <table class="table table-striped">
-                <!-- Test-->
+                
                 <tr>
-                    <th>Nom</th>
-                    <th>Prenom</th>
-                    <th>Age</th>
-                    <th></th>
+                    <th>ID</th>
+                    <th>Nom Centre</th>
+                    <th>Nom Activite</th>
+                    <th>Description</th>
+                    <th>Prix (Jour)</th>
                     <th></th>
                 </tr>
-                <c:forEach items="${enfants}" var="enf">
+                <c:forEach items="${listePropre}" var="act">
                     <!-- Code pour montrer l'information de chaque enfant -->
                     <tr>
-                        <td>${enf.getNomEnfant()}</td>
-                        <td>${enf.getPrenomEnfant()}</td>
-                        <td>${enf.getAge()}</td>
+                        <td>${act.getIdActivite()}</td>
+                        <td>${act.getTheme().getCentre().getNomCentre()}</td>
+                        <td>${act.getNomActivite()}</td>
+                        <td><p>${act.getDescriptif()}</p></td>
+                        <td>Precio?</td>
 
-                        <td><a href="ControleurFamille?action=inscrire&nom=${enf.getNomEnfant()}&prenom=${enf.getPrenomEnfant()}" class="btn btn-success">Inscrire à une nouvelle activité</a></td>
+                        <td><a href="ControleurFamille?action=periodes&nom=${prenom}&prenom=${nom}&${act.getIdActivite()}" class="btn btn-success">Inscrire à une nouvelle activité</a></td>
                         <!-- Code pour montrer l'information de chaque activite dans lequel il est present -->
-
-                        <td><a href="ControleurFamille?action=gestion&nom=${enf.getNomEnfant()}&prenom=${enf.getPrenomEnfant()}" class="btn btn-info">Plus...</a></td>
 
                     </tr>
                 </c:forEach>

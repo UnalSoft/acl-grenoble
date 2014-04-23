@@ -68,6 +68,9 @@ public class ControleurFamille extends HttpServlet {
             } catch (DAOException ex) {
                 Logger.getLogger(ControleurFamille.class.getName()).log(Level.SEVERE, null, ex);
             }
+
+        } else if (action.equals("periodes")) {
+
         } else if (action.equals("verifInscrire")) {
             try {
                 inscrireEnfant(request, response);
@@ -238,7 +241,7 @@ public class ControleurFamille extends HttpServlet {
 
         request.setAttribute("listePropre", listePropre);
 
-        getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/gestionEnfant.jsp").include(request, response);
+        getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/inscrireEnfant2.jsp").include(request, response);
 
     }
 

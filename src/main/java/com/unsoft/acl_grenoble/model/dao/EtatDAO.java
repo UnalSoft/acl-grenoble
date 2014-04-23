@@ -65,7 +65,7 @@ public class EtatDAO extends AbstractDataBaseDAO {
         try {
             conn = getConnection();
             PreparedStatement stmt = conn.prepareStatement("SELECT A.IDACTIVITE, A.NOMCENTRE, A.NOMTHEME, A.NOM, A.DESCRIPTIF, A.NBMAXANIM, "
-                    + "P.PERIODE,  P.SUPERPERIODE, P.DATEDEBU   T, P.DATEFIN, E.ETAT\n"
+                    + "P.PERIODE,  P.SUPERPERIODE, P.DATEDEBUT, P.DATEFIN, E.ETAT\n"
                     + "FROM ACTIVITE A, ETAT E, PERIODE P\n"
                     + "WHERE A.IDACTIVITE = E.IDACTIVITE\n"
                     + "AND P.PERIODE = E.PERIODE\n"
