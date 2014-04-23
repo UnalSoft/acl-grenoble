@@ -5,10 +5,15 @@
  */
 package com.unsoft.acl_grenoble.controller;
 
+import com.unsoft.acl_grenoble.model.centre.Activite;
+import com.unsoft.acl_grenoble.model.centre.Etat;
+import com.unsoft.acl_grenoble.model.centre.EtatEnum;
 import com.unsoft.acl_grenoble.model.centre.InscriptionActivite;
+import com.unsoft.acl_grenoble.model.dao.ActiviteDAO;
 import com.unsoft.acl_grenoble.model.dao.CompteDAO;
 import com.unsoft.acl_grenoble.model.dao.DAOException;
 import com.unsoft.acl_grenoble.model.dao.EnfantDAO;
+import com.unsoft.acl_grenoble.model.dao.EtatDAO;
 import com.unsoft.acl_grenoble.model.dao.RFamilleDAO;
 import com.unsoft.acl_grenoble.model.utilisateur.Enfant;
 import com.unsoft.acl_grenoble.model.utilisateur.ResponsableFamille;
@@ -75,9 +80,13 @@ public class ControleurFamille extends HttpServlet {
                     CompteDAO cDao = new CompteDAO(ds);
                     actionDemander2(request, response, rDao, eDao, cDao);
                 } else if (action.equals("inscrire")) {
-                    
+                    afficherActivites(request, response);                    
                 } else if (action.equals("gestion")) {
-
+                    gestionEnfant(request, response);
+                } else if (action.equals("verifInscrire")){
+                    inscrireEnfant(request, response);
+                }else if (action.equals("verifEffacer")){
+                    desInscrireEnfant(request, response);
                 }
             } else {
                 HttpSession session = request.getSession();
@@ -188,6 +197,64 @@ public class ControleurFamille extends HttpServlet {
             request.setAttribute("message", ex.getMessage());
             getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
         }
+    }
+
+    private void afficherActivites(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DAOException {
+        
+        ActiviteDAO activiteDAO = new ActiviteDAO(ds);
+        List<Activite> listeActivites = activiteDAO.getAllActivites();
+        EtatDAO etatDAO = new EtatDAO(ds);
+        List<Etat> listeEtat = etatDAO.getActivitesParEtat((EtatEnum.OUVERTE).getName());
+        EnfantDAO enfantDAO = new EnfantDAO(ds);
+        List<InscriptionActivite> listeInscris = enfantDAO.getListeDInscriptionsParEnfant(request.getParameter("nom"), request.getParameter("prenom"));
+        
+        List<Activite> listePropre = activiteDAO.purifyListActivites(listeActivites, listeEtat, listeInscris);
+        
+        request.setAttribute("listePropre", listePropre);
+        
+        getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/gestionEnfant.jsp").include(request, response);
+        
+        
+    }
+
+    private void gestionEnfant(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, DAOException {
+        EnfantDAO enfantDAO = new EnfantDAO(ds);
+        
+        List<InscriptionActivite> listeActivites = enfantDAO.getListeDInscriptionsParEnfant(request.getParameter("nom"), request.getParameter("prenom"));
+        
+        request.setAttribute("listeActivites", listeActivites);
+        
+        getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/gestionEnfant.jsp").include(request, response);
+    }
+
+    private void inscrireEnfant(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, DAOException {
+        EnfantDAO enfantDAO = new EnfantDAO(ds);
+        enfantDAO.inscrireEnfant(request.getParameter("prenom"), request.getParameter("nom"), Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"));
+        
+        ActiviteDAO activiteDAO = new ActiviteDAO(ds);
+        int courents = activiteDAO.getnbInscris(Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"));
+        int  nbMaxAnim = activiteDAO.getActivite(Integer.parseInt(request.getParameter("activite"))).getNbMaxAnimateurs();
+        
+        if(courents == nbMaxAnim * 10){
+            activiteDAO.changerEtat(Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"), EtatEnum.FERMEE);
+        }
+        
+        request.setAttribute("message", "Success");
+        getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/gestionEnfant.jsp").include(request, response);
+    }
+
+    private void desInscrireEnfant(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, DAOException {
+        EnfantDAO enfantDAO = new EnfantDAO(ds);
+        enfantDAO.desInscrireEnfant(request.getParameter("prenom"), request.getParameter("nom"), Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"));
+        
+                
+        ActiviteDAO activiteDAO = new ActiviteDAO(ds);
+        
+        //Por ahora... necesito probar
+        activiteDAO.changerEtat(Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"), EtatEnum.OUVERTE);
+        
+        request.setAttribute("message", "Success");
+        getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/gestionEnfant.jsp").include(request, response);
     }
 
 }
