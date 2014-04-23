@@ -143,5 +143,25 @@ public class EnfantDAO extends AbstractDataBaseDAO {
             closeConnection(conn);
         }
     }
+    
+    public void desInscrireEnfant(String prenomE, String nomE, int idActivite, String periode) throws DAOException {
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement("DELETE FROM Inscription"
+                    + " VALUES(?,?,?,?)");
+            stmt.setInt(1, idActivite);
+            stmt.setString(2, prenomE);
+            stmt.setString(3, nomE);
+            stmt.setString(4, periode);
+
+            stmt.execute();
+            stmt.close();
+        } catch (SQLException ex) {
+            throw new DAOException("BD erreur " + ex.getMessage(), ex);
+        } finally {
+            closeConnection(conn);
+        }
+    }
 
 }
