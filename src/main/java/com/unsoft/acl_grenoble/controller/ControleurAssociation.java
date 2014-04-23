@@ -176,14 +176,14 @@ public class ControleurAssociation extends HttpServlet {
                             responsable.setCompte(compte);
                             request.setAttribute("rFamille", responsable);
                             request.setAttribute("demande", true);
-                            request.setAttribute("message", "Bonjour " + responsable.getNomFamille() + responsable.getPrenom() + ",\n\n"
+                            request.setAttribute("message", "Bonjour " + responsable.getNomFamille() + " " + responsable.getPrenom() + ",\n\n"
                                     + "Votre demande de création de compte dans L’Association des Centres de Loisirs (ACL) de Grenoble a été ACEPTÉE.\n"
                                     + "Vous pouvez des maintenant y acceder avec les suivats données:\n\n"
                                     + "Nom d'utilisateur: " + responsable.getCompte().getNomUtilisateur() + "\n"
                                     + "Mot de Pass: " + responsable.getCompte().getMotdePass() + "\n\n"
                                     + "Merci pour votre confiance.\n\n"
                                     + "Cordialement,\n"
-                                    + respAsso.getNomFamille() + respAsso.getPrenom() + "\nResponsable Association des Centres de Loisirs (ACL) Grenoble");
+                                    + respAsso.getNomFamille() + " " + respAsso.getPrenom() + "\nResponsable Association des Centres de Loisirs (ACL) Grenoble");
                         } else {
                             throw new DAOException("Responsable non trouvé.");
                         }
@@ -203,12 +203,12 @@ public class ControleurAssociation extends HttpServlet {
                             responsable.setCompte(compte);
                             request.setAttribute("rFamille", responsable);
                             request.setAttribute("demande", false);
-                            request.setAttribute("message", "Bonjour " + responsable.getNomFamille() + responsable.getPrenom() + ",\n\n"
+                            request.setAttribute("message", "Bonjour " + responsable.getNomFamille() + " " + responsable.getPrenom() + ",\n\n"
                                     + "Votre demande de création de compte dans L’Association des Centres de Loisirs (ACL) de Grenoble a été REFUSÉE.\n"
                                     + "\n\n"
                                     + "Plus d'information: " + respAsso.getMail() + "\n\n"
                                     + "Cordialement,\n"
-                                    + respAsso.getNomFamille() + respAsso.getPrenom() + "\nResponsable Association des Centres de Loisirs (ACL) Grenoble");
+                                    + respAsso.getNomFamille() + " " + respAsso.getPrenom() + "\nResponsable Association des Centres de Loisirs (ACL) Grenoble");
                         } else {
                             throw new DAOException("Responsable non trouvé.");
                         }

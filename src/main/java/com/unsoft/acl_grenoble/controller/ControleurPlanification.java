@@ -15,12 +15,17 @@ import com.unsoft.acl_grenoble.model.dao.ActiviteDAO;
 import com.unsoft.acl_grenoble.model.dao.AnimateurDAO;
 import com.unsoft.acl_grenoble.model.dao.AsignationDAO;
 import com.unsoft.acl_grenoble.model.dao.CentreDAO;
+import com.unsoft.acl_grenoble.model.dao.CompteDAO;
 import com.unsoft.acl_grenoble.model.dao.DAOException;
 import com.unsoft.acl_grenoble.model.dao.EtatDAO;
 import com.unsoft.acl_grenoble.model.dao.PeriodeDAO;
+import com.unsoft.acl_grenoble.model.dao.ResponsableDAO;
+import com.unsoft.acl_grenoble.model.utilisateur.Responsable;
+import com.unsoft.acl_grenoble.util.GestionMail;
 import java.io.IOException;
 import java.util.List;
 import javax.annotation.Resource;
+import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -42,8 +47,8 @@ public class ControleurPlanification extends HttpServlet {
     private final String ANIMSINTERNES = "animsInternes";
     private final String ANIMSEXTERNES = "animsExternes";
     private static final String ANNULER_ACTIVITE = "annulerActivite";
-    private final int MIN_ENFANT_ANIMATEUR = 4;
-    private final int MAX_ENFANT_ANIMATEUR = 10;
+    private final int MIN_ENFANT_ANIMATEUR = 3;
+    private final int MAX_ENFANT_ANIMATEUR = 4;
     private final String SUCCES = "Animateurs asignés à l'activivité avec succès!\nActivité Confirmée!";
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -154,16 +159,16 @@ public class ControleurPlanification extends HttpServlet {
                         try {
                             if (nbMinAnim > 0) {
                                 if (action.equals(ANIMSINTERNES)) {
-                                    affecterAnimateurs(anims, idActivite, nomPeriode);
+                                    affecterAnimateurs(anims, idActivite, nomPeriode, userName);
                                 } else {
-                                    affecterAnimateurs(anims, idActivite, nomPeriode);
-                                    affecterAnimateurs(animsChoisis, idActivite, nomPeriode);
+                                    affecterAnimateurs(anims, idActivite, nomPeriode, userName);
+                                    affecterAnimateurs(animsChoisis, idActivite, nomPeriode, userName);
                                 }
                             }
                             new ActiviteDAO(dataSource).changerEtat(idActivite, nomPeriode, EtatEnum.CONFIRMEE);
                             request.setAttribute("message", SUCCES);
                             listerActivitesPreconfirmes(request, response);
-                        } catch (DAOException ex) {
+                        } catch (Exception ex) {
                             request.setAttribute("message", ex.getMessage());
                             getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
                         }
@@ -270,18 +275,43 @@ public class ControleurPlanification extends HttpServlet {
             request.setAttribute("etatsPreconfirmes", etatsPreconfirmes);
             getServletContext().getRequestDispatcher("/WEB-INF/responsablePlanification/affecterAnimateur.jsp").forward(request, response);
         } catch (DAOException ex) {
+            request.setAttribute("message", ex.getMessage());
             getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
         }
     }
 
-    private void affecterAnimateurs(String[] anims, int idActivite, String nomPeriode) throws DAOException {
+    private void affecterAnimateurs(String[] anims, int idActivite, String nomPeriode, String responsable) throws DAOException, MessagingException {
         AsignationDAO asignationDAO = new AsignationDAO(dataSource);
         for (String anim : anims) {
             String[] nomPrenom = anim.split(":");
             String nom = nomPrenom[0];
             String prenom = nomPrenom[1];
             asignationDAO.assignerAnimateur(nom, prenom, nomPeriode, idActivite);
+            envoyerMail(nom, prenom, idActivite, nomPeriode, responsable);
         }
+    }
+
+    private void envoyerMail(String nomAnimateur, String prenomAnimateur, int idActivite, 
+            String nomPeriode, String responsable) throws DAOException, MessagingException {
+        AnimateurDAO animateurDAO = new AnimateurDAO(dataSource);
+        ActiviteDAO activiteDAO = new ActiviteDAO(dataSource);
+        PeriodeDAO periodeDAO = new PeriodeDAO(dataSource);
+        CompteDAO compteDAO = new CompteDAO(dataSource);
+        Animateur animateur = animateurDAO.getAnimateur(nomAnimateur, prenomAnimateur);
+        Activite activite = activiteDAO.getActivite(idActivite);
+        Periode periode = periodeDAO.getPeriode(nomPeriode);
+        Responsable respAsso = new ResponsableDAO(dataSource).getResponsable(compteDAO.getCompte(responsable));
+        String message = "Bonjour " + nomAnimateur + " " + prenomAnimateur + ",\n\n"
+                + "L’Association des Centres de Loisirs (ACL) de Grenoble vous informe "
+                + "que vous avez été asigné comme animateur de l'activité : \n"
+                + activite.getNomActivite() + " pour le periode " + periode.nomPeriode() + "."
+                +"\n\nCordialement,\n"
+                + respAsso.getNomFamille() + " " + respAsso.getPrenom() 
+                + "\nResponsable de Panification \n"
+                + "Association des Centres de Loisirs (ACL) Grenoble";
+    
+        
+        new GestionMail().envoyerMail(animateur.getEmail(), "ACL Grenoble - Asignation Activité", message);
     }
 
     /**

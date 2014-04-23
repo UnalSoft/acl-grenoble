@@ -135,7 +135,29 @@ public class AnimateurDAO extends AbstractDataBaseDAO {
     }
 
     public Animateur getAnimateur(String nomAnimateur, String prenomAnimateur) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Animateur animateur = null;
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Animateur "
+                    + "WHERE nomAnimateur = ? "
+                    + "AND prenomAnimateur = ?");
+            stmt.setString(1, nomAnimateur);
+            stmt.setString(2, prenomAnimateur);
+            ResultSet rset = stmt.executeQuery();
+
+            if (rset.next()) {
+                animateur = new Animateur(rset.getString("nomAnimateur"), rset.getString("prenomAnimateur"), 
+                        rset.getString("email"), rset.getBoolean("estInterne"));
+            }
+            rset.close();
+            stmt.close();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
+        return animateur;
     }
 
     public Animateur addAnimateur(String nomAnimateur, String prenomAnimateur, String email, boolean isIntern) throws DAOException {
