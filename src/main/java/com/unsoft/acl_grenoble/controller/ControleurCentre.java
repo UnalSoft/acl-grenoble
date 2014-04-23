@@ -35,7 +35,9 @@ import javax.sql.DataSource;
 public class ControleurCentre extends HttpServlet {
 
    private final static int LONG_NOM = 20;
+   private final static int LONG_NOM_PERIODE = 60;
    private final static int LONG_DESCRIPTIF = 200;
+   private static final String RECHARGER = "recharger";
 
    @Resource(name = "jdbc/acl_grenoble")
    private DataSource dataSource;
@@ -200,11 +202,9 @@ public class ControleurCentre extends HttpServlet {
       if (userName != null) {
          String action = request.getParameter("action");
          if (action != null) {
-            System.out.println("request.getCharacterEncoding()");
             String nom = request.getParameter("nom");
             String theme = request.getParameterValues("theme")[0];
             String descriptif = request.getParameter("descriptif");
-            descriptif = descriptif != null ? descriptif : "";
             String periode = request.getParameterValues("periode")[0];
             String dDebut = request.getParameter("dateDebut");
             String dFin = request.getParameter("dateFin");
@@ -213,7 +213,6 @@ public class ControleurCentre extends HttpServlet {
             String[] competences = request.getParameterValues("competences");
             boolean valide = validerChamps(nom, descriptif, periode,
                     nombreAnimateurs, prix, competences, dDebut, dFin, request, response);
-            // Une fois valide, transformer le #animateurs et les dates
 
             // Obtenir periode pere
             Periode periodePere = new Periode(null, new Date(), new Date());
@@ -226,9 +225,13 @@ public class ControleurCentre extends HttpServlet {
 
             Date dateDebut = parseDate(dDebut);
             Date dateFin = parseDate(dFin);
+            String nomP = periode + " " + dDebut + " " + dFin;
             boolean dateReelle = dateDebut.after(new Date()) && dateDebut.before(dateFin);
             boolean periodeValide = dateDebut.after(periodePere.getDateDebut()) && dateFin.before(periodePere.getDateFin());
-            if (valide && dateReelle && periodeValide && Integer.parseInt(nombreAnimateurs) > 0 && Float.parseFloat(prix) >= 0) {
+            boolean nomPeriodeValide = nomP.length() < LONG_NOM_PERIODE;
+            if (valide && dateReelle && periodeValide
+                    && Integer.parseInt(nombreAnimateurs) > 0
+                    && Float.parseFloat(prix) >= 0 && nomPeriodeValide) {
                try {
                   // Creer l'activite
                   ActiviteDAO activiteDAO = new ActiviteDAO(dataSource);
@@ -242,25 +245,30 @@ public class ControleurCentre extends HttpServlet {
                   activiteDAO.lierCompetences(idActivite, lesCompetences);
 
                   // Creer un periode et lier l'etat
-                  String nomP = periode + " " + dDebut + " " + dFin;
                   Periode lePeriode = new Periode(nomP, dateDebut, dateFin, periodePere.nomPeriode());
                   activiteDAO.creerPeriode(lePeriode);
                   activiteDAO.lierEtat(idActivite, periode, EtatEnum.OUVERTE.getName());
+                  request.setAttribute("creationReussi", true);
                } catch (DAOException ex) {
                   request.setAttribute("message", ex.getMessage());
                   getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
                }
-               request.setAttribute("creationReussi", true);
             } else {
                request.setAttribute("creationReussi", false);
             }
+            request.setAttribute("action", RECHARGER);
+            request = listThemes(request, response, userName);
+            request = listCompetences(request);
+            request = listPeriodes(request, response);
+            getServletContext().getRequestDispatcher("/WEB-INF/responsableCentre/ajouterActivite.jsp").forward(request, response);
          } else {
-            String utilisateur = (String) session.getAttribute("utilisateur");
-            request = listThemes(request, response, utilisateur);
+            request = listThemes(request, response, userName);
             request = listCompetences(request);
             request = listPeriodes(request, response);
             getServletContext().getRequestDispatcher("/WEB-INF/responsableCentre/ajouterActivite.jsp").forward(request, response);
          }
+      } else {
+         getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
       }
    }
 

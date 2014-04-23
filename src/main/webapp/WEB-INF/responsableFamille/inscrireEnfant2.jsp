@@ -11,7 +11,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Mes enfants - ACL Grenoble</title>
+        <title>Inscrire Enfant - ACL Grenoble</title>
         <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
         <link href="css/style.css" rel="stylesheet" type="text/css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
@@ -32,7 +32,7 @@
                 </div>
                 <div class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
                     <ul class="nav navbar-nav">
-                        <li class="disabled"><a href="#">Inscrire un Enfant</a></li>
+                        <li class="active"><a href="#">Inscrire un Enfant</a></li>
                         <li><a href="ControleurAssociation?action=recruterAnimateur">Annuler une inscription</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
@@ -43,33 +43,30 @@
             </div>
         </nav>
         <div class="page-header">
-            <h1 class="text-center">Mes enfants</h1>
+            <h1 class="text-center">Inscription d'enfant: ${prenom} ${nom}</h1>
         </div>
         <div class="form-table col-lg-8 col-lg-offset-2">
             <table class="table table-striped">
-                <!-- Test-->
+                
                 <tr>
-                    <th>#</th>
-                    <th>Nom</th>
-                    <th>Prenom</th>
-                    <th>Age</th>
-                    <th></th>
+                    <th>ID</th>
+                    <th>Nom Centre</th>
+                    <th>Nom Activite</th>
+                    <th>Description</th>
+                    <th>Prix (Jour)</th>
                     <th></th>
                 </tr>
-                <% int i = 0; %>
-                <c:forEach items="${enfants}" var="enf">
-                    <%i++;%>
+                <c:forEach items="${listePropre}" var="act">
                     <!-- Code pour montrer l'information de chaque enfant -->
                     <tr>
-                        <td><%=i%></td>
-                        <td>${enf.getNomEnfant()}</td>
-                        <td>${enf.getPrenomEnfant()}</td>
-                        <td>${enf.getAge()}</td>
+                        <td>${act.getIdActivite()}</td>
+                        <td>${act.getTheme().getCentre().getNomCentre()}</td>
+                        <td>${act.getNomActivite()}</td>
+                        <td><p>${act.getDescriptif()}</p></td>
+                        <td>€ ${act.getPrixParJour()}</td>
 
-                        <td><a href="ControleurFamille?action=inscrire&nom=${enf.getNomEnfant()}&prenom=${enf.getPrenomEnfant()}" class="btn btn-success">Inscrire à une nouvelle activité</a></td>
+                        <td><a href="ControleurFamille?action=periodes&nom=${prenom}&prenom=${nom}&${act.getIdActivite()}" class="btn btn-success">Inscrire à une nouvelle activité</a></td>
                         <!-- Code pour montrer l'information de chaque activite dans lequel il est present -->
-
-                        <td><a href="ControleurFamille?action=gestion&nom=${enf.getNomEnfant()}&prenom=${enf.getPrenomEnfant()}" class="btn btn-info">Plus...</a></td>
 
                     </tr>
                 </c:forEach>

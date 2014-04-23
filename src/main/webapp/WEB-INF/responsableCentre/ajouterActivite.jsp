@@ -65,7 +65,7 @@
                 <div class="form-group">
                     <label for="descriptif" class="col-sm-4 control-label">Description</label>
                     <div class="col-sm-8">
-                        <textarea class="form-control" rows="5" id="descriptif" placeholder="Descriptif" name="descriptif"></textarea>
+                        <textarea class="form-control" rows="5" id="descriptif" placeholder="Descriptif" name="descriptif" required></textarea>
                     </div>
                 </div>
                 <div class="form-group">
@@ -106,9 +106,7 @@
                     <label for="competences" class="col-sm-4 control-label">Competences</label>
                     <div class="row col-md-6 col-md-offset-4">
                         <c:forEach items="${competences}" var="competence">
-                            <label class="checkbox-inline">
-                                <input type="checkbox"name="competences" value="${competence.toString()}" />${competence.getName()}<br>
-                            </label>
+                            <input type="checkbox"name="competences" value="${competence.toString()}" />${competence.getName()}<br>
                         </c:forEach>
                     </div>
                 </div>
@@ -135,10 +133,12 @@
                         </div>
                         <div class="modal-body">
                             <c:if test="${creationReussi == true}">
-                                <p>L'animateur a été inseré avec succes</p>
+                                <p>L'activité a été inseré avec succes</p>
                             </c:if>
                             <c:if test="${creationReussi == false}">
-                                <p>L'information donnée est incorrect, veuillez verifier</p>
+                                <p>L'information donnée est incorrect, veuillez 
+                                    verifier que les données soient valides et 
+                                    que les dates correspondent aux periodes</p>
                             </c:if>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         </div>
