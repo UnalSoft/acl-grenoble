@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -51,9 +53,33 @@ public class ControleurFamille extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String attribute = request.getParameter("action");
-        if (attribute.equals("demanderCompte")) {
+        String action = request.getParameter("action");
+        if (action.equals("demanderCompte")) {
             getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/demanderCompte.jsp").forward(request, response);
+        } else if (action.equals("inscrire")) {
+            try {
+                afficherActivites(request, response);
+            } catch (DAOException ex) {
+                Logger.getLogger(ControleurFamille.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (action.equals("gestion")) {
+            try {
+                gestionEnfant(request, response);
+            } catch (DAOException ex) {
+                Logger.getLogger(ControleurFamille.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (action.equals("verifInscrire")) {
+            try {
+                inscrireEnfant(request, response);
+            } catch (DAOException ex) {
+                Logger.getLogger(ControleurFamille.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (action.equals("verifEffacer")) {
+            try {
+                desInscrireEnfant(request, response);
+            } catch (DAOException ex) {
+                Logger.getLogger(ControleurFamille.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -80,12 +106,12 @@ public class ControleurFamille extends HttpServlet {
                     CompteDAO cDao = new CompteDAO(ds);
                     actionDemander2(request, response, rDao, eDao, cDao);
                 } else if (action.equals("inscrire")) {
-                    afficherActivites(request, response);                    
+                    afficherActivites(request, response);
                 } else if (action.equals("gestion")) {
                     gestionEnfant(request, response);
-                } else if (action.equals("verifInscrire")){
+                } else if (action.equals("verifInscrire")) {
                     inscrireEnfant(request, response);
-                }else if (action.equals("verifEffacer")){
+                } else if (action.equals("verifEffacer")) {
                     desInscrireEnfant(request, response);
                 }
             } else {
@@ -200,45 +226,44 @@ public class ControleurFamille extends HttpServlet {
     }
 
     private void afficherActivites(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DAOException {
-        
+
         ActiviteDAO activiteDAO = new ActiviteDAO(ds);
         List<Activite> listeActivites = activiteDAO.getAllActivites();
         EtatDAO etatDAO = new EtatDAO(ds);
         List<Etat> listeEtat = etatDAO.getActivitesParEtat((EtatEnum.OUVERTE).getName());
         EnfantDAO enfantDAO = new EnfantDAO(ds);
         List<InscriptionActivite> listeInscris = enfantDAO.getListeDInscriptionsParEnfant(request.getParameter("nom"), request.getParameter("prenom"));
-        
+
         List<Activite> listePropre = activiteDAO.purifyListActivites(listeActivites, listeEtat, listeInscris);
-        
+
         request.setAttribute("listePropre", listePropre);
-        
+
         getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/gestionEnfant.jsp").include(request, response);
-        
-        
+
     }
 
     private void gestionEnfant(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, DAOException {
         EnfantDAO enfantDAO = new EnfantDAO(ds);
-        
+
         List<InscriptionActivite> listeActivites = enfantDAO.getListeDInscriptionsParEnfant(request.getParameter("nom"), request.getParameter("prenom"));
-        
+
         request.setAttribute("listeActivites", listeActivites);
-        
+
         getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/gestionEnfant.jsp").include(request, response);
     }
 
     private void inscrireEnfant(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, DAOException {
         EnfantDAO enfantDAO = new EnfantDAO(ds);
         enfantDAO.inscrireEnfant(request.getParameter("prenom"), request.getParameter("nom"), Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"));
-        
+
         ActiviteDAO activiteDAO = new ActiviteDAO(ds);
         int courents = activiteDAO.getnbInscris(Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"));
-        int  nbMaxAnim = activiteDAO.getActivite(Integer.parseInt(request.getParameter("activite"))).getNbMaxAnimateurs();
-        
-        if(courents == nbMaxAnim * 10){
+        int nbMaxAnim = activiteDAO.getActivite(Integer.parseInt(request.getParameter("activite"))).getNbMaxAnimateurs();
+
+        if (courents == nbMaxAnim * 10) {
             activiteDAO.changerEtat(Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"), EtatEnum.FERMEE);
         }
-        
+
         request.setAttribute("message", "Success");
         getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/gestionEnfant.jsp").include(request, response);
     }
@@ -246,13 +271,12 @@ public class ControleurFamille extends HttpServlet {
     private void desInscrireEnfant(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, DAOException {
         EnfantDAO enfantDAO = new EnfantDAO(ds);
         enfantDAO.desInscrireEnfant(request.getParameter("prenom"), request.getParameter("nom"), Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"));
-        
-                
+
         ActiviteDAO activiteDAO = new ActiviteDAO(ds);
-        
+
         //Por ahora... necesito probar
         activiteDAO.changerEtat(Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"), EtatEnum.OUVERTE);
-        
+
         request.setAttribute("message", "Success");
         getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/gestionEnfant.jsp").include(request, response);
     }

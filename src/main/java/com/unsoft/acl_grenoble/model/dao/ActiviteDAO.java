@@ -141,12 +141,10 @@ public class ActiviteDAO extends AbstractDataBaseDAO {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Activite act = new Activite(rs.getString("idActivite"),
-                        rs.getString("nomCentre"), rs.getString("nomTheme"),
-                        rs.getString("nom"), rs.getString("descriptif"),
-                        rs.getString("nbMaxAnim"), rs.getString("prixParJour"));
-
-                activites.add(act);
+                Activite activite = new Activite(rs.getInt("idActivite"),
+                        new Theme(ThemeEnum.getTheme(rs.getString("nomTheme")), new CentreDeLoisirs(rs.getString("nomCentre"))),
+                        rs.getString("nom"), rs.getString("descriptif"), rs.getInt("nbMaxAnim"));
+                activites.add(activite);
 
             }
         } catch (SQLException e) {
@@ -227,8 +225,8 @@ public class ActiviteDAO extends AbstractDataBaseDAO {
                         dejaInscrit = true;
                     }
                 }
-                
-                if(dejaInscrit){
+
+                if (dejaInscrit) {
                     listePropre.remove(each);
                 }
 
