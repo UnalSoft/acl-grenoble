@@ -56,7 +56,6 @@ public class ActiviteDAO extends AbstractDataBaseDAO {
     public String getNomParId(int idActivite) throws DAOException {
         String nomActivite = "InvalidName";
         Connection conn = null;
-
         try {
             conn = getConnection();
             Statement st = conn.createStatement();
@@ -64,29 +63,17 @@ public class ActiviteDAO extends AbstractDataBaseDAO {
                     + "WHERE idActivite = ?");
             stmt.setInt(1, idActivite);
             ResultSet rs = stmt.executeQuery();
-
             while (rs.next()) {
                 nomActivite = rs.getString("nom");
-
             }
-
             stmt.close();
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
         } finally {
             closeConnection(conn);
         }
-
         return nomActivite;
     }
-
-    public List<ThemeEnum> getThemesPossibles() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-   public List<Periode> getPeriodesPossibles() {
-      throw new UnsupportedOperationException("Not supported yet.");
-   }
 
    public int createActivite(Activite activite) throws DAOException {
       Connection conn = null;
@@ -299,40 +286,27 @@ public class ActiviteDAO extends AbstractDataBaseDAO {
         for (Activite each : listeBrut) {
             listePropre.add(each);
         }
-        
-
         for (Activite each : listeBrut) {
-
             boolean ouvert = false;
-
             for (Etat each2 : listeActivitesOuverts) {
                 if (each.getIdActivite() == each2.getActivite().getIdActivite()) {
                     ouvert = true;
                 }
             }
-
             if (!ouvert) {
                 listePropre.remove(each);
             } else {
-
                 boolean dejaInscrit = false;
-
                 for (InscriptionActivite each2 : listeInscriptionsEnfant) {
                     if (each.getIdActivite() == each2.getIdActivite()) {
                         dejaInscrit = true;
                     }
                 }
-
                 if (dejaInscrit) {
                     listePropre.remove(each);
                 }
-
             }
-
         }
-
         return listePropre;
-
     }
-
 }
