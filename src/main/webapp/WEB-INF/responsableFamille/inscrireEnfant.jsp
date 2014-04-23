@@ -32,7 +32,7 @@
                 </div>
                 <div class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="#">Inscrire un Enfant</a></li>
+                        <li class="disabled"><a href="#">Inscrire un Enfant</a></li>
                         <li><a href="ControleurAssociation?action=recruterAnimateur">Annuler une inscription</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
@@ -49,15 +49,19 @@
             <table class="table table-striped">
                 <!-- Test-->
                 <tr>
+                    <th>#</th>
                     <th>Nom</th>
                     <th>Prenom</th>
                     <th>Age</th>
                     <th></th>
                     <th></th>
                 </tr>
+                <% int i = 0; %>
                 <c:forEach items="${enfants}" var="enf">
+                    <%i++;%>
                     <!-- Code pour montrer l'information de chaque enfant -->
                     <tr>
+                        <td><%=i%></td>
                         <td>${enf.getNomEnfant()}</td>
                         <td>${enf.getPrenomEnfant()}</td>
                         <td>${enf.getAge()}</td>

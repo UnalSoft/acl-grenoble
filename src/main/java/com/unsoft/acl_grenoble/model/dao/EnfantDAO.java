@@ -100,8 +100,6 @@ public class EnfantDAO extends AbstractDataBaseDAO {
             st.setString(2, nomEnfant);
             ResultSet rs = st.executeQuery();
 
-            
-
             while (rs.next()) {
                 InscriptionActivite inscription = new InscriptionActivite();
                 inscription.setIdActivite(rs.getInt("idActivite"));
@@ -112,18 +110,38 @@ public class EnfantDAO extends AbstractDataBaseDAO {
 
                 ActiviteDAO activite = new ActiviteDAO(dataSource);
                 inscription.setNomActivite(activite.getNomParId(inscription.getIdActivite()));
-                
+
                 listeActivites.add(inscription);
             }
-            
+
             st.close();
 
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
-        }finally{
+        } finally {
             closeConnection(conn);
         }
         return listeActivites;
+    }
+
+    public void inscrireEnfant(String prenomE, String nomE, int idActivite, String periode) throws DAOException {
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO Inscription"
+                    + " VALUES(?,?,?,?)");
+            stmt.setInt(1, idActivite);
+            stmt.setString(2, prenomE);
+            stmt.setString(3, nomE);
+            stmt.setString(4, periode);
+
+            stmt.execute();
+            stmt.close();
+        } catch (SQLException ex) {
+            throw new DAOException("BD erreur " + ex.getMessage(), ex);
+        } finally {
+            closeConnection(conn);
+        }
     }
 
 }

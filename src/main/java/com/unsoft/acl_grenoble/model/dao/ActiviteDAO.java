@@ -1,5 +1,6 @@
 package com.unsoft.acl_grenoble.model.dao;
 
+import com.unsoft.acl_grenoble.model.centre.Activite;
 import com.unsoft.acl_grenoble.model.centre.Competence;
 import com.unsoft.acl_grenoble.model.centre.Periode;
 import com.unsoft.acl_grenoble.model.centre.ThemeEnum;
@@ -47,11 +48,11 @@ public class ActiviteDAO extends AbstractDataBaseDAO {
         }
         return competences;
     }
-    
-    public String getNomParId(int idActivite) throws DAOException{
+
+    public String getNomParId(int idActivite) throws DAOException {
         String nomActivite = "InvalidName";
         Connection conn = null;
-        
+
         try {
             conn = getConnection();
             Statement st = conn.createStatement();
@@ -62,16 +63,16 @@ public class ActiviteDAO extends AbstractDataBaseDAO {
 
             while (rs.next()) {
                 nomActivite = rs.getString("nom");
-                
+
             }
-            
+
             stmt.close();
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
         } finally {
             closeConnection(conn);
         }
-        
+
         return nomActivite;
     }
 
@@ -98,6 +99,31 @@ public class ActiviteDAO extends AbstractDataBaseDAO {
 
     public boolean lierEtat(int idActivite, String periode, String etat) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public List<Activite> getAllActivites() throws DAOException {
+        List<Activite> activites = new ArrayList<Activite>();
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Activite");
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Activite act = new Activite(rs.getString("idActivite"),
+                        rs.getString("nomCentre"), rs.getString("nomTheme"),
+                        rs.getString("nom"), rs.getString("descriptif"),
+                        rs.getString("nbMaxAnim"), rs.getString("prixParJour"));
+
+                activites.add(act);
+
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
+        return activites;
     }
 
 }
