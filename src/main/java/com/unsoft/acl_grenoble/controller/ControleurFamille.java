@@ -240,6 +240,8 @@ public class ControleurFamille extends HttpServlet {
         List<Activite> listePropre = activiteDAO.purifyListActivites(listeActivites, listeEtat, listeInscris);
 
         request.setAttribute("listePropre", listePropre);
+        request.setAttribute("nom", request.getParameter("nom"));
+        request.setAttribute("prenom", request.getParameter("prenom"));
 
         getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/inscrireEnfant2.jsp").include(request, response);
 

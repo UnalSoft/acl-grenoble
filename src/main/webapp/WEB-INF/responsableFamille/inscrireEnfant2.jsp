@@ -63,7 +63,7 @@
                         <td>${act.getTheme().getCentre().getNomCentre()}</td>
                         <td>${act.getNomActivite()}</td>
                         <td><p>${act.getDescriptif()}</p></td>
-                        <td>Precio?</td>
+                        <td>€ ${act.getPrixParJour()}</td>
 
                         <td><a href="ControleurFamille?action=periodes&nom=${prenom}&prenom=${nom}&${act.getIdActivite()}" class="btn btn-success">Inscrire à une nouvelle activité</a></td>
                         <!-- Code pour montrer l'information de chaque activite dans lequel il est present -->
