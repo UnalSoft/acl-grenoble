@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.sql.DataSource;
 
@@ -131,7 +132,8 @@ public class ResponsableDAO extends AbstractDataBaseDAO {
          ResultSet rs = st.executeQuery(requeteSQL);
          while (rs.next()) {
             Periode periode = new Periode(rs.getString("PERIODE"), rs.getDate("DATEDEBUT"), rs.getDate("DATEFIN"));
-            periodes.add(periode);
+            if (periode.getDateDebut().after(new Date()))
+               periodes.add(periode);
          }
       } catch (SQLException e) {
          throw new DAOException("Erreur BD " + e.getMessage(), e);
@@ -148,7 +150,6 @@ public class ResponsableDAO extends AbstractDataBaseDAO {
     * @throws DAOException
     */
    public void insererAnimateur(Animateur animateur) throws DAOException {
-      //TODO Mettre l'animateur
       Connection conn = null;
       try {
          conn = getConnection();
@@ -159,17 +160,13 @@ public class ResponsableDAO extends AbstractDataBaseDAO {
          stmt.setString(3, animateur.getEmail());
          stmt.setBoolean(4, animateur.estInterne());
          stmt.executeUpdate();
-         //TODO Mettre les competences de l'animateur
          insererCompetences(conn, animateur);
-         //TODO Mettre les periodes de l'animateur
          insererPeriodes(conn, animateur);
-
       } catch (SQLException e) {
          throw new DAOException("Erreur BD " + e.getMessage(), e);
       } finally {
          closeConnection(conn);
       }
-
    }
 
    /**

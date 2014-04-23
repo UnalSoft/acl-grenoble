@@ -39,7 +39,7 @@ public class Periode {
         return dateDebut;
     }
 
-    public Date getDatefin() {
+    public Date getDateFin() {
         return datefin;
     }
 

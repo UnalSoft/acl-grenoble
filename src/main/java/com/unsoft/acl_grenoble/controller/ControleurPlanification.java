@@ -234,7 +234,7 @@ public class ControleurPlanification extends HttpServlet {
             List<Periode> periodesAsignes = asignationDAO.getPeriodesAnimateurParSuperPeriode(animateur.getNomAnimateur(), animateur.getPrenomAnimateur(), periode.getSuperPeriode());
             for (Periode p : periodesAsignes) {
                 //Verifier intersection dates
-                if (!(periode.getDatefin().before(p.getDateDebut())) || (periode.getDateDebut().after(p.getDatefin()))) {
+                if (!(periode.getDateFin().before(p.getDateDebut())) || (periode.getDateDebut().after(p.getDateFin()))) {
                     animateurs.remove(animateur);
                     i--;
                     break;
