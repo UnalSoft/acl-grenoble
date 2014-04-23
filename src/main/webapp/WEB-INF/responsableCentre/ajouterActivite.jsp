@@ -4,7 +4,7 @@
     Author     : juanmanuelmartinezromero
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
@@ -53,11 +53,11 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="Themes" class="col-sm-4 control-label">Thèmes</label>
+                    <label for="theme" class="col-sm-4 control-label">Thèmes</label>
                     <div class="col-sm-8">
-                        <select name="Themes" class="form-control" required>
+                        <select name="theme" class="form-control" required>
                             <c:forEach items="${themes}" var="theme">
-                                <option value="${theme}">${theme.theme.name}</option>
+                                <option value="${theme.theme.name}">${theme.theme.name}</option>
                             </c:forEach>
                         </select>
                     </div>
@@ -65,21 +65,41 @@
                 <div class="form-group">
                     <label for="descriptif" class="col-sm-4 control-label">Description</label>
                     <div class="col-sm-8">
-                        <textarea class="form-control" rows="5" id="descriptif" placeholder="Descriptif">${message}</textarea>
+                        <textarea class="form-control" rows="5" id="descriptif" placeholder="Descriptif" name="descriptif"></textarea>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="periodes" class="col-sm-4 control-label">Periodes</label>
-                    <div class="row col-md-6 col-md-offset-4">
-                        <c:forEach items="${periodes}" var="periode">
-                            <input type="checkbox"name="periodes" value="${periode.nomPeriode()}" />${periode.nomPeriode()}<br>
-                        </c:forEach>
+                    <label for="periode" class="col-sm-4 control-label">Periode</label>
+                    <div class="col-sm-8">
+                        <select name="periode" class="form-control" required>
+                            <c:forEach items="${periodes}" var="periode">
+                                <option value="${periode.nomPeriode()}">${periode.nomPeriode()}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="dateDebut" class="col-sm-4 control-label">Date de Debut</label>
+                    <div class="col-sm-8">
+                        <input type="date" class="form-control" id="dateDebut" placeholder="jj/mm/aa" name="dateDebut" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="dateFin" class="col-sm-4 control-label">Date de Fin</label>
+                    <div class="col-sm-8">
+                        <input type="date" class="form-control" id="dateFin" placeholder="jj/mm/aa" name="dateFin" required>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="nombreAnimateurs" class="col-sm-4 control-label">N. Animateurs</label>
                     <div class="col-sm-8">
-                        <input type="number" class="form-control" id="nombreAnimateurs" name="nombreAnimateurs" min="1" value="1">
+                        <input type="number" class="form-control" id="nombreAnimateurs" name="nombreAnimateurs" min="1" value="1" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="prix" class="col-sm-4 control-label">Prix par jour</label>
+                    <div class="col-sm-8">
+                        <input type="number" class="form-control" id="prix" name="prix" min="10" value="10" step="2" required>
                     </div>
                 </div>
                 <div class="form-group">
@@ -100,6 +120,34 @@
             </div>
 
         </form>
-
+        <c:if test="${creationReussi !=null}">
+            <div id="modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <c:if test="${creationReussi == true}">
+                                <h4 class="modal-title" id="myModalLabel">Insertion réussi</h4>
+                            </c:if>
+                            <c:if test="${creationReussi == false}">
+                                <h4 class="modal-title" id="myModalLabel">Insertion échoué</h4>
+                            </c:if>
+                        </div>
+                        <div class="modal-body">
+                            <c:if test="${creationReussi == true}">
+                                <p>L'animateur a été inseré avec succes</p>
+                            </c:if>
+                            <c:if test="${creationReussi == false}">
+                                <p>L'information donnée est incorrect, veuillez verifier</p>
+                            </c:if>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                $('#modal').modal('show');
+            </script>
+        </c:if>
     </body>
 </html>

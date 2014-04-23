@@ -71,7 +71,7 @@ public class ControleurAssociation extends HttpServlet {
                     try {
                         compteDAO.activerCompte(resp);
                         //envoyerEMail(true, message, resp);
-                    } catch (Exception ex) {
+                    } catch (DAOException ex) {
                         request.setAttribute("message", ex.getMessage());
                         getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
                     }
