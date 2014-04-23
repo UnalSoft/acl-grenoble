@@ -2,6 +2,7 @@ package com.unsoft.acl_grenoble.model.dao;
 
 import com.unsoft.acl_grenoble.model.centre.InscriptionActivite;
 import com.unsoft.acl_grenoble.model.utilisateur.Enfant;
+import com.unsoft.acl_grenoble.model.utilisateur.ResponsableFamille;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -74,7 +75,7 @@ public class EnfantDAO extends AbstractDataBaseDAO {
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                Enfant enfant = new Enfant(rs.getString("prenomEnfant"), rs.getString("nomFamillEnfant"), rs.getInt("age"));
+                Enfant enfant = new Enfant(rs.getString("nomFamillEnfant"), rs.getString("prenomEnfant"), rs.getInt("age"));
                 listEnfants.add(enfant);
             }
 
@@ -88,6 +89,34 @@ public class EnfantDAO extends AbstractDataBaseDAO {
         return listEnfants;
     }
 
+    public List<Enfant> getEnfantsInscrisActivite(int idActivite, String nomPeriode) throws DAOException {
+        List<Enfant> listEnfants = new ArrayList<Enfant>();
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement st = conn.prepareStatement("SELECT E.nomFamillEnfant, E.prenomEnfant, E.age, R.nomFamille, R.prenom, R.mail, R.ressources "
+                    + "FROM Inscription I, Enfant E, RFamille R "
+                    + "WHERE I.nomFamillEnfant = E.nomFamillEnfant AND I.prenomenfant = E.prenomenfant "
+                    + "AND E.nomFamille = R.nomFamille AND E.prenom = R.prenom "
+                    + "AND I.idActivite = ? AND periode = ?");
+
+            st.setInt(1, idActivite);
+            st.setString(2, nomPeriode);
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                ResponsableFamille resp = new ResponsableFamille(rs.getString("nomFamille"), rs.getString("prenom"), rs.getString("mail"), rs.getFloat("ressources"));
+                Enfant enfant = new Enfant(rs.getString("prenomEnfant"), rs.getString("nomFamillEnfant"), rs.getInt("age"));
+                enfant.setResponsable(resp);
+                listEnfants.add(enfant);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
+        return listEnfants;
+    }
     public List<InscriptionActivite> getListeDInscriptionsParEnfant(String nomEnfant, String prenomEnfant) throws DAOException {
         List<InscriptionActivite> listeActivites = new ArrayList<InscriptionActivite>();
         Connection conn = null;

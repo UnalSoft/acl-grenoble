@@ -17,12 +17,16 @@ import com.unsoft.acl_grenoble.model.dao.AsignationDAO;
 import com.unsoft.acl_grenoble.model.dao.CentreDAO;
 import com.unsoft.acl_grenoble.model.dao.CompteDAO;
 import com.unsoft.acl_grenoble.model.dao.DAOException;
+import com.unsoft.acl_grenoble.model.dao.EnfantDAO;
 import com.unsoft.acl_grenoble.model.dao.EtatDAO;
 import com.unsoft.acl_grenoble.model.dao.PeriodeDAO;
 import com.unsoft.acl_grenoble.model.dao.ResponsableDAO;
+import com.unsoft.acl_grenoble.model.utilisateur.Enfant;
 import com.unsoft.acl_grenoble.model.utilisateur.Responsable;
+import com.unsoft.acl_grenoble.model.utilisateur.ResponsableFamille;
 import com.unsoft.acl_grenoble.util.GestionMail;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
@@ -66,10 +70,10 @@ public class ControleurPlanification extends HttpServlet {
         HttpSession session = request.getSession();
         String userName = (String) session.getAttribute("utilisateur");
         if (userName != null) {
+            request.setCharacterEncoding("UTF-8");
             String action = request.getParameter("action");
             if (action != null) {
-                if (action.equals(AFFECTER)) {
-                    request.setCharacterEncoding("UTF-8");
+                if (action.equals(AFFECTER)) {                    
                     listerAnimateursDisponibles(request, response, true);
                 }
             } else {
@@ -165,6 +169,7 @@ public class ControleurPlanification extends HttpServlet {
                                     affecterAnimateurs(animsChoisis, idActivite, nomPeriode, userName);
                                 }
                             }
+                            genererFactures(idActivite, nomPeriode);
                             new ActiviteDAO(dataSource).changerEtat(idActivite, nomPeriode, EtatEnum.CONFIRMEE);
                             request.setAttribute("message", SUCCES);
                             listerActivitesPreconfirmes(request, response);
@@ -312,6 +317,24 @@ public class ControleurPlanification extends HttpServlet {
     
         
         new GestionMail().envoyerMail(animateur.getEmail(), "ACL Grenoble - Asignation Activité", message);
+    }
+    
+    private void genererFactures(int idActivite, String nomPeriode) throws DAOException {
+        EnfantDAO enfantDAO = new EnfantDAO(dataSource);
+        List<Enfant> enfantsInscris = enfantDAO.getEnfantsInscrisActivite(idActivite, nomPeriode);
+        List<ResponsableFamille> responsables = new ArrayList<ResponsableFamille>();
+        for (Enfant enfant : enfantsInscris) {
+            if (!responsables.contains(enfant.getResponsable())) {
+                enfant.getResponsable().getEnfants().add(enfant);
+                responsables.add(enfant.getResponsable());
+            } else {
+                int index = responsables.indexOf(enfant.getResponsable());
+                responsables.get(index).getEnfants().add(enfant);
+            }
+        }
+        for (ResponsableFamille resp : responsables) {
+            //calculerPrix();
+        }
     }
 
     /**

@@ -13,6 +13,7 @@ public class Enfant {
     private String nomEnfant;
     private String prenomEnfant;
     private int age;
+    private ResponsableFamille responsable;
 
     public Enfant(String nomEnfant, String prenomEnfant, int age) {
         this.nomEnfant = nomEnfant;
@@ -43,7 +44,13 @@ public class Enfant {
     public void setAge(int age) {
         this.age = age;
     }
-    
-    
+
+    public ResponsableFamille getResponsable() {
+        return responsable;
+    }  
+
+    public void setResponsable(ResponsableFamille responsable) {
+        this.responsable = responsable;
+    }
 
 }
