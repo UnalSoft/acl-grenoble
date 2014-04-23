@@ -4,7 +4,7 @@
     Author     : sparrow
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
@@ -63,9 +63,9 @@
                         <td>${act.getTheme().getCentre().getNomCentre()}</td>
                         <td>${act.getNomActivite()}</td>
                         <td><p>${act.getDescriptif()}</p></td>
-                        <td>€ ${act.getPrixParJour()}</td>
+                        <td>EUR ${act.getPrixParJour()}</td>
 
-                        <td><a href="ControleurFamille?action=periodes&nom=${prenom}&prenom=${nom}&${act.getIdActivite()}" class="btn btn-success">Inscrire à une nouvelle activité</a></td>
+                        <td><a href="ControleurFamille?action=periodes&nom=${nom}&prenom=${prenom}&idActivite=${act.getIdActivite()}&activite=${act.getNomActivite()}" class="btn btn-success">Inscrire à une nouvelle activité</a></td>
                         <!-- Code pour montrer l'information de chaque activite dans lequel il est present -->
 
                     </tr>

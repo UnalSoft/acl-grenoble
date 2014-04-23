@@ -88,4 +88,6 @@ public class EtatDAO extends AbstractDataBaseDAO {
         return etats;
     }
 
+    
+    
 }

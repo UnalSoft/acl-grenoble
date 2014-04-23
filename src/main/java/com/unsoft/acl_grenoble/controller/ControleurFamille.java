@@ -9,11 +9,13 @@ import com.unsoft.acl_grenoble.model.centre.Activite;
 import com.unsoft.acl_grenoble.model.centre.Etat;
 import com.unsoft.acl_grenoble.model.centre.EtatEnum;
 import com.unsoft.acl_grenoble.model.centre.InscriptionActivite;
+import com.unsoft.acl_grenoble.model.centre.Periode;
 import com.unsoft.acl_grenoble.model.dao.ActiviteDAO;
 import com.unsoft.acl_grenoble.model.dao.CompteDAO;
 import com.unsoft.acl_grenoble.model.dao.DAOException;
 import com.unsoft.acl_grenoble.model.dao.EnfantDAO;
 import com.unsoft.acl_grenoble.model.dao.EtatDAO;
+import com.unsoft.acl_grenoble.model.dao.PeriodeDAO;
 import com.unsoft.acl_grenoble.model.dao.RFamilleDAO;
 import com.unsoft.acl_grenoble.model.utilisateur.Enfant;
 import com.unsoft.acl_grenoble.model.utilisateur.ResponsableFamille;
@@ -53,6 +55,9 @@ public class ControleurFamille extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        request.setCharacterEncoding("UTF-8");
+
         String action = request.getParameter("action");
         if (action.equals("demanderCompte")) {
             getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/demanderCompte.jsp").forward(request, response);
@@ -70,6 +75,11 @@ public class ControleurFamille extends HttpServlet {
             }
 
         } else if (action.equals("periodes")) {
+            try {
+                selectionPeriodes(request, response);
+            } catch (DAOException ex) {
+                Logger.getLogger(ControleurFamille.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
         } else if (action.equals("verifInscrire")) {
             try {
@@ -97,6 +107,8 @@ public class ControleurFamille extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        request.setCharacterEncoding("UTF-8");
 
         String action = request.getParameter("action");
         try {
@@ -201,7 +213,7 @@ public class ControleurFamille extends HttpServlet {
 
     private void remplirListeEnfantsEtActivites(HttpServletRequest request, HttpServletResponse response, List<Enfant> listEnfants) throws IOException, ServletException {
         try {
-
+            request.setCharacterEncoding("UTF-8");
             request.setAttribute("enfants", listEnfants);
 
             int max = 0;
@@ -229,7 +241,7 @@ public class ControleurFamille extends HttpServlet {
     }
 
     private void afficherActivites(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DAOException {
-
+        request.setCharacterEncoding("UTF-8");
         ActiviteDAO activiteDAO = new ActiviteDAO(ds);
         List<Activite> listeActivites = activiteDAO.getAllActivites();
         EtatDAO etatDAO = new EtatDAO(ds);
@@ -248,6 +260,9 @@ public class ControleurFamille extends HttpServlet {
     }
 
     private void gestionEnfant(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, DAOException {
+        request.setCharacterEncoding("UTF-8");
+        request.setAttribute("nom", request.getParameter("nom"));
+        request.setAttribute("prenom", request.getParameter("prenom"));
         EnfantDAO enfantDAO = new EnfantDAO(ds);
 
         List<InscriptionActivite> listeActivites = enfantDAO.getListeDInscriptionsParEnfant(request.getParameter("nom"), request.getParameter("prenom"));
@@ -258,6 +273,7 @@ public class ControleurFamille extends HttpServlet {
     }
 
     private void inscrireEnfant(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, DAOException {
+        request.setCharacterEncoding("UTF-8");
         EnfantDAO enfantDAO = new EnfantDAO(ds);
         enfantDAO.inscrireEnfant(request.getParameter("prenom"), request.getParameter("nom"), Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"));
 
@@ -274,6 +290,9 @@ public class ControleurFamille extends HttpServlet {
     }
 
     private void desInscrireEnfant(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, DAOException {
+        request.setCharacterEncoding("UTF-8");
+        
+        
         EnfantDAO enfantDAO = new EnfantDAO(ds);
         enfantDAO.desInscrireEnfant(request.getParameter("prenom"), request.getParameter("nom"), Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"));
 
@@ -284,6 +303,18 @@ public class ControleurFamille extends HttpServlet {
 
         request.setAttribute("message", "Success");
         getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/gestionEnfant.jsp").include(request, response);
+    }
+
+    private void selectionPeriodes(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, DAOException {
+        request.setCharacterEncoding("UTF-8");
+        PeriodeDAO periodeDAO = new PeriodeDAO(ds);
+        List<Periode> listePeriodes = periodeDAO.getAllPeriodesOuvertParActivite(Integer.parseInt(request.getParameter("idActivite")));
+
+        request.setAttribute("listePeriodes", listePeriodes);
+        request.setAttribute("activite", request.getParameter("activite"));
+        request.setAttribute("idActivite", request.getParameter("idActivite"));
+
+        getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/inscrireEnfant3.jsp").include(request, response);
     }
 
 }
