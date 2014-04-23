@@ -11,6 +11,7 @@ import com.unsoft.acl_grenoble.model.dao.ResponsableDAO;
 import com.unsoft.acl_grenoble.model.utilisateur.Compte;
 import com.unsoft.acl_grenoble.model.utilisateur.Responsable;
 import com.unsoft.acl_grenoble.model.utilisateur.ResponsableFamille;
+import com.unsoft.acl_grenoble.util.GestionMail;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -69,8 +70,10 @@ public class ControleurAssociation extends HttpServlet {
                     String resp = request.getParameter("resp");
                     String message = request.getParameter("message");
                     try {
+                        RFamilleDAO rFamilleDAO = new RFamilleDAO(dataSource);
+                        ResponsableFamille responsable = rFamilleDAO.getResponsable(resp);
                         compteDAO.activerCompte(resp);
-                        //envoyerEMail(true, message, resp);
+                        new GestionMail().envoyerMail(responsable.getMail(), "ACL Grenoble - Demande Refusée", message);
                     } catch (Exception ex) {
                         request.setAttribute("message", ex.getMessage());
                         getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
@@ -86,8 +89,9 @@ public class ControleurAssociation extends HttpServlet {
                         new EnfantDAO(dataSource).effacerEnfant(responsable.getNomFamille(), responsable.getPrenom());
                         rFamilleDAO.effacerResponsable(resp);
                         compteDAO.effacerCompte(resp);
-                        //envoyerEMail(true, message, resp);
-                    } catch (DAOException ex) {
+
+                        new GestionMail().envoyerMail(responsable.getMail(), "ACL Grenoble - Demande Refusée", message);
+                    } catch (Exception ex) {
                         request.setAttribute("message", ex.getMessage());
                         getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
                     }
@@ -172,14 +176,14 @@ public class ControleurAssociation extends HttpServlet {
                             responsable.setCompte(compte);
                             request.setAttribute("rFamille", responsable);
                             request.setAttribute("demande", true);
-                            request.setAttribute("message", "Bonjour " + responsable.getNomFamille() + responsable.getPrenom() + ",\n\n"
+                            request.setAttribute("message", "Bonjour " + responsable.getNomFamille() + " " + responsable.getPrenom() + ",\n\n"
                                     + "Votre demande de création de compte dans L’Association des Centres de Loisirs (ACL) de Grenoble a été ACEPTÉE.\n"
                                     + "Vous pouvez des maintenant y acceder avec les suivats données:\n\n"
                                     + "Nom d'utilisateur: " + responsable.getCompte().getNomUtilisateur() + "\n"
                                     + "Mot de Pass: " + responsable.getCompte().getMotdePass() + "\n\n"
                                     + "Merci pour votre confiance.\n\n"
                                     + "Cordialement,\n"
-                                    + respAsso.getNomFamille() + respAsso.getPrenom() + "\nResponsable Association des Centres de Loisirs (ACL) Grenoble");
+                                    + respAsso.getNomFamille() + " " + respAsso.getPrenom() + "\nResponsable Association des Centres de Loisirs (ACL) Grenoble");
                         } else {
                             throw new DAOException("Responsable non trouvé.");
                         }
@@ -199,12 +203,12 @@ public class ControleurAssociation extends HttpServlet {
                             responsable.setCompte(compte);
                             request.setAttribute("rFamille", responsable);
                             request.setAttribute("demande", false);
-                            request.setAttribute("message", "Bonjour " + responsable.getNomFamille() + responsable.getPrenom() + ",\n\n"
+                            request.setAttribute("message", "Bonjour " + responsable.getNomFamille() + " " + responsable.getPrenom() + ",\n\n"
                                     + "Votre demande de création de compte dans L’Association des Centres de Loisirs (ACL) de Grenoble a été REFUSÉE.\n"
                                     + "\n\n"
                                     + "Plus d'information: " + respAsso.getMail() + "\n\n"
                                     + "Cordialement,\n"
-                                    + respAsso.getNomFamille() + respAsso.getPrenom() + "\nResponsable Association des Centres de Loisirs (ACL) Grenoble");
+                                    + respAsso.getNomFamille() + " " + respAsso.getPrenom() + "\nResponsable Association des Centres de Loisirs (ACL) Grenoble");
                         } else {
                             throw new DAOException("Responsable non trouvé.");
                         }
@@ -224,54 +228,6 @@ public class ControleurAssociation extends HttpServlet {
         } else {
             getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
         }
-    }
-
-    /**
-     * Sert a envoyer un message à l'Utilisateur
-     *
-     * @param reponsePositive Evalué à vrai si la reponse est positive.
-     * @param content Mot de passe si est un reponse positive, Justification au
-     * cas contraire
-     * @param email email de l'utilisateur
-     * @return
-     */
-    private boolean envoyerEMail(boolean reponsePositive, String content, String email) throws MessagingException {
-        try {
-            // Conection Properties
-            Properties props = new Properties();
-            props.setProperty("mail.smtp.host", "smtp.gmail.com");
-            props.setProperty("mail.smtp.starttls.enable", "true");
-            props.setProperty("mail.smtp.port", "587");
-            props.setProperty("mail.smtp.user", email);
-            props.setProperty("mail.smtp.auth", "true");
-
-            // Prepare session
-            Session session = Session.getDefaultInstance(props);
-
-            // Build Message
-            MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("centre.loisirs.grenoble@gmail.com"));
-            message.addRecipient(
-                    Message.RecipientType.TO,
-                    new InternetAddress(email));
-            if (reponsePositive) {
-                message.setSubject("ACL Grenoble - Demande Acceptée");
-            } else {
-                message.setSubject("ACL Grenoble - Demande Refusée");
-            }
-            message.setText(content);
-
-            // Send Message
-            Transport t = session.getTransport("smtp");
-            t.connect("centre.loisirs.grenoble@gmail.com", "webprojet");
-            t.sendMessage(message, message.getAllRecipients());
-
-            // Close
-            t.close();
-        } catch (MessagingException ex) {
-            throw ex;
-        }
-        return true;
     }
 
     private HttpServletRequest listPeriodes(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

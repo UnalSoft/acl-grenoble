@@ -11,7 +11,7 @@ package com.unsoft.acl_grenoble.model.centre;
  * @author juanmanuelmartinezromero
  */
 public class CentreDeLoisirs {
-   private String nomCentre;
+   private final String nomCentre;
 
     public CentreDeLoisirs(String nomCentre) {
         this.nomCentre = nomCentre;

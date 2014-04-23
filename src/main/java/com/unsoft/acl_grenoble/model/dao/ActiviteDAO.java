@@ -103,7 +103,7 @@ public class ActiviteDAO extends AbstractDataBaseDAO {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public boolean lierEtat(int idActivite, String periode, String etat) {
+    public boolean lierEtat(int idActivite, String periode, EtatEnum etat) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -120,7 +120,7 @@ public class ActiviteDAO extends AbstractDataBaseDAO {
             if (rset.next()) {
                 activite = new Activite(rset.getInt("idActivite"),
                         new Theme(ThemeEnum.getTheme(rset.getString("nomTheme")), new CentreDeLoisirs(rset.getString("nomCentre"))),
-                        rset.getString("nom"), rset.getString("descriptif"), rset.getInt("nbMaxAnim"));
+                        rset.getString("nom"), rset.getString("descriptif"), rset.getInt("nbMaxAnim"), rset.getFloat("prixParJour"));
             }
             rset.close();
             stmt.close();
@@ -143,7 +143,7 @@ public class ActiviteDAO extends AbstractDataBaseDAO {
             while (rs.next()) {
                 Activite activite = new Activite(rs.getInt("idActivite"),
                         new Theme(ThemeEnum.getTheme(rs.getString("nomTheme")), new CentreDeLoisirs(rs.getString("nomCentre"))),
-                        rs.getString("nom"), rs.getString("descriptif"), rs.getInt("nbMaxAnim"));
+                        rs.getString("nom"), rs.getString("descriptif"), rs.getInt("nbMaxAnim"), rs.getFloat("prixParJour"));
                 activites.add(activite);
 
             }

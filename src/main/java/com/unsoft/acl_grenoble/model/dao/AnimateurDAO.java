@@ -83,11 +83,11 @@ public class AnimateurDAO extends AbstractDataBaseDAO {
             conn = getConnection();
             Statement st = conn.createStatement();
             PreparedStatement stmt = conn.prepareStatement("SELECT P.PERIODE, P.DATEDEBUT, P.DATEFIN "
-                    + "FROM EST_DISPONIBLE E, PERIODE P, ANIMATEUR A\n"
-                    + "WHERE E.PERIODE = P.PERIODE\n"
-                    + "AND E.NOMANIMATEUR = A.NOMANIMATEUR\n"
-                    + "AND E.PRENOMANIMATEUR = A.PRENOMANIMATEUR\n"
-                    + "AND E.NOMANIMATEUR = ? AND E.PRENOMANIMATEUR = ?\n"
+                    + "FROM EST_DISPONIBLE E, PERIODE P, ANIMATEUR A "
+                    + "WHERE E.PERIODE = P.PERIODE "
+                    + "AND E.NOMANIMATEUR = A.NOMANIMATEUR "
+                    + "AND E.PRENOMANIMATEUR = A.PRENOMANIMATEUR "
+                    + "AND E.NOMANIMATEUR = ? AND E.PRENOMANIMATEUR = ? "
                     + "AND A.ESTINTERNE = 0");
             stmt.setString(1, nomAnim);
             stmt.setString(2, prenomAnim);
@@ -111,11 +111,11 @@ public class AnimateurDAO extends AbstractDataBaseDAO {
         try {
             conn = getConnection();
             PreparedStatement stmt = conn.prepareStatement("SELECT A.NOMANIMATEUR, A.PRENOMANIMATEUR, "
-                    + "A.EMAIL, A.ESTINTERNE\n"
-                    + "FROM EST_DISPONIBLE E, ANIMATEUR A\n"
-                    + "AND E.NOMANIMATEUR = A.NOMANIMATEUR\n"
-                    + "AND E.PRENOMANIMATEUR = A.PRENOMANIMATEUR\n"
-                    + "AND A.ESTINTERNE = ?\n"
+                    + "A.EMAIL, A.ESTINTERNE "
+                    + "FROM EST_DISPONIBLE E, ANIMATEUR A "
+                    + "WHERE E.NOMANIMATEUR = A.NOMANIMATEUR "
+                    + "AND E.PRENOMANIMATEUR = A.PRENOMANIMATEUR "
+                    + "AND A.ESTINTERNE = ? "
                     + "AND E.PERIODE = ?");
             stmt.setBoolean(1, estInterne);
             stmt.setString(2, periode);
@@ -135,7 +135,29 @@ public class AnimateurDAO extends AbstractDataBaseDAO {
     }
 
     public Animateur getAnimateur(String nomAnimateur, String prenomAnimateur) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Animateur animateur = null;
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Animateur "
+                    + "WHERE nomAnimateur = ? "
+                    + "AND prenomAnimateur = ?");
+            stmt.setString(1, nomAnimateur);
+            stmt.setString(2, prenomAnimateur);
+            ResultSet rset = stmt.executeQuery();
+
+            if (rset.next()) {
+                animateur = new Animateur(rset.getString("nomAnimateur"), rset.getString("prenomAnimateur"), 
+                        rset.getString("email"), rset.getBoolean("estInterne"));
+            }
+            rset.close();
+            stmt.close();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
+        return animateur;
     }
 
     public Animateur addAnimateur(String nomAnimateur, String prenomAnimateur, String email, boolean isIntern) throws DAOException {

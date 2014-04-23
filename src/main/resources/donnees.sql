@@ -35,6 +35,7 @@ INSERT ALL
   INTO ETATENUM VALUES ('PRE_CONFIRMEE')
   INTO ETATENUM VALUES ('CONFIRMEE')
   INTO ETATENUM VALUES ('FINIE')
+  INTO ETATENUM VALUES ('ANNULEE')
 SELECT * FROM dual;
 
 INSERT ALL
@@ -84,19 +85,29 @@ SELECT * FROM dual;
 INSERT ALL
   INTO ACTIVITE (NOMCENTRE, NOMTHEME, NOM, DESCRIPTIF, NBMAXANIM) 
     VALUES('MAISON des COLLINES', 'Découverte de la nature', 'Visite de la campagne', 
-    'les enfants inscrits peuvent profiter des nombreux espaces verts de la Maison des Collines et d''un encadrement, par des équipes d''animation sensibilisées à la nature',
-    10)
+    'les enfants inscrits peuvent profiter des nombreux espaces verts de la Maison des Collines et d''un encadrement, par des équipes d''animation sensibilisées à la nature', 10)
+  INTO ACTIVITE (NOMCENTRE, NOMTHEME, NOM, DESCRIPTIF, NBMAXANIM) 
+	  VALUES ('MAISON des COLLINES', 'Découverte de la nature', 'Tir à l''arc', 'Les activités se déroulent à St Martin d’Uriage et tour- nent autour de deux grands thèmes décidés une semaine à l’avance, par l’équipe d’animation. Les enfants sont répartis en 2 groupes d’âge.', 5)
 SELECT * FROM dual;
 
 INSERT ALL
-  INTO PERIODE VALUES('Découverte de la nature 04/28 - 04/30', 'Vacances de printemps 2014', DATE '2014-04-28', DATE '2014-04-30')
+  INTO COMPETENCEACTIVITE VALUES(1, 'Charisme')
+  INTO COMPETENCEACTIVITE VALUES(1, 'Leadership')
+  INTO COMPETENCEACTIVITE VALUES(1, 'Sens de l’humour')
+  INTO COMPETENCEACTIVITE VALUES(2, 'Capacité à superviser')
+  INTO COMPETENCEACTIVITE VALUES(2, 'Motivateur')
+  INTO COMPETENCEACTIVITE VALUES(2, 'Stratégique')
+SELECT * FROM dual;
+
+INSERT ALL
+  INTO PERIODE VALUES('Découverte de la nature 04/28/2014 - 04/30/2014', 'Vacances de printemps 2014', DATE '2014-04-28', DATE '2014-04-30')
+  INTO PERIODE VALUES ('Tir à l''arc 04/18/2014 - 04/28/2014', 'Vacances de printemps 2014', DATE '2014-04-18', DATE '2014-04-28')
 SELECT * FROM dual;  
 
 INSERT ALL 
-  INTO ETAT VALUES(1, 'Découverte de la nature 04/28 - 04/30', 'OUVERTE')
+  INTO ETAT VALUES(1, 'Découverte de la nature 04/28/2014 - 04/30/2014', 'OUVERTE')
+  INTO ETAT VALUES (2, 'Tir à l''arc 04/18/2014 - 04/28/2014', 'PRE_CONFIRMEE')
 SELECT * FROM dual;
-
-
 
 
 INSERT ALL
@@ -104,36 +115,96 @@ INSERT ALL
   INTO COMPTE VALUES ('Marie.Bertrand', '1234', 1)
   INTO COMPTE VALUES ('Dominique.Perrier', '1234', 1)
   INTO COMPTE VALUES ('Paul.Henriot', '1234', 1)
+  INTO COMPTE VALUES ('Jose.Pavarotti', '1234', 1)
   INTO COMPTE VALUES ('Janine.Labrune', '1234', 0)
   INTO COMPTE VALUES ('Carine.Schmitt', '1234', 0)
 SELECT * FROM dual;
 
 INSERT ALL
-  INTO UTILISATEUR VALUES ('Fuller','Richard','Richard.Fuller','Richard.Fuller@mail.com')
-  INTO UTILISATEUR VALUES ('Bertrand','Marie','Marie.Bertrand','Marie.Bertrand@mail.com')
-  INTO UTILISATEUR VALUES ('Perrier','Dominique','Dominique.Perrier','Dominique.Perrier@mail.com')
-  INTO UTILISATEUR VALUES ('Henriot','Paul','Paul.Henriot','Paul.Henriot@mail.com')
-  INTO UTILISATEUR VALUES ('Labrune','Janine','Janine.Labrune','Janine.Labrune@mail.com') 
-  INTO UTILISATEUR VALUES ('Schmitt','Carine','Carine.Schmitt','Carine.Schmitt@mail.com') 
+  INTO UTILISATEUR VALUES ('Fuller','Richard','Richard.Fuller','Richard.Fuller@yopmail.com')
+  INTO UTILISATEUR VALUES ('Bertrand','Marie','Marie.Bertrand','Marie.Bertrand@yopmail.com')
+  INTO UTILISATEUR VALUES ('Perrier','Dominique','Dominique.Perrier','Dominique.Perrier@yopmail.com')
+  INTO UTILISATEUR VALUES ('Henriot','Paul','Paul.Henriot','Paul.Henriot@yopmail.com')
+  INTO UTILISATEUR VALUES ('Pavarotti','Jose','Jose.Pavarotti','Jose.Pavarotti@yopmail.com')
+  INTO UTILISATEUR VALUES ('Labrune','Janine','Janine.Labrune','Janine.Labrune@yopmail.com') 
+  INTO UTILISATEUR VALUES ('Schmitt','Carine','Carine.Schmitt','Carine.Schmitt@yopmail.com') 
 SELECT * FROM dual;
 
 INSERT ALL
-  INTO RESPONSABLE VALUES ('Fuller','Richard', null, 'R_ASSOCIATION', 'Richard.Fuller','Richard.Fuller@mail.com')
-  INTO RESPONSABLE VALUES ('Bertrand','Marie', 'MAISON des COLLINES', 'R_CENTRE', 'Marie.Bertrand','Marie.Bertrand@mail.com')
-  INTO RESPONSABLE VALUES ('Perrier','Dominique', 'MAISON des COLLINES', 'R_PLANIFICATION', 'Dominique.Perrier','Dominique.Perrier@mail.com')
+  INTO RESPONSABLE VALUES ('Fuller','Richard', null, 'R_ASSOCIATION', 'Richard.Fuller','Richard.Fuller@yopmail.com')
+  INTO RESPONSABLE VALUES ('Bertrand','Marie', 'MAISON des COLLINES', 'R_CENTRE', 'Marie.Bertrand','Marie.Bertrand@yopmail.com')
+  INTO RESPONSABLE VALUES ('Perrier','Dominique', 'MAISON des COLLINES', 'R_PLANIFICATION', 'Dominique.Perrier','Dominique.Perrier@yopmail.com')
 SELECT * FROM dual;
 
 INSERT ALL
   INTO RFAMILLE VALUES('Henriot','Paul', 'Paul.Henriot','Paul.Henriot@mail.com', 36000)
+  INTO RFAMILLE VALUES('Pavarotti','Jose','Jose.Pavarotti','Jose.Pavarotti@yopmail.com', 36000)
   INTO RFAMILLE VALUES('Labrune','Janine','Janine.Labrune','Janine.Labrune@mail.com', 30000)
   INTO RFAMILLE VALUES('Schmitt','Carine','Carine.Schmitt','Carine.Schmitt@mail.com', 32000)
 SELECT * FROM dual;
 
 INSERT ALL
   INTO ENFANT VALUES('Daniel', 'Henriot', 'Henriot','Paul', 15)
+  INTO ENFANT VALUES('Charlie', 'Henriot', 'Henriot','Paul', 15)
+  INTO ENFANT VALUES('Jenny', 'Henriot', 'Henriot','Paul', 10)
+  INTO ENFANT VALUES('Anabela', 'Pavarotti', 'Pavarotti','Jose', 10)
+  INTO ENFANT VALUES('Mary', 'Pavarotti', 'Pavarotti','Jose', 10)
+  INTO ENFANT VALUES('Paul', 'Pavarotti', 'Pavarotti','Jose', 14)
   INTO ENFANT VALUES('Annette', 'Roulet', 'Labrune','Janine', 16)
   INTO ENFANT VALUES('Christian', 'Roulet', 'Labrune','Janine', 12)
   INTO ENFANT VALUES('John', 'Schmitt', 'Schmitt','Carine', 8)
 SELECT * FROM dual;
 
+INSERT ALL
+  INTO ANIMATEUR VALUES('Phillips', 'Rene', 'Rene.Phillips@yopmail.com', 1)
+  INTO ANIMATEUR VALUES('Pfalzheim', 'Henriette', 'Henriette.Pfalzheim@yopmail.com', 1)
+  INTO ANIMATEUR VALUES('Bertrand', 'Marie', 'Marie.Bertrand@yopmail.com', 1)
+  INTO ANIMATEUR VALUES('Pipps', 'Georg', 'Georg.Pipps@yopmail.com', 1)
+  INTO ANIMATEUR VALUES('Batista', 'Bernardo', 'Bernardo.Batista@yopmail.com', 0)
+  INTO ANIMATEUR VALUES('Kloss', 'Horst', 'Horst.Kloss@yopmail.com', 0)
+  INTO ANIMATEUR VALUES('Wilson', 'Paula', 'Paula.Wilson@yopmail.com', 0)
+  INTO ANIMATEUR VALUES('Limeira', 'Janete', 'Janete.Limeira@yopmail.com', 0)
+SELECT * FROM dual;
+
+INSERT ALL
+  INTO COMPETENCEANIMATEUR VALUES('Phillips', 'Rene', 'Capacité à superviser')
+  INTO COMPETENCEANIMATEUR VALUES('Phillips', 'Rene', 'Motivateur')
+  INTO COMPETENCEANIMATEUR VALUES('Phillips', 'Rene', 'Stratégique')
+  INTO COMPETENCEANIMATEUR VALUES('Phillips', 'Rene', 'Sociable')
+  INTO COMPETENCEANIMATEUR VALUES('Pfalzheim', 'Henriette', 'Capacité à superviser')
+  INTO COMPETENCEANIMATEUR VALUES('Pfalzheim', 'Henriette', 'Sociable')
+  INTO COMPETENCEANIMATEUR VALUES('Bertrand', 'Marie', 'Sociable')
+  INTO COMPETENCEANIMATEUR VALUES('Pipps', 'Georg', 'Sociable')
+  INTO COMPETENCEANIMATEUR VALUES('Batista', 'Bernardo', 'Capacité à superviser')
+  INTO COMPETENCEANIMATEUR VALUES('Batista', 'Bernardo', 'Motivateur')
+  INTO COMPETENCEANIMATEUR VALUES('Batista', 'Bernardo', 'Stratégique')
+  INTO COMPETENCEANIMATEUR VALUES('Batista', 'Bernardo', 'Sociable')
+  INTO COMPETENCEANIMATEUR VALUES('Kloss', 'Horst', 'Capacité à superviser')
+  INTO COMPETENCEANIMATEUR VALUES('Kloss', 'Horst', 'Sociable')
+  INTO COMPETENCEANIMATEUR VALUES('Wilson', 'Paula', 'Capacité à superviser')
+  INTO COMPETENCEANIMATEUR VALUES('Limeira', 'Janete', 'Capacité à superviser')
+SELECT * FROM dual;
+
+INSERT ALL
+  INTO EST_DISPONIBLE VALUES('Phillips', 'Rene', 'Vacances de printemps 2014')
+  INTO EST_DISPONIBLE VALUES('Pfalzheim', 'Henriette', 'Vacances de printemps 2014')
+  INTO EST_DISPONIBLE VALUES('Bertrand', 'Marie', 'Vacances d''été 2014')
+  INTO EST_DISPONIBLE VALUES('Pipps', 'Georg', 'Vacances de Toussaint 2014')
+  INTO EST_DISPONIBLE VALUES('Batista', 'Bernardo', 'Vacances de printemps 2014')
+  INTO EST_DISPONIBLE VALUES('Kloss', 'Horst', 'Vacances de printemps 2014')
+  INTO EST_DISPONIBLE VALUES('Wilson', 'Paula', 'Vacances d''été 2014')
+  INTO EST_DISPONIBLE VALUES('Limeira', 'Janete', 'Vacances de Toussaint 2014')
+SELECT * FROM dual;
+
+INSERT ALL
+  INTO INSCRIPTION VALUES(41, 'Daniel', 'Henriot', 'Tir à l''arc 04/18 - 04/28')
+  INTO INSCRIPTION VALUES(41, 'Charlie', 'Henriot', 'Tir à l''arc 04/18 - 04/28')
+  INTO INSCRIPTION VALUES(41, 'Jenny', 'Henriot', 'Tir à l''arc 04/18 - 04/28')
+  INTO INSCRIPTION VALUES(41, 'Anabela', 'Pavarotti', 'Tir à l''arc 04/18 - 04/28')
+  INTO INSCRIPTION VALUES(41, 'Mary', 'Pavarotti', 'Tir à l''arc 04/18 - 04/28')
+  INTO INSCRIPTION VALUES(41, 'Paul', 'Pavarotti', 'Tir à l''arc 04/18 - 04/28')
+SELECT * FROM dual;
+
 commit;
+
+DESC INSCRIPTION;

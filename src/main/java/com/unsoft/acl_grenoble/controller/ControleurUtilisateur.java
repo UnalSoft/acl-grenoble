@@ -91,7 +91,7 @@ public class ControleurUtilisateur extends HttpServlet {
                     break;
                 case R_CENTRE:
                     //TODO Retourner vers la page de R. Centre (et verifier les parametres)
-                    getServletContext().getRequestDispatcher("/WEB-INF/responsableCentre/accueilRespCentre.jsp").forward(request, response);
+                    getServletContext().getRequestDispatcher("/ControleurCentre").forward(request, response);
                     break;
                 case R_PLANIFICATION:
                     //TODO Retourner vers la page de R. Plan (et verifier les parametres)
