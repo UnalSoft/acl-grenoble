@@ -52,5 +52,9 @@ public class Activite {
     public Theme getTheme() {
         return theme;
     }
+
+    public float getPrixParJour() {
+        return prixParJour;
+    }
     
 }
