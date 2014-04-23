@@ -31,8 +31,7 @@ public class EtatDAO extends AbstractDataBaseDAO {
         Connection conn = null;
         try {
             conn = getConnection();
-            Statement st = conn.createStatement();
-            PreparedStatement stmt = conn.prepareStatement("SELECT A.IDACTIVITE, A.NOMCENTRE, A.NOMTHEME, A.NOM, A.DESCRIPTIF, A.NBMAXANIM, "
+            PreparedStatement stmt = conn.prepareStatement("SELECT A.IDACTIVITE, A.NOMCENTRE, A.NOMTHEME, A.NOM, A.DESCRIPTIF, A.NBMAXANIM, A.PRIXPARJOUR"
                     + "P.PERIODE,  P.SUPERPERIODE, P.DATEDEBUT, P.DATEFIN, E.ETAT\n"
                     + "FROM ACTIVITE A, ETAT E, PERIODE P\n"
                     + "WHERE A.IDACTIVITE = E.IDACTIVITE\n"
@@ -46,7 +45,7 @@ public class EtatDAO extends AbstractDataBaseDAO {
             while (rs.next()) {
                 Activite activite = new Activite(rs.getInt("idActivite"),
                         new Theme(ThemeEnum.getTheme(rs.getString("nomTheme")), new CentreDeLoisirs(rs.getString("nomCentre"))),
-                        rs.getString("nom"), rs.getString("descriptif"), rs.getInt("nbMaxAnim"));
+                        rs.getString("nom"), rs.getString("descriptif"), rs.getInt("nbMaxAnim"), rs.getFloat("prixParJour"));
                 Periode periode = new Periode(rs.getString("periode"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getString("superperiode"));
                 Etat etat = new Etat(activite, periode, EtatEnum.getEtat(rs.getString("etat")));
                 etats.add(etat);

@@ -18,13 +18,15 @@ public class Activite {
    private String nomActivite;
    private List<Competence> competences;
    private Theme theme;
+   private float prixParJour;
 
-    public Activite(int idActivite, Theme theme, String nomActivite, String descriptif, int nbMaxAnimateurs) {
+    public Activite(int idActivite, Theme theme, String nomActivite, String descriptif, int nbMaxAnimateurs, float prixParJour) {
         this.idActivite = idActivite;
         this.nbMaxAnimateurs = nbMaxAnimateurs;
         this.descriptif = descriptif;
         this.nomActivite = nomActivite;
         this.theme = theme;
+        this.prixParJour = prixParJour;
     }
 
     public int getIdActivite() {

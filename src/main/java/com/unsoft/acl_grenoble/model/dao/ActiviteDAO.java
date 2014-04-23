@@ -90,7 +90,7 @@ public class ActiviteDAO extends AbstractDataBaseDAO {
             if (rset.next()) {
                 activite = new Activite(rset.getInt("idActivite"), 
                 new Theme(ThemeEnum.getTheme(rset.getString("nomTheme")), new CentreDeLoisirs(rset.getString("nomCentre"))),
-                rset.getString("nom"), rset.getString("descriptif"), rset.getInt("nbMaxAnim"));
+                rset.getString("nom"), rset.getString("descriptif"), rset.getInt("nbMaxAnim"), rset.getFloat("prixParJour"));
             }
             rset.close();
             stmt.close();

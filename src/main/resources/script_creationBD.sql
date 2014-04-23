@@ -52,6 +52,7 @@ create table ACTIVITE  (
    NOM                  VARCHAR2(30)                    not null,
    DESCRIPTIF           VARCHAR2(200)                    not null,
    NBMAXANIM            SMALLINT                        not null,
+   PRIXPARJOUR          FLOAT                           not null,
    foreign key (NOMCENTRE, NOMTHEME) references THEME (NOMCENTRE, NOMTHEME)
 );
 

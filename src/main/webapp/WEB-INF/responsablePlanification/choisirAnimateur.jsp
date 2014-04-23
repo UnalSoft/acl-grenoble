@@ -121,7 +121,7 @@
                     <button type="submit" class="btn btn-primary btn-block" name="submit">Continuer</button>
                 </c:if>
                 <c:if test="${impossible == true}">
-                    <p><button type="submit" class="btn btn-warning btn-block" name="submit">Retourner</button></p>
+                    <p><button type="submit" class="btn btn-warning btn-block" name="submit">Continuer plus tard</button></p>
                     <p><button type="submit" class="btn btn-danger btn-block" name="action" value="annulerActivite">Annuler Activite</button></p>
                 </c:if>
             </div>

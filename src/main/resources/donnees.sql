@@ -35,6 +35,7 @@ INSERT ALL
   INTO ETATENUM VALUES ('PRE_CONFIRMEE')
   INTO ETATENUM VALUES ('CONFIRMEE')
   INTO ETATENUM VALUES ('FINIE')
+  INTO ETATENUM VALUES ('ANNULEE')
 SELECT * FROM dual;
 
 INSERT ALL
@@ -99,13 +100,13 @@ INSERT ALL
 SELECT * FROM dual;
 
 INSERT ALL
-  INTO PERIODE VALUES('Découverte de la nature 04/28 - 04/30', 'Vacances de printemps 2014', DATE '2014-04-28', DATE '2014-04-30')
-  INTO PERIODE VALUES ('Tir à l''arc 04/18 - 04/28', 'Vacances de printemps 2014', DATE '2014-04-18', DATE '2014-04-28')
+  INTO PERIODE VALUES('Découverte de la nature 04/28/2014 - 04/30/2014', 'Vacances de printemps 2014', DATE '2014-04-28', DATE '2014-04-30')
+  INTO PERIODE VALUES ('Tir à l''arc 04/18/2014 - 04/28/2014', 'Vacances de printemps 2014', DATE '2014-04-18', DATE '2014-04-28')
 SELECT * FROM dual;  
 
 INSERT ALL 
-  INTO ETAT VALUES(1, 'Découverte de la nature 04/28 - 04/30', 'OUVERTE')
-  INTO ETAT VALUES (2, 'Tir à l''arc 04/18 - 04/28', 'PRE_CONFIRMEE')
+  INTO ETAT VALUES(1, 'Découverte de la nature 04/28/2014 - 04/30/2014', 'OUVERTE')
+  INTO ETAT VALUES (2, 'Tir à l''arc 04/18/2014 - 04/28/2014', 'PRE_CONFIRMEE')
 SELECT * FROM dual;
 
 
@@ -118,6 +119,7 @@ INSERT ALL
   INTO COMPTE VALUES ('Janine.Labrune', '1234', 0)
   INTO COMPTE VALUES ('Carine.Schmitt', '1234', 0)
 SELECT * FROM dual;
+
 INSERT ALL
   INTO UTILISATEUR VALUES ('Fuller','Richard','Richard.Fuller','Richard.Fuller@yopmail.com')
   INTO UTILISATEUR VALUES ('Bertrand','Marie','Marie.Bertrand','Marie.Bertrand@yopmail.com')
@@ -136,6 +138,7 @@ SELECT * FROM dual;
 
 INSERT ALL
   INTO RFAMILLE VALUES('Henriot','Paul', 'Paul.Henriot','Paul.Henriot@mail.com', 36000)
+  INTO RFAMILLE VALUES('Pavarotti','Jose','Jose.Pavarotti','Jose.Pavarotti@yopmail.com', 36000)
   INTO RFAMILLE VALUES('Labrune','Janine','Janine.Labrune','Janine.Labrune@mail.com', 30000)
   INTO RFAMILLE VALUES('Schmitt','Carine','Carine.Schmitt','Carine.Schmitt@mail.com', 32000)
 SELECT * FROM dual;
@@ -144,6 +147,9 @@ INSERT ALL
   INTO ENFANT VALUES('Daniel', 'Henriot', 'Henriot','Paul', 15)
   INTO ENFANT VALUES('Charlie', 'Henriot', 'Henriot','Paul', 15)
   INTO ENFANT VALUES('Jenny', 'Henriot', 'Henriot','Paul', 10)
+  INTO ENFANT VALUES('Anabela', 'Pavarotti', 'Pavarotti','Jose', 10)
+  INTO ENFANT VALUES('Mary', 'Pavarotti', 'Pavarotti','Jose', 10)
+  INTO ENFANT VALUES('Paul', 'Pavarotti', 'Pavarotti','Jose', 14)
   INTO ENFANT VALUES('Annette', 'Roulet', 'Labrune','Janine', 16)
   INTO ENFANT VALUES('Christian', 'Roulet', 'Labrune','Janine', 12)
   INTO ENFANT VALUES('John', 'Schmitt', 'Schmitt','Carine', 8)
@@ -191,9 +197,12 @@ INSERT ALL
 SELECT * FROM dual;
 
 INSERT ALL
-  INTO INSCRIPTION VALUES(2, 'Daniel', 'Henriot', 'Tir à l''arc 04/18 - 04/28')
-  INTO INSCRIPTION VALUES(2, 'Charlie', 'Henriot', 'Tir à l''arc 04/18 - 04/28')
-  INTO INSCRIPTION VALUES(2, 'Jenny', 'Henriot', 'Tir à l''arc 04/18 - 04/28')
+  INTO INSCRIPTION VALUES(41, 'Daniel', 'Henriot', 'Tir à l''arc 04/18 - 04/28')
+  INTO INSCRIPTION VALUES(41, 'Charlie', 'Henriot', 'Tir à l''arc 04/18 - 04/28')
+  INTO INSCRIPTION VALUES(41, 'Jenny', 'Henriot', 'Tir à l''arc 04/18 - 04/28')
+  INTO INSCRIPTION VALUES(41, 'Anabela', 'Pavarotti', 'Tir à l''arc 04/18 - 04/28')
+  INTO INSCRIPTION VALUES(41, 'Mary', 'Pavarotti', 'Tir à l''arc 04/18 - 04/28')
+  INTO INSCRIPTION VALUES(41, 'Paul', 'Pavarotti', 'Tir à l''arc 04/18 - 04/28')
 SELECT * FROM dual;
 
 commit;
