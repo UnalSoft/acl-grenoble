@@ -61,10 +61,10 @@
                     <tr>
                         <td>${per.nomPeriode()}</td>
                         <td>${per.getDateDebut()}</td>
-                        <td>${per.getDatefin()}</td>
+                        <td>${per.getDateFin()}</td>
                         <td>${per.getSuperPeriode()}</td>
                         
-                        <td><a href="ControleurFamille?action=verifInscrire&nom=${nom}&prenom=${prenom}&idActivite=${activite}&periode=${per.nomPeriode()}" class="btn btn-success">Inscrire à une nouvelle activité</a></td>
+                        <td><a href="ControleurFamille?action=verifInscrire&nom=${nom}&prenom=${prenom}&idActivite=${activite}&periode=${per.nomPeriode()}" class="btn btn-success">Confirmer Inscription</a></td>
                         <!-- Code pour montrer l'information de chaque activite dans lequel il est present -->
 
                     </tr>

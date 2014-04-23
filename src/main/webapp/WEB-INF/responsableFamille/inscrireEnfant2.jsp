@@ -65,7 +65,7 @@
                         <td><p>${act.getDescriptif()}</p></td>
                         <td>EUR ${act.getPrixParJour()}</td>
 
-                        <td><a href="ControleurFamille?action=periodes&nom=${nom}&prenom=${prenom}&idActivite=${act.getIdActivite()}&activite=${act.getNomActivite()}" class="btn btn-success">Inscrire à une nouvelle activité</a></td>
+                        <td><a href="ControleurFamille?action=periodes&nom=${nom}&prenom=${prenom}&idActivite=${act.getIdActivite()}&activite=${act.getNomActivite()}" class="btn btn-info">Selection de periode</a></td>
                         <!-- Code pour montrer l'information de chaque activite dans lequel il est present -->
 
                     </tr>
