@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context antiJARLocking="true" path="/acl_grenoble">
-  <Resource 
-  auth="Container" 
-  type="javax.sql.DataSource"
-  driverClassName="oracle.jdbc.OracleDriver" 
-  url="jdbc:oracle:thin:@ensioracle1.imag.fr:1521:ensioracle1"
-  maxActive="10" 
-  maxIdle="3" 
-  maxWait="10000" 
-  name="jdbc/acl_grenoble"
-  password="martijua"
-  username="martijua"
-  />  
+    <Resource auth="Container" 
+              driverClassName="oracle.jdbc.OracleDriver" 
+              maxActive="10" 
+              maxIdle="3" 
+              maxWait="10000" 
+              name="jdbc/acl_grenoble" 
+              password="martijua" 
+              type="javax.sql.DataSource" 
+              url="jdbc:oracle:thin:@ensioracle1.imag.fr:1521:ensioracle1" 
+              username="martijua"/>
 </Context>
