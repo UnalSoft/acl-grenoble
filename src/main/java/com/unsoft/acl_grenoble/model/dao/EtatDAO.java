@@ -59,4 +59,34 @@ public class EtatDAO extends AbstractDataBaseDAO {
         return etats;
     }
 
+    public List<Etat> getActivitesParEtat(String etat) throws DAOException {
+        List<Etat> etats = new ArrayList<Etat>();
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement("SELECT A.IDACTIVITE, A.NOMCENTRE, A.NOMTHEME, A.NOM, A.DESCRIPTIF, A.NBMAXANIM, "
+                    + "P.PERIODE,  P.SUPERPERIODE, P.DATEDEBU   T, P.DATEFIN, E.ETAT\n"
+                    + "FROM ACTIVITE A, ETAT E, PERIODE P\n"
+                    + "WHERE A.IDACTIVITE = E.IDACTIVITE\n"
+                    + "AND P.PERIODE = E.PERIODE\n"
+                    + "AND E.ETAT = ?");
+            stmt.setString(1, etat);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Activite activite = new Activite(rs.getInt("idActivite"),
+                        new Theme(ThemeEnum.getTheme(rs.getString("nomTheme")), new CentreDeLoisirs(rs.getString("nomCentre"))),
+                        rs.getString("nom"), rs.getString("descriptif"), rs.getInt("nbMaxAnim"));
+                Periode periode = new Periode(rs.getString("periode"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getString("superperiode"));
+                Etat ett = new Etat(activite, periode, EtatEnum.getEtat(etat));
+                etats.add(ett);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
+        return etats;
+    }
+
 }

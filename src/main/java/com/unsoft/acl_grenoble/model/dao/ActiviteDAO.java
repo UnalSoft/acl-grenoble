@@ -3,10 +3,13 @@ package com.unsoft.acl_grenoble.model.dao;
 import com.unsoft.acl_grenoble.model.centre.Activite;
 import com.unsoft.acl_grenoble.model.centre.CentreDeLoisirs;
 import com.unsoft.acl_grenoble.model.centre.Competence;
+import com.unsoft.acl_grenoble.model.centre.Etat;
 import com.unsoft.acl_grenoble.model.centre.EtatEnum;
+import com.unsoft.acl_grenoble.model.centre.InscriptionActivite;
 import com.unsoft.acl_grenoble.model.centre.Periode;
 import com.unsoft.acl_grenoble.model.centre.Theme;
 import com.unsoft.acl_grenoble.model.centre.ThemeEnum;
+import java.awt.Desktop;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -199,4 +202,42 @@ public class ActiviteDAO extends AbstractDataBaseDAO {
         }
 
     }
+
+    public List<Activite> purifyListActivites(List<Activite> listeBrut, List<Etat> listeActivitesOuverts, List<InscriptionActivite> listeInscriptionsEnfant) {
+        List<Activite> listePropre = listeBrut;
+
+        for (Activite each : listePropre) {
+
+            boolean ouvert = false;
+
+            for (Etat each2 : listeActivitesOuverts) {
+                if (each.getIdActivite() == each2.getActivite().getIdActivite()) {
+                    ouvert = true;
+                }
+            }
+
+            if (!ouvert) {
+                listePropre.remove(each);
+            } else {
+
+                boolean dejaInscrit = false;
+
+                for (InscriptionActivite each2 : listeInscriptionsEnfant) {
+                    if (each.getIdActivite() == each2.getIdActivite()) {
+                        dejaInscrit = true;
+                    }
+                }
+                
+                if(dejaInscrit){
+                    listePropre.remove(each);
+                }
+
+            }
+
+        }
+
+        return listePropre;
+
+    }
+
 }
