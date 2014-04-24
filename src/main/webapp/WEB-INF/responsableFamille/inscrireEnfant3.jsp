@@ -28,12 +28,12 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="ControleurAssociation">ACL Grenoble</a>
+                    <a class="navbar-brand" href="">ACL Grenoble</a>
                 </div>
                 <div class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="#">Inscrire un Enfant</a></li>
-                        <li><a href="ControleurAssociation?action=recruterAnimateur">Annuler une inscription</a></li>
+                        <li class="disabled"><a href="#">Gestion d'Enfant</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="disabled"><a href="#">${utilisateur}</a></li>

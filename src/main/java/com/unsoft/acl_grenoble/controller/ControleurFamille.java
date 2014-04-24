@@ -46,7 +46,8 @@ public class ControleurFamille extends HttpServlet {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
-     * Handles the HTTP <code>GET</code> method.
+     * Handles the HTTP
+     * <code>GET</code> method.
      *
      * @param request servlet request
      * @param response servlet response
@@ -56,48 +57,46 @@ public class ControleurFamille extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        request.setCharacterEncoding("UTF-8");
 
         String action = request.getParameter("action");
-        if (action.equals("demanderCompte")) {
-            getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/demanderCompte.jsp").forward(request, response);
-        } else if (action.equals("inscrire")) {
-            try {
+
+        response.setContentType("text/html; charset=UTF-8");
+        
+        
+        try {
+
+            if (action.equals("demanderCompte")) {
+                //request.setCharacterEncoding("UTF-8");
+                getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/demanderCompte.jsp").forward(request, response);
+            } else if (action.equals("inscrire")) {
+
                 afficherActivites(request, response);
-            } catch (DAOException ex) {
-                Logger.getLogger(ControleurFamille.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else if (action.equals("gestion")) {
-            try {
+
+            } else if (action.equals("gestion")) {
+
                 gestionEnfant(request, response);
-            } catch (DAOException ex) {
-                Logger.getLogger(ControleurFamille.class.getName()).log(Level.SEVERE, null, ex);
-            }
 
-        } else if (action.equals("periodes")) {
-            try {
+            } else if (action.equals("periodes")) {
+
                 selectionPeriodes(request, response);
-            } catch (DAOException ex) {
-                Logger.getLogger(ControleurFamille.class.getName()).log(Level.SEVERE, null, ex);
-            }
 
-        } else if (action.equals("verifInscrire")) {
-            try {
+            } else if (action.equals("verifInscrire")) {
+
                 inscrireEnfant(request, response);
-            } catch (DAOException ex) {
-                Logger.getLogger(ControleurFamille.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else if (action.equals("verifEffacer")) {
-            try {
+
+            } else if (action.equals("verifEffacer")) {
+
                 desInscrireEnfant(request, response);
-            } catch (DAOException ex) {
-                Logger.getLogger(ControleurFamille.class.getName()).log(Level.SEVERE, null, ex);
             }
+        } catch (Exception ex) {
+            //request.setCharacterEncoding("UTF-8");
+            getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
         }
     }
 
     /**
-     * Handles the HTTP <code>POST</code> method.
+     * Handles the HTTP
+     * <code>POST</code> method.
      *
      * @param request servlet request
      * @param response servlet response
@@ -146,6 +145,7 @@ public class ControleurFamille extends HttpServlet {
             }
 
         } catch (DAOException e) {
+            //request.setCharacterEncoding("UTF-8");
             getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").
                     forward(request, response);
         }
@@ -155,7 +155,7 @@ public class ControleurFamille extends HttpServlet {
             HttpServletResponse response, RFamilleDAO rDao, EnfantDAO eDao,
             CompteDAO cDao) throws DAOException, ServletException, IOException {
 
-        request.setCharacterEncoding("UTF-8");
+        //request.setCharacterEncoding("UTF-8");
 
         String prenomR = request.getParameter("prenomR");
         String nomR = request.getParameter("nomR");
@@ -197,7 +197,7 @@ public class ControleurFamille extends HttpServlet {
      */
     private void actionDemander1(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
+        //request.setCharacterEncoding("UTF-8");
         getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/demanderCompte2.jsp").include(request, response);
     }
 
@@ -213,7 +213,8 @@ public class ControleurFamille extends HttpServlet {
 
     private void remplirListeEnfantsEtActivites(HttpServletRequest request, HttpServletResponse response, List<Enfant> listEnfants) throws IOException, ServletException {
         try {
-            request.setCharacterEncoding("UTF-8");
+            //request.setCharacterEncoding("UTF-8");
+
             request.setAttribute("enfants", listEnfants);
 
             int max = 0;
@@ -223,101 +224,123 @@ public class ControleurFamille extends HttpServlet {
                 max++;
 
                 EnfantDAO enfantDao = new EnfantDAO(ds);
-                List<InscriptionActivite> listeActivites
-                        = enfantDao.getListeDInscriptionsParEnfant(
-                                each.getNomEnfant(), each.getPrenomEnfant());
+                List<InscriptionActivite> listeActivites = enfantDao.getListeDInscriptionsParEnfant(
+                        each.getNomEnfant(), each.getPrenomEnfant());
 
                 request.setAttribute("activites" + max, listeActivites);
 
             }
 
             request.setAttribute("max", max);
-            request.setCharacterEncoding("UTF-8");
             getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/inscrireEnfant.jsp").forward(request, response);
         } catch (Exception ex) {
-            request.setAttribute("message", ex.getMessage());
-            request.setCharacterEncoding("UTF-8");
+
             getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
         }
     }
 
     private void afficherActivites(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DAOException {
-        request.setCharacterEncoding("UTF-8");
-        ActiviteDAO activiteDAO = new ActiviteDAO(ds);
-        List<Activite> listeActivites = activiteDAO.getAllActivites();
-        EtatDAO etatDAO = new EtatDAO(ds);
-        List<Etat> listeEtat = etatDAO.getActivitesParEtat((EtatEnum.OUVERTE).getName());
-        EnfantDAO enfantDAO = new EnfantDAO(ds);
-        List<InscriptionActivite> listeInscris = enfantDAO.getListeDInscriptionsParEnfant(request.getParameter("nom"), request.getParameter("prenom"));
+        try {
+            //request.setCharacterEncoding("UTF-8");
+            ActiviteDAO activiteDAO = new ActiviteDAO(ds);
+            List<Activite> listeActivites = activiteDAO.getAllActivites();
+            EtatDAO etatDAO = new EtatDAO(ds);
+            List<Etat> listeEtat = etatDAO.getActivitesParEtat((EtatEnum.OUVERTE).getName());
+            EnfantDAO enfantDAO = new EnfantDAO(ds);
+            List<InscriptionActivite> listeInscris = enfantDAO.getListeDInscriptionsParEnfant(request.getParameter("nom"), request.getParameter("prenom"));
 
-        List<Activite> listePropre = activiteDAO.purifyListActivites(listeActivites, listeEtat, listeInscris);
-        
-        request.setAttribute("listePropre", listePropre);
-        request.setAttribute("nom", request.getParameter("nom"));
-        request.setAttribute("prenom", request.getParameter("prenom"));
-        request.setCharacterEncoding("UTF-8");
-        getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/inscrireEnfant2.jsp").include(request, response);
+            List<Activite> listePropre = activiteDAO.purifyListActivites(listeActivites, listeEtat, listeInscris);
 
+            request.setAttribute("listePropre", listePropre);
+            request.setAttribute("nom", request.getParameter("nom"));
+            request.setAttribute("prenom", request.getParameter("prenom"));
+
+            getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/inscrireEnfant2.jsp").include(request, response);
+        } catch (Exception ex) {
+
+            getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
+        }
     }
 
     private void gestionEnfant(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, DAOException {
-        request.setCharacterEncoding("UTF-8");
-        request.setAttribute("nom", request.getParameter("nom"));
-        request.setAttribute("prenom", request.getParameter("prenom"));
-        EnfantDAO enfantDAO = new EnfantDAO(ds);
+        try {
 
-        List<InscriptionActivite> listeActivites = enfantDAO.getListeDInscriptionsParEnfant(request.getParameter("nom"), request.getParameter("prenom"));
+            //request.setCharacterEncoding("UTF-8");
+            request.setAttribute("nom", request.getParameter("nom"));
+            request.setAttribute("prenom", request.getParameter("prenom"));
+            EnfantDAO enfantDAO = new EnfantDAO(ds);
 
-        request.setAttribute("listeActivites", listeActivites);
-        request.setCharacterEncoding("UTF-8");
-        getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/gestionEnfant.jsp").include(request, response);
+            List<InscriptionActivite> listeActivites = enfantDAO.getListeDInscriptionsParEnfant(request.getParameter("nom"), request.getParameter("prenom"));
+
+            request.setAttribute("listeActivites", listeActivites);
+
+            getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/gestionEnfant.jsp").include(request, response);
+        } catch (Exception ex) {
+
+            getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
+        }
     }
 
     private void inscrireEnfant(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, DAOException {
-        request.setCharacterEncoding("UTF-8");
-        EnfantDAO enfantDAO = new EnfantDAO(ds);
-        enfantDAO.inscrireEnfant(request.getParameter("prenom"), request.getParameter("nom"), Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"));
+        try {
+            //request.setCharacterEncoding("UTF-8");
+            EnfantDAO enfantDAO = new EnfantDAO(ds);
+            enfantDAO.inscrireEnfant(request.getParameter("prenom"), request.getParameter("nom"), Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"));
 
-        ActiviteDAO activiteDAO = new ActiviteDAO(ds);
-        int courents = activiteDAO.getnbInscris(Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"));
-        int nbMaxAnim = activiteDAO.getActivite(Integer.parseInt(request.getParameter("activite"))).getNbMaxAnimateurs();
+            ActiviteDAO activiteDAO = new ActiviteDAO(ds);
+            int courents = activiteDAO.getnbInscris(Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"));
+            int nbMaxAnim = activiteDAO.getActivite(Integer.parseInt(request.getParameter("activite"))).getNbMaxAnimateurs();
 
-        if (courents == nbMaxAnim * 10) {
-            activiteDAO.changerEtat(Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"), EtatEnum.FERMEE);
+            if (courents == nbMaxAnim * 10) {
+                activiteDAO.changerEtat(Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"), EtatEnum.FERMEE);
+            }
+
+            request.setAttribute("message", "Success");
+            getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/gestionEnfant.jsp").include(request, response);
+        } catch (Exception ex) {
+
+            getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
         }
-        request.setCharacterEncoding("UTF-8");
-        request.setAttribute("message", "Success");
-        getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/gestionEnfant.jsp").include(request, response);
     }
 
     private void desInscrireEnfant(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, DAOException {
-        request.setCharacterEncoding("UTF-8");
-        
-        
-        EnfantDAO enfantDAO = new EnfantDAO(ds);
-        enfantDAO.desInscrireEnfant(request.getParameter("prenom"), request.getParameter("nom"), Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"));
+        try {
+            //request.setCharacterEncoding("UTF-8");
 
-        ActiviteDAO activiteDAO = new ActiviteDAO(ds);
 
-        //Por ahora... necesito probar
-        activiteDAO.changerEtat(Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"), EtatEnum.OUVERTE);
-        request.setCharacterEncoding("UTF-8");
-        request.setAttribute("message", "Success");
-        getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/gestionEnfant.jsp").include(request, response);
+            EnfantDAO enfantDAO = new EnfantDAO(ds);
+            enfantDAO.desInscrireEnfant(request.getParameter("prenom"), request.getParameter("nom"), Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"));
+
+            ActiviteDAO activiteDAO = new ActiviteDAO(ds);
+
+            //Por ahora... necesito probar
+            activiteDAO.changerEtat(Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"), EtatEnum.OUVERTE);
+
+            request.setAttribute("message", "Success");
+            getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/gestionEnfant.jsp").include(request, response);
+        } catch (Exception ex) {
+
+            getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
+        }
+
     }
 
     private void selectionPeriodes(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, DAOException {
-        request.setCharacterEncoding("UTF-8");
-        PeriodeDAO periodeDAO = new PeriodeDAO(ds);
-        List<Periode> listePeriodes = periodeDAO.getAllPeriodesOuvertParActivite(Integer.parseInt(request.getParameter("idActivite")));
+        try {
+            //request.setCharacterEncoding("UTF-8");
+            PeriodeDAO periodeDAO = new PeriodeDAO(ds);
+            List<Periode> listePeriodes = periodeDAO.getAllPeriodesOuvertParActivite(Integer.parseInt(request.getParameter("idActivite")));
 
-        request.setAttribute("nom", request.getParameter("nom"));
-        request.setAttribute("prenom", request.getParameter("prenom"));
-        request.setAttribute("listePeriodes", listePeriodes);
-        request.setAttribute("activite", request.getParameter("activite"));
-        request.setAttribute("idActivite", request.getParameter("idActivite"));
-        request.setCharacterEncoding("UTF-8");
-        getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/inscrireEnfant3.jsp").include(request, response);
+            request.setAttribute("nom", request.getParameter("nom"));
+            request.setAttribute("prenom", request.getParameter("prenom"));
+            request.setAttribute("listePeriodes", listePeriodes);
+            request.setAttribute("activite", request.getParameter("activite"));
+            request.setAttribute("idActivite", request.getParameter("idActivite"));
+
+            getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/inscrireEnfant3.jsp").include(request, response);
+        } catch (Exception ex) {
+
+            getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
+        }
     }
-
 }
