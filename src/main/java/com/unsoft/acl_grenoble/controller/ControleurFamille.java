@@ -112,6 +112,7 @@ public class ControleurFamille extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        response.setContentType("text/html; charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
 
         String action = request.getParameter("action");
@@ -160,12 +161,12 @@ public class ControleurFamille extends HttpServlet {
             HttpServletResponse response, RFamilleDAO rDao, EnfantDAO eDao,
             CompteDAO cDao) throws DAOException, ServletException, IOException {
 
-        //request.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
 
-        String prenomR = request.getParameter("prenomR");
-        String nomR = request.getParameter("nomR");
+        String prenomR = new String(request.getParameter("prenomR").getBytes("iso-8859-1"), "UTF-8");
+        String nomR = new String(request.getParameter("nomR").getBytes("iso-8859-1"), "UTF-8");
         String emailR = request.getParameter("emailR");
-        String nomF = request.getParameter("nomF");
+        
         Double revenuF = Double.parseDouble(request.getParameter("revenuF"));
         int nombreEnfants = Integer.parseInt(request.getParameter("nomEnfants"));
 
@@ -181,11 +182,11 @@ public class ControleurFamille extends HttpServlet {
 
         //Enfants
         String prenomi;
-        String nomi;
+        String nomi;    
         int agei;
         for (int i = 1; i <= nombreEnfants; i++) {
-            prenomi = request.getParameter("PrenomE" + i);
-            nomi = request.getParameter("NomE" + i);
+            prenomi = new String(request.getParameter("PrenomE" + i).getBytes("iso-8859-1"), "UTF-8");
+            nomi = new String(request.getParameter("NomE" + i).getBytes("iso-8859-1"), "UTF-8");
             agei = Integer.parseInt(request.getParameter("AgeE" + i));
             eDao.addEnfant(prenomi, nomi, prenomR, nomR, agei);
         }

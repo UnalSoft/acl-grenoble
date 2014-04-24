@@ -122,6 +122,7 @@ public class EnfantDAO extends AbstractDataBaseDAO {
         }
         return listEnfants;
     }
+
     public List<InscriptionActivite> getListeDInscriptionsParEnfant(String nomEnfant, String prenomEnfant) throws DAOException {
         List<InscriptionActivite> listeActivites = new ArrayList<InscriptionActivite>();
         Connection conn = null;
@@ -165,16 +166,18 @@ public class EnfantDAO extends AbstractDataBaseDAO {
         return listeActivites;
     }
 
-    public void inscrireEnfant(String prenomE, String nomE, int idActivite, String periode) throws DAOException {
+    public void inscrireEnfant(String prenomE, String nomE, int idActivite, String periode, float prix) throws DAOException {
         Connection conn = null;
         try {
+
             conn = getConnection();
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO Inscription"
-                    + " VALUES(?,?,?,?)");
+                    + " VALUES(?,?,?,?,?)");
             stmt.setInt(1, idActivite);
             stmt.setString(2, prenomE);
             stmt.setString(3, nomE);
             stmt.setString(4, periode);
+            stmt.setFloat(5, prix);
 
             stmt.execute();
             stmt.close();
@@ -184,13 +187,13 @@ public class EnfantDAO extends AbstractDataBaseDAO {
             closeConnection(conn);
         }
     }
-    
+
     public void desInscrireEnfant(String prenomE, String nomE, int idActivite, String periode) throws DAOException {
         Connection conn = null;
         try {
             conn = getConnection();
             PreparedStatement stmt = conn.prepareStatement("DELETE FROM Inscription"
-                    + " VALUES(?,?,?,?)");
+                    + " WHERE idActivite = ? AND prenomEnfant = ? AND nomFamillEnfant = ? AND periode = ?");
             stmt.setInt(1, idActivite);
             stmt.setString(2, prenomE);
             stmt.setString(3, nomE);
@@ -204,5 +207,4 @@ public class EnfantDAO extends AbstractDataBaseDAO {
             closeConnection(conn);
         }
     }
-
 }
