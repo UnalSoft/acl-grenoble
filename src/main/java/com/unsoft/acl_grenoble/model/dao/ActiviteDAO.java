@@ -280,33 +280,5 @@ public class ActiviteDAO extends AbstractDataBaseDAO {
         return activites;
     }
 
-    public List<Activite> purifyListActivites(List<Activite> listeBrut, List<Etat> listeActivitesOuverts, List<InscriptionActivite> listeInscriptionsEnfant) {
-        List<Activite> listePropre = new ArrayList<Activite>();
-        
-        for (Activite each : listeBrut) {
-            listePropre.add(each);
-        }
-        for (Activite each : listeBrut) {
-            boolean ouvert = false;
-            for (Etat each2 : listeActivitesOuverts) {
-                if (each.getIdActivite() == each2.getActivite().getIdActivite()) {
-                    ouvert = true;
-                }
-            }
-            if (!ouvert) {
-                listePropre.remove(each);
-            } else {
-                boolean dejaInscrit = false;
-                for (InscriptionActivite each2 : listeInscriptionsEnfant) {
-                    if (each.getIdActivite() == each2.getActivite().getIdActivite()) {
-                        dejaInscrit = true;
-                    }
-                }
-                if (dejaInscrit) {
-                    listePropre.remove(each);
-                }
-            }
-        }
-        return listePropre;
-    }
+    
 }

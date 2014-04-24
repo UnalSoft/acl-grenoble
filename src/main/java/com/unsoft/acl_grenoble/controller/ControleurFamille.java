@@ -247,7 +247,7 @@ public class ControleurFamille extends HttpServlet {
 
     private void afficherActivites(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DAOException {
         try {
-            //request.setCharacterEncoding("UTF-8");
+            //request.setCharacterEncoding("UTF-8");            
             ActiviteDAO activiteDAO = new ActiviteDAO(ds);
             List<Activite> listeActivites = activiteDAO.getAllActivites();
             EtatDAO etatDAO = new EtatDAO(ds);
@@ -255,7 +255,7 @@ public class ControleurFamille extends HttpServlet {
             EnfantDAO enfantDAO = new EnfantDAO(ds);
             List<InscriptionActivite> listeInscris = enfantDAO.getListeDInscriptionsParEnfant(request.getParameter("nom"), request.getParameter("prenom"));
 
-            List<Activite> listePropre = activiteDAO.purifyListActivites(listeActivites, listeEtat, listeInscris);
+            List<Activite> listePropre = purifyListActivites(listeActivites, listeEtat, listeInscris);
 
             request.setAttribute("listePropre", listePropre);
             request.setAttribute("nom", request.getParameter("nom"));
@@ -375,6 +375,36 @@ public class ControleurFamille extends HttpServlet {
 
             getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
         }
+    }
+    
+    public List<Activite> purifyListActivites(List<Activite> listeBrut, List<Etat> listeActivitesOuverts, List<InscriptionActivite> listeInscriptionsEnfant) {
+        List<Activite> listePropre = new ArrayList<Activite>();
+        
+        for (Activite each : listeBrut) {
+            listePropre.add(each);
+        }
+        for (Activite each : listeBrut) {
+            boolean ouvert = false;
+            for (Etat each2 : listeActivitesOuverts) {
+                if (each.getIdActivite() == each2.getActivite().getIdActivite()) {
+                    ouvert = true;
+                }
+            }
+            if (!ouvert) {
+                listePropre.remove(each);
+            } else {
+                boolean dejaInscrit = false;
+                for (InscriptionActivite each2 : listeInscriptionsEnfant) {
+                    if (each.getIdActivite() == each2.getActivite().getIdActivite()) {
+                        dejaInscrit = true;
+                    }
+                }
+                if (dejaInscrit) {
+                    listePropre.remove(each);
+                }
+            }
+        }
+        return listePropre;
     }
 
     /**

@@ -270,14 +270,26 @@ public class ControleurPlanification extends HttpServlet {
     private void listerActivitesPreconfirmes(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String utilisateur = (String) request.getSession().getAttribute("utilisateur");
         try {
-            String centre = new CentreDAO(dataSource).getCentreParUtilisateur(utilisateur);
-            List<Etat> etatsPreconfirmes = new EtatDAO(dataSource).getActivitesPreConfirmees(centre);
+            preconfirmerActivites();
+            EtatDAO etatDAO = new EtatDAO(dataSource);
+            String centre = new CentreDAO(dataSource).getCentreParUtilisateur(utilisateur);            
+            List<Etat> etatsPreconfirmes = etatDAO.getActivitesPreConfirmees(centre);
             request.setAttribute("etatsPreconfirmes", etatsPreconfirmes);
             getServletContext().getRequestDispatcher("/WEB-INF/responsablePlanification/affecterAnimateur.jsp").forward(request, response);
         } catch (DAOException ex) {
             request.setAttribute("message", ex.getMessage());
             getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
         }
+    }
+
+    private EtatDAO preconfirmerActivites() throws DAOException {
+        EtatDAO etatDAO = new EtatDAO(dataSource);
+        List<Etat> activitesPourPreConfirmer = etatDAO.getActivitesPourPreConfirmer();
+        ActiviteDAO activiteDAO = new ActiviteDAO(dataSource);
+        for(Etat appc : activitesPourPreConfirmer) {
+            activiteDAO.changerEtat(appc.getActivite().getIdActivite(), appc.getPeriode().nomPeriode(), EtatEnum.PRE_CONFIRMEE);
+        }
+        return etatDAO;
     }
 
     private void affecterAnimateurs(String[] anims, int idActivite, String nomPeriode, String responsable) throws DAOException, MessagingException {

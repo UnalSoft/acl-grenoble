@@ -115,4 +115,62 @@ public class EtatDAO extends AbstractDataBaseDAO {
 
         return etat;
     }
+    
+    public List<Etat> getActivitesPourPreConfirmer() throws DAOException {
+        List<Etat> etats = new ArrayList<Etat>();
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement("SELECT A.IDACTIVITE, A.NOMCENTRE, A.NOMTHEME, A.NOM, A.DESCRIPTIF, A.NBMAXANIM, A.PRIXPARJOUR,"
+                    + "P.PERIODE,  P.SUPERPERIODE, P.DATEDEBUT, P.DATEFIN, E.ETAT "
+                    + "FROM ACTIVITE A, ETAT E, PERIODE P "
+                    + "WHERE A.IDACTIVITE = E.IDACTIVITE "
+                    + "AND P.PERIODE = E.PERIODE "
+                    + "AND SYSDATE < P.datedebut+30 AND (E.etat = 'OUVERTE' OR E.etat = 'FERMEE')");
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Activite activite = new Activite(rs.getInt("idActivite"),
+                        new Theme(ThemeEnum.getTheme(rs.getString("nomTheme")), new CentreDeLoisirs(rs.getString("nomCentre"))),
+                        rs.getString("nom"), rs.getString("descriptif"), rs.getInt("nbMaxAnim"), rs.getFloat("prixParJour"));
+                Periode periode = new Periode(rs.getString("periode"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getString("superperiode"));
+                Etat ett = new Etat(activite, periode, EtatEnum.getEtat(rs.getString("etat")));
+                etats.add(ett);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
+        return etats;
+    }
+    
+    public List<Etat> getActivitesPourFinir() throws DAOException {
+        List<Etat> etats = new ArrayList<Etat>();
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement("SELECT A.IDACTIVITE, A.NOMCENTRE, A.NOMTHEME, A.NOM, A.DESCRIPTIF, A.NBMAXANIM, A.PRIXPARJOUR,"
+                    + "P.PERIODE,  P.SUPERPERIODE, P.DATEDEBUT, P.DATEFIN, E.ETAT "
+                    + "FROM ACTIVITE A, ETAT E, PERIODE P "
+                    + "WHERE A.IDACTIVITE = E.IDACTIVITE "
+                    + "AND P.PERIODE = E.PERIODE "
+                    + "AND p.dateFin < SYSDATE  and (e.etat != 'FINIE')");
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Activite activite = new Activite(rs.getInt("idActivite"),
+                        new Theme(ThemeEnum.getTheme(rs.getString("nomTheme")), new CentreDeLoisirs(rs.getString("nomCentre"))),
+                        rs.getString("nom"), rs.getString("descriptif"), rs.getInt("nbMaxAnim"), rs.getFloat("prixParJour"));
+                Periode periode = new Periode(rs.getString("periode"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getString("superperiode"));
+                Etat ett = new Etat(activite, periode, EtatEnum.getEtat(rs.getString("etat")));
+                etats.add(ett);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
+        return etats;
+    }
 }

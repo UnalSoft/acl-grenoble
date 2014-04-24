@@ -1,12 +1,17 @@
 package com.unsoft.acl_grenoble.controller;
 
+import com.unsoft.acl_grenoble.model.centre.Etat;
+import com.unsoft.acl_grenoble.model.centre.EtatEnum;
+import com.unsoft.acl_grenoble.model.dao.ActiviteDAO;
 import com.unsoft.acl_grenoble.model.dao.CompteDAO;
 import com.unsoft.acl_grenoble.model.dao.DAOException;
+import com.unsoft.acl_grenoble.model.dao.EtatDAO;
 import com.unsoft.acl_grenoble.model.dao.ResponsableDAO;
 import com.unsoft.acl_grenoble.model.utilisateur.Compte;
 import com.unsoft.acl_grenoble.model.utilisateur.Responsable;
 import com.unsoft.acl_grenoble.model.utilisateur.RoleEnum;
 import java.io.IOException;
+import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -49,6 +54,7 @@ public class ControleurUtilisateur extends HttpServlet {
         try {
             Compte compte = compteDAO.getCompte(name, mdp);
             verifierCompte(compte, responsableDAO, request, response);
+            verifierActivitesFinies();
         } catch (DAOException ex) {
             request.setAttribute("message", ex.getMessage());
             getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
@@ -117,6 +123,14 @@ public class ControleurUtilisateur extends HttpServlet {
             getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
         }
     }
+    
+    private void verifierActivitesFinies() throws DAOException {
+        List<Etat> activitesPourFinir = new EtatDAO(dataSource).getActivitesPourFinir();
+        final ActiviteDAO activiteDAO = new ActiviteDAO(dataSource);
+        for (Etat etat : activitesPourFinir) {
+            activiteDAO.changerEtat(etat.getActivite().getIdActivite(), etat.getPeriode().nomPeriode(), EtatEnum.FINIE);
+        }
+    }
 
     /**
      * Returns a short description of the servlet.
@@ -127,4 +141,6 @@ public class ControleurUtilisateur extends HttpServlet {
     public String getServletInfo() {
         return "Servlet Gerant Utilisateur Fonctions";
     }// </editor-fold>
+
+    
 }
