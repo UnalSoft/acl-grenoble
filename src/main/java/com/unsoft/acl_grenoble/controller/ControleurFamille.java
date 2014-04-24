@@ -60,33 +60,38 @@ public class ControleurFamille extends HttpServlet {
 
         String action = request.getParameter("action");
 
+        request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
-        
-        
+
+
         try {
 
-            if (action.equals("demanderCompte")) {
-                //request.setCharacterEncoding("UTF-8");
-                getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/demanderCompte.jsp").forward(request, response);
-            } else if (action.equals("inscrire")) {
+            if (action != null) {
+                if (action.equals("demanderCompte")) {
+                    //request.setCharacterEncoding("UTF-8");
+                    getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/demanderCompte.jsp").forward(request, response);
+                } else if (action.equals("inscrire")) {
 
-                afficherActivites(request, response);
+                    afficherActivites(request, response);
 
-            } else if (action.equals("gestion")) {
+                } else if (action.equals("gestion")) {
 
-                gestionEnfant(request, response);
+                    gestionEnfant(request, response);
 
-            } else if (action.equals("periodes")) {
+                } else if (action.equals("periodes")) {
 
-                selectionPeriodes(request, response);
+                    selectionPeriodes(request, response);
 
-            } else if (action.equals("verifInscrire")) {
+                } else if (action.equals("verifInscrire")) {
 
-                inscrireEnfant(request, response);
+                    inscrireEnfant(request, response);
 
-            } else if (action.equals("verifEffacer")) {
+                } else if (action.equals("verifEffacer")) {
 
-                desInscrireEnfant(request, response);
+                    desInscrireEnfant(request, response);
+                }
+            } else {
+                doPost(request, response);
             }
         } catch (Exception ex) {
             //request.setCharacterEncoding("UTF-8");
@@ -273,20 +278,30 @@ public class ControleurFamille extends HttpServlet {
 
     private void inscrireEnfant(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, DAOException {
         try {
-            //request.setCharacterEncoding("UTF-8");
+            request.setCharacterEncoding("UTF-8");
             EnfantDAO enfantDAO = new EnfantDAO(ds);
-            enfantDAO.inscrireEnfant(request.getParameter("prenom"), request.getParameter("nom"), Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"));
+
+            //Characters sensibles a être oops
+            String periode = new String(request.getParameter("periode").getBytes("iso-8859-1"), "UTF-8");
+            String prenom = new String(request.getParameter("prenom").getBytes("iso-8859-1"), "UTF-8");
+            String nom = new String(request.getParameter("nom").getBytes("iso-8859-1"), "UTF-8");
+
+            enfantDAO.inscrireEnfant(prenom, nom, Integer.parseInt(request.getParameter("idActivite")),
+                    periode, Float.parseFloat(request.getParameter("prix")));
+
 
             ActiviteDAO activiteDAO = new ActiviteDAO(ds);
-            int courents = activiteDAO.getnbInscris(Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"));
-            int nbMaxAnim = activiteDAO.getActivite(Integer.parseInt(request.getParameter("activite"))).getNbMaxAnimateurs();
+            int courents = activiteDAO.getnbInscris(Integer.parseInt(request.getParameter("idActivite")), periode);
+            int nbMaxAnim = activiteDAO.getActivite(Integer.parseInt(request.getParameter("idActivite"))).getNbMaxAnimateurs();
 
             if (courents == nbMaxAnim * 10) {
-                activiteDAO.changerEtat(Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"), EtatEnum.FERMEE);
+                activiteDAO.changerEtat(Integer.parseInt(request.getParameter("idActivite")), periode, EtatEnum.FERMEE);
             }
 
-            request.setAttribute("message", "Success");
-            getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/gestionEnfant.jsp").include(request, response);
+            //request.removeAttribute("action");
+            //getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/accueilFamille.jsp").forward(request, response);
+            
+            response.sendRedirect("/acl_grenoble/ControleurFamille");
         } catch (Exception ex) {
 
             getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
@@ -297,17 +312,28 @@ public class ControleurFamille extends HttpServlet {
         try {
             //request.setCharacterEncoding("UTF-8");
 
+            //Characters sensibles a être oops
+            String periode = new String(request.getParameter("periode").getBytes("iso-8859-1"), "UTF-8");
+            String prenom = new String(request.getParameter("prenom").getBytes("iso-8859-1"), "UTF-8");
+            String nom = new String(request.getParameter("nom").getBytes("iso-8859-1"), "UTF-8");
+
 
             EnfantDAO enfantDAO = new EnfantDAO(ds);
-            enfantDAO.desInscrireEnfant(request.getParameter("prenom"), request.getParameter("nom"), Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"));
+            enfantDAO.desInscrireEnfant(prenom, nom, Integer.parseInt(request.getParameter("idActivite")), periode);
 
-            ActiviteDAO activiteDAO = new ActiviteDAO(ds);
 
+            EtatDAO etatDAO = new EtatDAO(ds);
+            String etat = etatDAO.getEtatActiviteDansPeriode(Integer.parseInt(request.getParameter("idActivite")), periode);
+
+            if (etat.equals(EtatEnum.FERMEE.getName())) {
+
+                ActiviteDAO activiteDAO = new ActiviteDAO(ds);
+                activiteDAO.changerEtat(Integer.parseInt(request.getParameter("idActivite")), periode, EtatEnum.OUVERTE);
+            }
             //Por ahora... necesito probar
-            activiteDAO.changerEtat(Integer.parseInt(request.getParameter("activite")), request.getParameter("periode"), EtatEnum.OUVERTE);
 
-            request.setAttribute("message", "Success");
-            getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/gestionEnfant.jsp").include(request, response);
+            response.sendRedirect("/acl_grenoble/ControleurFamille");
+            //getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/gestionEnfant.jsp").forward(request, response);
         } catch (Exception ex) {
 
             getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
@@ -321,6 +347,12 @@ public class ControleurFamille extends HttpServlet {
             PeriodeDAO periodeDAO = new PeriodeDAO(ds);
             List<Periode> listePeriodes = periodeDAO.getAllPeriodesOuvertParActivite(Integer.parseInt(request.getParameter("idActivite")));
 
+            float prix = Float.parseFloat(request.getParameter("prix"));
+
+            prix = ajousterPrix(prix);
+
+            request.setAttribute("prix", prix);
+
             request.setAttribute("nom", request.getParameter("nom"));
             request.setAttribute("prenom", request.getParameter("prenom"));
             request.setAttribute("listePeriodes", listePeriodes);
@@ -332,5 +364,16 @@ public class ControleurFamille extends HttpServlet {
 
             getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
         }
+    }
+
+    /**
+     * Méthode pour ajuster le prix en fonction de la situation économique.
+     *
+     * @param prix
+     */
+    private float ajousterPrix(float prix) {
+        //Pas encore implementée
+
+        return 1 * prix;
     }
 }

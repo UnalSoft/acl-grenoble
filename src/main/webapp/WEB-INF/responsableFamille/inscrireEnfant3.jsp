@@ -45,6 +45,7 @@
         <div class="page-header">
             <h1 class="text-center">Inscription d'enfant: ${prenom} ${nom}</h1>
             <h2 class="text-center">Selection de periode d'activité: ${activite}</h2>
+            <h3 class="text-success text-center">Prix ajusté: ${prix}</h3>
         </div>
         <div class="form-table col-lg-8 col-lg-offset-2">
             <table class="table table-striped">
@@ -64,7 +65,7 @@
                         <td>${per.getDateFin()}</td>
                         <td>${per.getSuperPeriode()}</td>
                         
-                        <td><a href="ControleurFamille?action=verifInscrire&nom=${nom}&prenom=${prenom}&idActivite=${activite}&periode=${per.nomPeriode()}" class="btn btn-success">Confirmer Inscription</a></td>
+                        <td><a href="ControleurFamille?action=verifInscrire&nom=${nom}&prenom=${prenom}&idActivite=${idActivite}&periode=${per.nomPeriode()}&prix=${prix}" class="btn btn-success">Confirmer Inscription</a></td>
                         <!-- Code pour montrer l'information de chaque activite dans lequel il est present -->
 
                     </tr>

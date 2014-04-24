@@ -88,6 +88,31 @@ public class EtatDAO extends AbstractDataBaseDAO {
         return etats;
     }
 
-    
-    
+    public String getEtatActiviteDansPeriode(int idActivite, String periode) throws DAOException {
+        Connection conn = null;
+        String etat = "";
+
+        try {
+            conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Etat "
+                    + "WHERE idActivite = ? AND periode = ?");
+            stmt.setInt(1, idActivite);
+            stmt.setString(2, periode);
+
+            ResultSet rset = stmt.executeQuery();
+
+            while (rset.next()) {
+                etat = rset.getString("etat");
+            }
+
+            rset.close();
+            stmt.close();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
+
+        return etat;
+    }
 }
