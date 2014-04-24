@@ -57,7 +57,7 @@
                 <tr>
                     <td><%=etat.getActivite().getNomActivite()%></td>
                     <td><%=etat.getPeriode().getDateDebut()%></td>
-                    <td><%=etat.getPeriode().getDatefin()%></td>
+                    <td><%=etat.getPeriode().getDateFin()%></td>
                     <td><a href="ControleurPlanification?action=affecter&idActivite=<%=etat.getActivite().getIdActivite()%>&periode=<%=etat.getPeriode().nomPeriode()%>" class="btn btn-success">Affecter</a></td>
                 </tr>
                 <%}%>
