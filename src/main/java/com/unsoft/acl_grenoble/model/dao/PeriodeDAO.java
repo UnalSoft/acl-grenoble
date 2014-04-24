@@ -70,4 +70,26 @@ public class PeriodeDAO extends AbstractDataBaseDAO {
         return periodes;
     }
 
+    public List<Periode> getSuperPeriodes() throws DAOException {
+        List<Periode> periodes = new ArrayList<Periode>();
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM PERIODE P "
+                    + "WHERE superPeriode is null "
+                    + "and dateDebut <= SYSDATE+30");
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Periode periode = new Periode(rs.getString("periode"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getString("superperiode"));
+                periodes.add(periode);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
+        return periodes;
+    }
+
 }

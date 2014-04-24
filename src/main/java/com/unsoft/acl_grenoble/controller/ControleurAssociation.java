@@ -6,6 +6,7 @@ import com.unsoft.acl_grenoble.model.centre.Periode;
 import com.unsoft.acl_grenoble.model.dao.CompteDAO;
 import com.unsoft.acl_grenoble.model.dao.DAOException;
 import com.unsoft.acl_grenoble.model.dao.EnfantDAO;
+import com.unsoft.acl_grenoble.model.dao.PeriodeDAO;
 import com.unsoft.acl_grenoble.model.dao.RFamilleDAO;
 import com.unsoft.acl_grenoble.model.dao.ResponsableDAO;
 import com.unsoft.acl_grenoble.model.utilisateur.Compte;
@@ -219,9 +220,20 @@ public class ControleurAssociation extends HttpServlet {
                     listPeriodes(request, response);
                     getServletContext().getRequestDispatcher("/WEB-INF/responsableAssociation/recruterAnimateur.jsp").forward(request, response);
                 } else if (action.equals(GENERER_FACTURES)) {
+                    PeriodeDAO periodeDAO = new PeriodeDAO(dataSource);
                     try {
-                        new GestionFactures().genererFactures(PERIODE_ACTUEL, dataSource);
-                        request.setAttribute("message", MESSAGE_FACTURES);
+                        String superPeriode = request.getParameter("superPeriode");
+                        if (superPeriode == null) {
+                            List<Periode> periodes = periodeDAO.getSuperPeriodes();
+                            request.setAttribute("periodes", periodes);
+                            request.setAttribute("message", "Selectionnez la periode pour la generation des factures: ");
+                        } else {
+                            if (new GestionFactures().genererFactures(superPeriode, dataSource)) {
+                                request.setAttribute("message", MESSAGE_FACTURES);
+                                request.setAttribute("succes", true);
+                            }
+                        }
+
                         remplirListe(request, response);
                     } catch (Exception ex) {
                         request.setAttribute("message", ex.getMessage());

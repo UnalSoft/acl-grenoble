@@ -24,7 +24,7 @@ import javax.swing.JFileChooser;
  */
 public class GestionFactures {
 
-    public void genererFactures(String nomSuperPeriode, DataSource dataSource) throws Exception {
+    public boolean genererFactures(String nomSuperPeriode, DataSource dataSource) throws Exception {
         InscriptionDAO inscriptionDAO = new InscriptionDAO(dataSource);
         List<InscriptionActivite> inscriptions = inscriptionDAO.getInscriptionsParPeriode(nomSuperPeriode);
         List<Enfant> enfantsInscris = new ArrayList<Enfant>();
@@ -54,11 +54,14 @@ public class GestionFactures {
         File folderFact = null;
         if (result == JFileChooser.APPROVE_OPTION) {
             folderFact = fileChooser.getSelectedFile().getAbsoluteFile();
+        } else {
+            return false;
         }
         
         for (ResponsableFamille resp : responsables) {
             genererPDF(resp, nomSuperPeriode, folderFact);
         }
+        return true;
     }
 
     private void genererPDF(ResponsableFamille resp, String nomSuperPeriode, File folderFact) throws Exception {

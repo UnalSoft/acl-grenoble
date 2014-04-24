@@ -110,10 +110,31 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title" id="myModalLabel">Succès</h4>
+                            <c:if test="${periodes != null}">
+                                <h4 class="modal-title" id="myModalLabel">Generation des Factures</h4>
+                            </c:if>
+                            <c:if test="${succes == true}">
+                                <h4 class="modal-title" id="myModalLabel">Succès</h4>
+                            </c:if>
                         </div>
                         <div class="modal-body">
                             <p>${message}</p>
+
+                            <c:if test="${periodes != null}">
+                                <form action="ControleurAssociation">
+                                    <c:forEach items="${periodes}" var="per">
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="superPeriode" value="${per.nomPeriode()}" checked>
+                                                ${per.nomPeriode()}
+                                            </label>
+                                        </div>
+                                    </c:forEach>
+                                    <input type="hidden" name="action" value="genererFactures" />
+                                    <input type="submit" value="Generer Factures" class="btn btn-primary"/>
+                                </form>
+                            </c:if>
+
                         </div>
                     </div>
                 </div>
