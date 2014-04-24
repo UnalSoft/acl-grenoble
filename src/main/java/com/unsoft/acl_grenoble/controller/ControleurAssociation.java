@@ -11,19 +11,13 @@ import com.unsoft.acl_grenoble.model.dao.ResponsableDAO;
 import com.unsoft.acl_grenoble.model.utilisateur.Compte;
 import com.unsoft.acl_grenoble.model.utilisateur.Responsable;
 import com.unsoft.acl_grenoble.model.utilisateur.ResponsableFamille;
+import com.unsoft.acl_grenoble.util.GestionFactures;
 import com.unsoft.acl_grenoble.util.GestionMail;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 import javax.annotation.Resource;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -45,9 +39,12 @@ public class ControleurAssociation extends HttpServlet {
     private static final String REFUSER = "refuser";
     private static final String RECRUTER = "recruterAnimateur";
     private static final String INSERER_ANIMATEUR = "insererAnimateur";
+    private static final String GENERER_FACTURES = "genererFactures";
     private final static int LONG_NOM = 20;
     private final static int LONG_MAIL = 60;
     private final static boolean ANIMATEUR_INTERNE = true;
+    private static final String MESSAGE_FACTURES = "Factures generées et envoyées aux responsables des familles.";
+    private static final String PERIODE_ACTUEL = "Vacances de printemps 2014";
 
     /**
      * Handles the HTTP <code>POST</code> method.
@@ -73,7 +70,7 @@ public class ControleurAssociation extends HttpServlet {
                         RFamilleDAO rFamilleDAO = new RFamilleDAO(dataSource);
                         ResponsableFamille responsable = rFamilleDAO.getResponsable(resp);
                         compteDAO.activerCompte(resp);
-                        new GestionMail().envoyerMail(responsable.getMail(), "ACL Grenoble - Demande Refusée", message);
+                        new GestionMail().envoyerMail(responsable.getMail(), "ACL Grenoble - Demande Refusée", message, null);
                     } catch (Exception ex) {
                         request.setAttribute("message", ex.getMessage());
                         getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
@@ -90,7 +87,7 @@ public class ControleurAssociation extends HttpServlet {
                         rFamilleDAO.effacerResponsable(resp);
                         compteDAO.effacerCompte(resp);
 
-                        new GestionMail().envoyerMail(responsable.getMail(), "ACL Grenoble - Demande Refusée", message);
+                        new GestionMail().envoyerMail(responsable.getMail(), "ACL Grenoble - Demande Refusée", message, null);
                     } catch (Exception ex) {
                         request.setAttribute("message", ex.getMessage());
                         getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
@@ -221,6 +218,15 @@ public class ControleurAssociation extends HttpServlet {
                     listCompetences(request);
                     listPeriodes(request, response);
                     getServletContext().getRequestDispatcher("/WEB-INF/responsableAssociation/recruterAnimateur.jsp").forward(request, response);
+                } else if (action.equals(GENERER_FACTURES)) {
+                    try {
+                        new GestionFactures().genererFactures(PERIODE_ACTUEL, dataSource);
+                        request.setAttribute("message", MESSAGE_FACTURES);
+                        remplirListe(request, response);
+                    } catch (Exception ex) {
+                        request.setAttribute("message", ex.getMessage());
+                        getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
+                    }
                 }
             } else {
                 remplirListe(request, response);

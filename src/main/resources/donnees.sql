@@ -83,11 +83,13 @@ INSERT ALL
 SELECT * FROM dual;    
 
 INSERT ALL
-  INTO ACTIVITE (NOMCENTRE, NOMTHEME, NOM, DESCRIPTIF, NBMAXANIM) 
+  INTO ACTIVITE (NOMCENTRE, NOMTHEME, NOM, DESCRIPTIF, NBMAXANIM, PRIXPARJOUR) 
     VALUES('MAISON des COLLINES', 'Découverte de la nature', 'Visite de la campagne', 
-    'les enfants inscrits peuvent profiter des nombreux espaces verts de la Maison des Collines et d''un encadrement, par des équipes d''animation sensibilisées à la nature', 10)
-  INTO ACTIVITE (NOMCENTRE, NOMTHEME, NOM, DESCRIPTIF, NBMAXANIM) 
-	  VALUES ('MAISON des COLLINES', 'Découverte de la nature', 'Tir à l''arc', 'Les activités se déroulent à St Martin d’Uriage et tour- nent autour de deux grands thèmes décidés une semaine à l’avance, par l’équipe d’animation. Les enfants sont répartis en 2 groupes d’âge.', 5)
+    'les enfants inscrits peuvent profiter des nombreux espaces verts de la Maison des Collines et d''un encadrement, par des équipes d''animation sensibilisées à la nature',
+    10, 20)
+  INTO ACTIVITE (NOMCENTRE, NOMTHEME, NOM, DESCRIPTIF, NBMAXANIM, PRIXPARJOUR) 
+	  VALUES ('MAISON des COLLINES', 'Découverte de la nature', 'Tir à l''arc', 'Les activités se déroulent à St Martin d’Uriage et tour- nent autour de deux grands thèmes décidés une semaine à l’avance, par l’équipe d’animation. Les enfants sont répartis en 2 groupes d’âge.',
+    5, 20)
 SELECT * FROM dual;
 
 INSERT ALL
@@ -137,10 +139,10 @@ INSERT ALL
 SELECT * FROM dual;
 
 INSERT ALL
-  INTO RFAMILLE VALUES('Henriot','Paul', 'Paul.Henriot','Paul.Henriot@mail.com', 36000)
+  INTO RFAMILLE VALUES('Henriot','Paul', 'Paul.Henriot','Paul.Henriot@yopmail.com', 36000)
   INTO RFAMILLE VALUES('Pavarotti','Jose','Jose.Pavarotti','Jose.Pavarotti@yopmail.com', 36000)
-  INTO RFAMILLE VALUES('Labrune','Janine','Janine.Labrune','Janine.Labrune@mail.com', 30000)
-  INTO RFAMILLE VALUES('Schmitt','Carine','Carine.Schmitt','Carine.Schmitt@mail.com', 32000)
+  INTO RFAMILLE VALUES('Labrune','Janine','Janine.Labrune','Janine.Labrune@yopmail.com', 30000)
+  INTO RFAMILLE VALUES('Schmitt','Carine','Carine.Schmitt','Carine.Schmitt@yopmail.com', 32000)
 SELECT * FROM dual;
 
 INSERT ALL
@@ -197,12 +199,12 @@ INSERT ALL
 SELECT * FROM dual;
 
 INSERT ALL
-  INTO INSCRIPTION VALUES(41, 'Daniel', 'Henriot', 'Tir à l''arc 04/18 - 04/28')
-  INTO INSCRIPTION VALUES(41, 'Charlie', 'Henriot', 'Tir à l''arc 04/18 - 04/28')
-  INTO INSCRIPTION VALUES(41, 'Jenny', 'Henriot', 'Tir à l''arc 04/18 - 04/28')
-  INTO INSCRIPTION VALUES(41, 'Anabela', 'Pavarotti', 'Tir à l''arc 04/18 - 04/28')
-  INTO INSCRIPTION VALUES(41, 'Mary', 'Pavarotti', 'Tir à l''arc 04/18 - 04/28')
-  INTO INSCRIPTION VALUES(41, 'Paul', 'Pavarotti', 'Tir à l''arc 04/18 - 04/28')
+  INTO INSCRIPTION VALUES(41, 'Daniel', 'Henriot', 'Tir à l''arc 04/18 - 04/28', 20)
+  INTO INSCRIPTION VALUES(41, 'Charlie', 'Henriot', 'Tir à l''arc 04/18 - 04/28', 20)
+  INTO INSCRIPTION VALUES(41, 'Jenny', 'Henriot', 'Tir à l''arc 04/18 - 04/28', 20)
+  INTO INSCRIPTION VALUES(41, 'Anabela', 'Pavarotti', 'Tir à l''arc 04/18 - 04/28', 20)
+  INTO INSCRIPTION VALUES(41, 'Mary', 'Pavarotti', 'Tir à l''arc 04/18 - 04/28', 20)
+  INTO INSCRIPTION VALUES(41, 'Paul', 'Pavarotti', 'Tir à l''arc 04/18 - 04/28', 20)
 SELECT * FROM dual;
 
 commit;

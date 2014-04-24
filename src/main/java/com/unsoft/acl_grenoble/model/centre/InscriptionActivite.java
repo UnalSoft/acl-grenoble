@@ -15,4 +15,30 @@ public class InscriptionActivite {
     Enfant enfant;
     Activite activite;
     Periode periode;
+    float prixParJour;
+
+    public InscriptionActivite(Enfant enfant, Activite activite, Periode periode, float prixParJour) {
+        this.enfant = enfant;
+        this.activite = activite;
+        this.periode = periode;
+        this.prixParJour = prixParJour;
+    }
+
+    public Activite getActivite() {
+        return activite;
+    }
+
+    public Enfant getEnfant() {
+        return enfant;
+    }
+
+    public Periode getPeriode() {
+        return periode;
+    }
+
+    public float getPrixParJour() {
+        return prixParJour;
+    }
+    
+    
 }
