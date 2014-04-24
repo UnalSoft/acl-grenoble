@@ -61,7 +61,7 @@
                         <td>${act.getNomActivite()}</td>
                         <td>${act.getPeriode()}</td>
                         
-                        <td><a href="ControleurFamille?action=verifEffacer&nom=${nom}&prenom=${prenom}&activite=${act.getIdActivite()}&periode=${act.getPeriode()}" class="btn btn-warning">Tuer enfant</a></td>
+                        <td><a href="ControleurFamille?action=verifEffacer&nom=${nom}&prenom=${prenom}&activite=${act.getIdActivite()}&periode=${act.getPeriode()}" class="btn btn-warning">Desinscrire</a></td>
                         <!-- Code pour montrer l'information de chaque activite dans lequel il est present -->
 
                     </tr>

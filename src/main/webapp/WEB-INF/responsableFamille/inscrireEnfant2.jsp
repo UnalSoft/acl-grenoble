@@ -4,7 +4,7 @@
     Author     : sparrow
 --%>
 
-<%@page contentType="text/html charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
@@ -33,7 +33,7 @@
                 <div class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="#">Inscrire un Enfant</a></li>
-                        <li><a href="ControleurAssociation?action=recruterAnimateur">Annuler une inscription</a></li>
+                        <li class="disabled"><a href="">Gestion d'Enfant</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="disabled"><a href="#">${utilisateur}</a></li>
