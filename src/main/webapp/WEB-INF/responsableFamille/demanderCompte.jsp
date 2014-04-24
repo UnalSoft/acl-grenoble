@@ -29,7 +29,7 @@
                 </div>
                 <div class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
                     <ul class="nav navbar-nav">
-                        <li><a href="ControleurFamille?action=demanderCompte">Demander un compte</a></li>
+                        <li class="active"><a href="ControleurFamille?action=demanderCompte">Demander un compte</a></li>
                         <li><a href="ControleurExterne?action=sInscrire.jsp">S’inscrire comme animateur externe</a></li>
                     </ul>
                 </div>
@@ -62,12 +62,21 @@
                 </div>
                 <div class="form-group">
                     <h2>Information de la famille</h2>
-                    Revenu Annuel (EUR €): <input type="text" name="revenuF" value="" /><br/> 
-
+                    <div class="form-group">
+                        <label for="revenuF" class="col-sm-2 control-label">Revenu Annuel (EUR €):</label>
+                        <div class="col-sm-3">
+                            <input type="text" name="revenuF" class="form-control"value="" />
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <h2>Information des enfants</h2>
-                    Nombre d'enfants: <input type="text" name="nombreE" value="" /><br/>
+                    <div class="form-group">
+                        <label for="nombreE" class="col-sm-2 control-label">Nombre d'enfants:</label>
+                        <div class="col-sm-3">
+                            <input type="text" name="revenuF" class="form-control"value="" />
+                        </div>
+                    </div>
                 </div>
                 <input type="submit" value="Submit" class="btn btn-primary btn-lg btn-block" />
             </form>

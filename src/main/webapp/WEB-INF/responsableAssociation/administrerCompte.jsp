@@ -35,7 +35,7 @@
                         <li><a href="ControleurAssociation?action=genererFactures">Generer Factures</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li class="disabled"><a href="#">${utilisateur}</a></li>
+                        <li><a>${utilisateur}</a></li>
                         <li><a href="ControleurUtilisateur?action=logout">Fermer la session</a></li>
                     </ul>
                 </div>

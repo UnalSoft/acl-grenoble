@@ -47,8 +47,8 @@ public class ControleurPlanification extends HttpServlet {
     private final String ANIMSINTERNES = "animsInternes";
     private final String ANIMSEXTERNES = "animsExternes";
     private static final String ANNULER_ACTIVITE = "annulerActivite";
-    private final int MIN_ENFANT_ANIMATEUR = 3;
-    private final int MAX_ENFANT_ANIMATEUR = 4;
+    private final int MIN_ENFANT_ANIMATEUR = 4;
+    private final int MAX_ENFANT_ANIMATEUR = 10;
     private final String SUCCES = "Animateurs asignés à l'activivité avec succès!\nActivité Confirmée!";
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

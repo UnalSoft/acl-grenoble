@@ -31,6 +31,7 @@
                 </div>
                 <div class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
                     <ul class="nav navbar-nav">
+                        <li><a href="ControleurFamille?action=demanderCompte">Demander un compte</a></li>
                         <li class="active"><a>S'inscrire comme animateur externe</a></li>
                     </ul>
                 </div>
