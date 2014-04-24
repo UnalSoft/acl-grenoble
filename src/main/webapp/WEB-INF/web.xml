@@ -4,6 +4,14 @@
         <servlet-name>ControlUtilisateur</servlet-name>
         <servlet-class>com.unsoft.acl_grenoble.controller.ControleurUtilisateur</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ControleurExterne</servlet-name>
+        <servlet-class>com.unsoft.acl_grenoble.controller.ControleurExterne</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ControleurExterne</servlet-name>
+        <url-pattern>/ControleurExterne</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

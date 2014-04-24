@@ -8,7 +8,7 @@ import com.unsoft.acl_grenoble.model.utilisateur.Enfant;
 
 /**
  *
- * @author martijua
+ * @author sparrow
  */
 public class InscriptionActivite {
 

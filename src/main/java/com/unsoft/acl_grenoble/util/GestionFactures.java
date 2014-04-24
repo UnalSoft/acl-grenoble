@@ -17,7 +17,6 @@ import java.util.List;
 import javax.mail.MessagingException;
 import javax.sql.DataSource;
 import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -92,7 +91,7 @@ public class GestionFactures {
 
         for (Enfant enfant : resp.getEnfants()) {
             for (InscriptionActivite inscription : enfant.getInscriptions()) {
-                float nbJours = (inscription.getPeriode().getDatefin().getTime() - inscription.getPeriode().getDateDebut().getTime()) / (milisecPerDay);
+                float nbJours = (inscription.getPeriode().getDateFin().getTime() - inscription.getPeriode().getDateDebut().getTime()) / (milisecPerDay);
                 float prixActivite = inscription.getPrixParJour() * nbJours;
                 total += prixActivite;
                 table.addCell(enfant.getNomEnfant());

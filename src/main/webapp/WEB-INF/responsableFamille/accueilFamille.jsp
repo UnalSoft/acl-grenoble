@@ -3,7 +3,7 @@
     Created on : 12 avr. 2014, 10:59:50
     Author     : LEONARDO
 --%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>

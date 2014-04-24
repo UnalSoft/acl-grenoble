@@ -6,8 +6,8 @@ package com.unsoft.acl_grenoble.model.centre;
  */
 public class Theme {
     
-    private ThemeEnum theme;
-    private CentreDeLoisirs centre;
+    private final ThemeEnum theme;
+    private final CentreDeLoisirs centre;
 
     public Theme(ThemeEnum theme, CentreDeLoisirs centre) {
         this.theme = theme;

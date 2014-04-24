@@ -4,14 +4,14 @@
     Author     : sparrow
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Mes enfants - ACL Grenoble</title>
+        <title>Gestion d'Enfant - ACL Grenoble</title>
         <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
         <link href="css/style.css" rel="stylesheet" type="text/css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
@@ -32,8 +32,8 @@
                 </div>
                 <div class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
                     <ul class="nav navbar-nav">
-                        <li class="disabled"><a href="#">Inscrire un Enfant</a></li>
-                        <li class="disabled"><a href="#">Gestion d'Enfant</a></li>
+                        <li><a href="">Inscrire un Enfant</a></li>
+                        <li class="active"><a href="">Gestion d'enfant</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="disabled"><a href="#">${utilisateur}</a></li>
@@ -43,33 +43,26 @@
             </div>
         </nav>
         <div class="page-header">
-            <h1 class="text-center">Mes enfants</h1>
+            <h1 class="text-center">Gestion d'enfant: ${prenom} ${nom}</h1>
         </div>
         <div class="form-table col-lg-8 col-lg-offset-2">
             <table class="table table-striped">
-                <!-- Test-->
+                
                 <tr>
-                    <th>#</th>
-                    <th>Nom</th>
-                    <th>Prenom</th>
-                    <th>Age</th>
-                    <th></th>
+                    <th>ID</th>
+                    <th>Nom Activite</th>
+                    <th>Periode</th>
                     <th></th>
                 </tr>
-                <% int i = 0; %>
-                <c:forEach items="${enfants}" var="enf">
-                    <%i++;%>
+                <c:forEach items="${listeActivites}" var="act">
                     <!-- Code pour montrer l'information de chaque enfant -->
                     <tr>
-                        <td><%=i%></td>
-                        <td>${enf.getNomEnfant()}</td>
-                        <td>${enf.getPrenomEnfant()}</td>
-                        <td>${enf.getAge()}</td>
-
-                        <td><a href="ControleurFamille?action=inscrire&nom=${enf.getNomEnfant()}&prenom=${enf.getPrenomEnfant()}" class="btn btn-success">Inscrire à une nouvelle activité</a></td>
+                        <td>${act.getActivite().getIdActivite()}</td>
+                        <td>${act.getActivite().getNomActivite()}</td>
+                        <td>${act.getPeriode()}</td>
+                        
+                        <td><a href="ControleurFamille?action=verifEffacer&nom=${nom}&prenom=${prenom}&activite=${act.getActivite().getIdActivite()}&periode=${act.getPeriode().nomPeriode()}" class="btn btn-warning">Desinscrire</a></td>
                         <!-- Code pour montrer l'information de chaque activite dans lequel il est present -->
-
-                        <td><a href="ControleurFamille?action=gestion&nom=${enf.getNomEnfant()}&prenom=${enf.getPrenomEnfant()}" class="btn btn-info">Plus...</a></td>
 
                     </tr>
                 </c:forEach>
