@@ -43,8 +43,7 @@ public class ControleurFamille extends HttpServlet {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
-     * Handles the HTTP
-     * <code>GET</code> method.
+     * Handles the HTTP <code>GET</code> method.
      *
      * @param request servlet request
      * @param response servlet response
@@ -54,12 +53,10 @@ public class ControleurFamille extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-
         String action = request.getParameter("action");
 
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
-
 
         try {
 
@@ -97,8 +94,7 @@ public class ControleurFamille extends HttpServlet {
     }
 
     /**
-     * Handles the HTTP
-     * <code>POST</code> method.
+     * Handles the HTTP <code>POST</code> method.
      *
      * @param request servlet request
      * @param response servlet response
@@ -163,7 +159,7 @@ public class ControleurFamille extends HttpServlet {
         String prenomR = new String(request.getParameter("prenomR").getBytes("iso-8859-1"), "UTF-8");
         String nomR = new String(request.getParameter("nomR").getBytes("iso-8859-1"), "UTF-8");
         String emailR = request.getParameter("emailR");
-        
+
         Double revenuF = Double.parseDouble(request.getParameter("revenuF"));
         int nombreEnfants = Integer.parseInt(request.getParameter("nomEnfants"));
 
@@ -179,7 +175,7 @@ public class ControleurFamille extends HttpServlet {
 
         //Enfants
         String prenomi;
-        String nomi;    
+        String nomi;
         int agei;
         for (int i = 1; i <= nombreEnfants; i++) {
             prenomi = new String(request.getParameter("PrenomE" + i).getBytes("iso-8859-1"), "UTF-8");
@@ -252,7 +248,7 @@ public class ControleurFamille extends HttpServlet {
             EnfantDAO enfantDAO = new EnfantDAO(ds);
             List<InscriptionActivite> listeInscris = enfantDAO.getListeDInscriptionsParEnfant(request.getParameter("nom"), request.getParameter("prenom"));
 
-            List<Activite> listePropre = purifyListActivites(listeActivites, listeEtat, listeInscris);
+            List<Activite> listePropre = purifyListActivites(listeEtat, listeInscris);
 
             request.setAttribute("listePropre", listePropre);
             request.setAttribute("nom", request.getParameter("nom"));
@@ -290,13 +286,12 @@ public class ControleurFamille extends HttpServlet {
             EnfantDAO enfantDAO = new EnfantDAO(ds);
 
             //Characters sensibles a être oops
-            String periode = new String(request.getParameter("periode").getBytes("iso-8859-1"), "UTF-8");
-            String prenom = new String(request.getParameter("prenom").getBytes("iso-8859-1"), "UTF-8");
-            String nom = new String(request.getParameter("nom").getBytes("iso-8859-1"), "UTF-8");
+            String periode = new String(request.getParameter("periode").getBytes("ISO-8859-1"), "UTF-8");
+            String prenom = new String(request.getParameter("prenom").getBytes("ISO-8859-1"), "UTF-8");
+            String nom = new String(request.getParameter("nom").getBytes("ISO-8859-1"), "UTF-8");
 
             enfantDAO.inscrireEnfant(prenom, nom, Integer.parseInt(request.getParameter("idActivite")),
                     periode, Float.parseFloat(request.getParameter("prix")));
-
 
             ActiviteDAO activiteDAO = new ActiviteDAO(ds);
             int courents = activiteDAO.getnbInscris(Integer.parseInt(request.getParameter("idActivite")), periode);
@@ -308,7 +303,6 @@ public class ControleurFamille extends HttpServlet {
 
             //request.removeAttribute("action");
             //getServletContext().getRequestDispatcher("/WEB-INF/responsableFamille/accueilFamille.jsp").forward(request, response);
-            
             response.sendRedirect("/acl_grenoble/ControleurFamille");
         } catch (Exception ex) {
 
@@ -325,10 +319,8 @@ public class ControleurFamille extends HttpServlet {
             String prenom = new String(request.getParameter("prenom").getBytes("iso-8859-1"), "UTF-8");
             String nom = new String(request.getParameter("nom").getBytes("iso-8859-1"), "UTF-8");
 
-
             EnfantDAO enfantDAO = new EnfantDAO(ds);
             enfantDAO.desInscrireEnfant(prenom, nom, Integer.parseInt(request.getParameter("idActivite")), periode);
-
 
             EtatDAO etatDAO = new EtatDAO(ds);
             String etat = etatDAO.getEtatActiviteDansPeriode(Integer.parseInt(request.getParameter("idActivite")), periode);
@@ -373,34 +365,29 @@ public class ControleurFamille extends HttpServlet {
             getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);
         }
     }
-    
-    public List<Activite> purifyListActivites(List<Activite> listeBrut, List<Etat> listeActivitesOuverts, List<InscriptionActivite> listeInscriptionsEnfant) {
+
+    public List<Activite> purifyListActivites(List<Etat> listeActivitesOuverts, List<InscriptionActivite> listeInscriptionsEnfant) {
+
+        List<Etat> dispo = listeActivitesOuverts;
         List<Activite> listePropre = new ArrayList<Activite>();
+
+        for (int i = 0; i < dispo.size(); i++) {
+            Etat activite = listeActivitesOuverts.get(i);
+            for (InscriptionActivite inscription : listeInscriptionsEnfant) {
+                if ((activite.getActivite().getIdActivite() == inscription.getActivite().getIdActivite())
+                        || (!(activite.getPeriode().getDateFin().before(inscription.getPeriode().getDateDebut()))
+                        || (activite.getPeriode().getDateDebut().after(inscription.getPeriode().getDateFin())))) {
+                    dispo.remove(activite);
+                    i--;
+                    break;
+                }
+            }
+        }
         
-        for (Activite each : listeBrut) {
-            listePropre.add(each);
+        for (Etat disp : dispo) {
+            listePropre.add(disp.getActivite());
         }
-        for (Activite each : listeBrut) {
-            boolean ouvert = false;
-            for (Etat each2 : listeActivitesOuverts) {
-                if (each.getIdActivite() == each2.getActivite().getIdActivite()) {
-                    ouvert = true;
-                }
-            }
-            if (!ouvert) {
-                listePropre.remove(each);
-            } else {
-                boolean dejaInscrit = false;
-                for (InscriptionActivite each2 : listeInscriptionsEnfant) {
-                    if (each.getIdActivite() == each2.getActivite().getIdActivite()) {
-                        dejaInscrit = true;
-                    }
-                }
-                if (dejaInscrit) {
-                    listePropre.remove(each);
-                }
-            }
-        }
+
         return listePropre;
     }
 
