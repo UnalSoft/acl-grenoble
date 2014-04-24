@@ -67,6 +67,7 @@ public class ControleurPlanification extends HttpServlet {
         String userName = (String) session.getAttribute("utilisateur");
         if (userName != null) {
             request.setCharacterEncoding("UTF-8");
+            response.setContentType("text/html; charset=UTF-8");
             String action = request.getParameter("action");
             if (action != null) {
                 if (action.equals(AFFECTER)) {                    
@@ -98,6 +99,7 @@ public class ControleurPlanification extends HttpServlet {
             if (action != null) {
                 if (action.equals(ANIMSINTERNES) || action.equals(ANIMSEXTERNES)) {
                     request.setCharacterEncoding("UTF-8");
+                    response.setContentType("text/html; charset=UTF-8");
                     String[] anims = request.getParameterValues("animateurs");
                     int nbAnimateurs = 0;
                     if (anims != null) {
@@ -194,12 +196,16 @@ public class ControleurPlanification extends HttpServlet {
     }
 
     private void listerAnimateursDisponibles(HttpServletRequest request, HttpServletResponse response, boolean estInterne) throws ServletException, NumberFormatException, IOException {
+        request.setCharacterEncoding("UTF-8");
         String idActivite = request.getParameter("idActivite");
         String nomPeriode = request.getParameter("periode");
         try {
             final ActiviteDAO activiteDAO = new ActiviteDAO(dataSource);
             Activite activite = activiteDAO.getActivite(Integer.parseInt(idActivite));
             Periode periode = new PeriodeDAO(dataSource).getPeriode(nomPeriode);
+            if (periode == null) {
+                throw new DAOException("Periode " + nomPeriode + " non trouvé!");
+            }
             List<Animateur> animateursDisponibles = obtenirAnimateursDisponibles(periode, activite, estInterne);
             int nbInscris = activiteDAO.getnbInscris(activite.getIdActivite(), periode.nomPeriode());
             int nbMinAnim = (int) Math.ceil((double) nbInscris / MAX_ENFANT_ANIMATEUR);

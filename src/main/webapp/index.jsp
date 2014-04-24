@@ -52,8 +52,5 @@
                 <input type="submit" name="Connexion" value="Connexion" class="btn btn-primary btn-lg btn-block"/>
             </form>
         </div>
-        <%-- 
-        <jsp:forward page="WEB-INF/responsableFamille/accueilFamille.jsp"/>
-        --%>
     </body>
 </html>

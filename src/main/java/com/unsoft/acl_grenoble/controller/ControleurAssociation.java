@@ -45,7 +45,6 @@ public class ControleurAssociation extends HttpServlet {
     private final static int LONG_MAIL = 60;
     private final static boolean ANIMATEUR_INTERNE = true;
     private static final String MESSAGE_FACTURES = "Factures generées et envoyées aux responsables des familles.";
-    private static final String PERIODE_ACTUEL = "Vacances de printemps 2014";
 
     /**
      * Handles the HTTP <code>POST</code> method.
