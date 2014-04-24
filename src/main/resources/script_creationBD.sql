@@ -34,8 +34,8 @@ create table THEME  (
 
 /* Table: PERIODE*/
 create table PERIODE  (
-   PERIODE              VARCHAR2(40)                    primary key,
-   SUPERPERIODE          VARCHAR2(40),
+   PERIODE              VARCHAR2(60)                    primary key,
+   SUPERPERIODE          VARCHAR2(60),
    DATEDEBUT            DATE                            not null,
    DATEFIN              DATE                            not null,
    foreign key (NOMANIMATEUR, PRENOMANIMATEUR) references ANIMATEUR (NOMANIMATEUR, PRENOMANIMATEUR)
@@ -88,7 +88,7 @@ create table COMPETENCEANIMATEUR  (
 create table EST_DISPONIBLE  (
    NOMANIMATEUR         VARCHAR2(20)                    not null,
    PRENOMANIMATEUR      VARCHAR2(20)                    not null,
-   PERIODE              VARCHAR2(40)                    not null,
+   PERIODE              VARCHAR2(60)                    not null,
    primary key (NOMANIMATEUR, PRENOMANIMATEUR, PERIODE),
    foreign key (NOMANIMATEUR, PRENOMANIMATEUR) references ANIMATEUR (NOMANIMATEUR, PRENOMANIMATEUR),
    foreign key (PERIODE) references PERIODE (PERIODE)
@@ -98,7 +98,7 @@ create table EST_DISPONIBLE  (
 create table ASIGNATION  (
    NOMANIMATEUR         VARCHAR2(20)                    not null,
    PRENOMANIMATEUR      VARCHAR2(20)                    not null,
-   PERIODE              VARCHAR2(40)                    not null,
+   PERIODE              VARCHAR2(60)                    not null,
    IDACTIVITE           INTEGER                         not null,
    primary key (NOMANIMATEUR, PRENOMANIMATEUR, PERIODE, IDACTIVITE),
    foreign key (NOMANIMATEUR, PRENOMANIMATEUR) references ANIMATEUR (NOMANIMATEUR, PRENOMANIMATEUR),
@@ -109,7 +109,7 @@ create table ASIGNATION  (
 /* Table: ETAT*/
 create table ETAT  (
    IDACTIVITE           INTEGER                         not null,
-   PERIODE              VARCHAR2(40)                    not null,
+   PERIODE              VARCHAR2(60)                    not null,
    ETAT                 VARCHAR2(20)                    not null,
    primary key (IDACTIVITE, PERIODE),
    foreign key (IDACTIVITE) references ACTIVITE (IDACTIVITE),
@@ -175,7 +175,8 @@ create table INSCRIPTION  (
    IDACTIVITE           INTEGER                         not null,
    PRENOMENFANT         VARCHAR2(20)                    not null,
    NOMFAMILLENFANT      VARCHAR2(20)                    not null,
-   PERIODE              VARCHAR2(40)                    not null,
+   PERIODE              VARCHAR2(60)                    not null,
+   PRIXPARJOUR          FLOAT                           not null,
    primary key (IDACTIVITE, PRENOMENFANT, NOMFAMILLENFANT, PERIODE),
    foreign key (IDACTIVITE) references ACTIVITE (IDACTIVITE),
    foreign key (PRENOMENFANT, NOMFAMILLENFANT) references ENFANT (PRENOMENFANT, NOMFAMILLENFANT),

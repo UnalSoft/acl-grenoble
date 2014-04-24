@@ -298,7 +298,7 @@ public class ActiviteDAO extends AbstractDataBaseDAO {
             } else {
                 boolean dejaInscrit = false;
                 for (InscriptionActivite each2 : listeInscriptionsEnfant) {
-                    if (each.getIdActivite() == each2.getIdActivite()) {
+                    if (each.getIdActivite() == each2.getActivite().getIdActivite()) {
                         dejaInscrit = true;
                     }
                 }

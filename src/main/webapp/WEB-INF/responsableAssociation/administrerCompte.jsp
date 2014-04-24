@@ -32,6 +32,7 @@
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="#">Administrer Demandes de Compte</a></li>
                         <li><a href="ControleurAssociation?action=recruterAnimateur">Recruter animateur permanent</a></li>
+                        <li><a href="ControleurAssociation?action=genererFactures">Generer Factures</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="disabled"><a href="#">${utilisateur}</a></li>
@@ -64,7 +65,6 @@
             </table>
         </div>
         <c:if test="${demande != null}">
-            <!-- Modal Accepter -->
             <form method="POST" action="ControleurAssociation">
                 <div id="modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -100,6 +100,24 @@
                     </div><!-- /.modal-dialog -->
                 </div><!-- /.modal -->
             </form>
+            <script>
+                $('#modal').modal('show');
+            </script>
+        </c:if>
+        <c:if test="${message != null}">
+            <div id="modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">Succès</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>${message}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <script>
                 $('#modal').modal('show');
             </script>

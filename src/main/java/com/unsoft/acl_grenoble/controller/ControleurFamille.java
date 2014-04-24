@@ -112,6 +112,8 @@ public class ControleurFamille extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        request.setCharacterEncoding("UTF-8");
+
         String action = request.getParameter("action");
         try {
             if (action != null) {
@@ -122,6 +124,14 @@ public class ControleurFamille extends HttpServlet {
                     EnfantDAO eDao = new EnfantDAO(ds);
                     CompteDAO cDao = new CompteDAO(ds);
                     actionDemander2(request, response, rDao, eDao, cDao);
+                } else if (action.equals("inscrire")) {
+                    afficherActivites(request, response);
+                } else if (action.equals("gestion")) {
+                    gestionEnfant(request, response);
+                } else if (action.equals("verifInscrire")) {
+                    inscrireEnfant(request, response);
+                } else if (action.equals("verifEffacer")) {
+                    desInscrireEnfant(request, response);
                 }
             } else {
                 HttpSession session = request.getSession();

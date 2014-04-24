@@ -1,6 +1,11 @@
 package com.unsoft.acl_grenoble.model.dao;
 
+import com.unsoft.acl_grenoble.model.centre.Activite;
+import com.unsoft.acl_grenoble.model.centre.CentreDeLoisirs;
 import com.unsoft.acl_grenoble.model.centre.InscriptionActivite;
+import com.unsoft.acl_grenoble.model.centre.Periode;
+import com.unsoft.acl_grenoble.model.centre.Theme;
+import com.unsoft.acl_grenoble.model.centre.ThemeEnum;
 import com.unsoft.acl_grenoble.model.utilisateur.Enfant;
 import com.unsoft.acl_grenoble.model.utilisateur.ResponsableFamille;
 import java.sql.Connection;
@@ -122,23 +127,30 @@ public class EnfantDAO extends AbstractDataBaseDAO {
         Connection conn = null;
         try {
             conn = getConnection();
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM Inscription "
-                    + "WHERE preNomEnfant = ? AND nomFamillEnfant = ?");
+            PreparedStatement st = conn.prepareStatement("SELECT E.nomFamillEnfant, E.prenomEnfant, E.age, R.nomFamille, R.prenom, R.mail, R.ressources, "
+                    + "I.prixParJour, A.idActivite, A.nomCentre, A.nomTheme, A.nom, A.descriptif, A.nbMaxAnim, A.prixParJour, "
+                    + "P.periode, P.dateDebut, P.dateFin, P.superPeriode "
+                    + "FROM Inscription I, Enfant E, RFamille R, Periode P, Activite A "
+                    + "WHERE I.nomFamillEnfant = E.nomFamillEnfant AND I.prenomenfant = E.prenomenfant "
+                    + "AND E.nomFamille = R.nomFamille AND E.prenom = R.prenom "
+                    + "AND P.periode = I.periode "
+                    + "AND I.idActivite = A.idActivite "
+                    + "AND E.nomFamillEnfant = ? AND E.prenomenfant = ?");
 
-            st.setString(1, prenomEnfant);
-            st.setString(2, nomEnfant);
-            ResultSet rs = st.executeQuery();
+            st.setString(1, nomEnfant);
+            st.setString(2, prenomEnfant);
+            ResultSet rset = st.executeQuery();
 
-            while (rs.next()) {
-                InscriptionActivite inscription = new InscriptionActivite();
-                inscription.setIdActivite(rs.getInt("idActivite"));
-                inscription.setPrenomEnfant(rs.getString("preNomEnfant"));
-                inscription.setNomEnfant(rs.getString("nomFamillEnfant"));
-                inscription.setPeriode(rs.getString("periode"));
-                inscription.setNomActivite("Place Holder");
+            while (rset.next()) {
+                ResponsableFamille resp = new ResponsableFamille(rset.getString("nomFamille"), rset.getString("prenom"), rset.getString("mail"), rset.getFloat("ressources"));
+                Enfant enfant = new Enfant(rset.getString("prenomEnfant"), rset.getString("nomFamillEnfant"), rset.getInt("age"));
+                enfant.setResponsable(resp);
+                Activite activite = new Activite(rset.getInt("idActivite"),
+                        new Theme(ThemeEnum.getTheme(rset.getString("nomTheme")), new CentreDeLoisirs(rset.getString("nomCentre"))),
+                        rset.getString("nom"), rset.getString("descriptif"), rset.getInt("nbMaxAnim"), rset.getFloat("prixParJour"));
+                Periode periode = new Periode(rset.getString("periode"), rset.getDate("dateDebut"), rset.getDate("dateFin"), rset.getString("superPeriode"));
 
-                ActiviteDAO activite = new ActiviteDAO(dataSource);
-                inscription.setNomActivite(activite.getNomParId(inscription.getIdActivite()));
+                InscriptionActivite inscription = new InscriptionActivite(enfant, activite, periode, rset.getFloat("prixParJour"));
 
                 listeActivites.add(inscription);
             }
@@ -153,18 +165,16 @@ public class EnfantDAO extends AbstractDataBaseDAO {
         return listeActivites;
     }
 
-    public void inscrireEnfant(String prenomE, String nomE, int idActivite, String periode, float prix) throws DAOException {
-            Connection conn = null;
+    public void inscrireEnfant(String prenomE, String nomE, int idActivite, String periode) throws DAOException {
+        Connection conn = null;
         try {
-            
             conn = getConnection();
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO Inscription"
-                    + " VALUES(?,?,?,?,?)");
+                    + " VALUES(?,?,?,?)");
             stmt.setInt(1, idActivite);
             stmt.setString(2, prenomE);
             stmt.setString(3, nomE);
             stmt.setString(4, periode);
-            stmt.setFloat(5, prix);
 
             stmt.execute();
             stmt.close();
@@ -180,7 +190,7 @@ public class EnfantDAO extends AbstractDataBaseDAO {
         try {
             conn = getConnection();
             PreparedStatement stmt = conn.prepareStatement("DELETE FROM Inscription"
-                    + " WHERE idActivite = ? AND prenomEnfant = ? AND nomFamillEnfant = ? AND periode = ?");
+                    + " VALUES(?,?,?,?)");
             stmt.setInt(1, idActivite);
             stmt.setString(2, prenomE);
             stmt.setString(3, nomE);
