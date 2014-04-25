@@ -285,9 +285,9 @@ public class ControleurFamille extends HttpServlet {
             EnfantDAO enfantDAO = new EnfantDAO(ds);
 
             //Characters sensibles a être oops
-            String periode = new String(request.getParameter("periode").getBytes("ISO-8859-1"), "UTF-8");
-            String prenom = new String(request.getParameter("prenom").getBytes("ISO-8859-1"), "UTF-8");
-            String nom = new String(request.getParameter("nom").getBytes("ISO-8859-1"), "UTF-8");
+            String periode = new String(request.getParameter("periode").getBytes("iso-8859-1"), "UTF-8");
+            String prenom = new String(request.getParameter("prenom").getBytes("iso-8859-1"), "UTF-8");
+            String nom = new String(request.getParameter("nom").getBytes("iso-8859-1"), "UTF-8");
 
             enfantDAO.inscrireEnfant(prenom, nom, Integer.parseInt(request.getParameter("idActivite")),
                     periode, Float.parseFloat(request.getParameter("prix")));

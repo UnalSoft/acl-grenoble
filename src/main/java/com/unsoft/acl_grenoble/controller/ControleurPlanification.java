@@ -157,7 +157,7 @@ public class ControleurPlanification extends HttpServlet {
                         listerAnimateursDisponibles(request, response, !besoinExtern);
                     } else {
                         int idActivite = Integer.parseInt(request.getParameter("idActivite"));
-                        String nomPeriode = request.getParameter("periode");
+                        String nomPeriode = new String(request.getParameter("periode").getBytes("iso-8859-1"), "UTF-8");
                         try {
                             if (nbMinAnim > 0) {
                                 if (action.equals(ANIMSINTERNES)) {
@@ -198,7 +198,7 @@ public class ControleurPlanification extends HttpServlet {
     private void listerAnimateursDisponibles(HttpServletRequest request, HttpServletResponse response, boolean estInterne) throws ServletException, NumberFormatException, IOException {
         request.setCharacterEncoding("UTF-8");
         String idActivite = request.getParameter("idActivite");
-        String nomPeriode = request.getParameter("periode");
+        String nomPeriode = new String(request.getParameter("periode").getBytes("iso-8859-1"),"UTF-8");
         try {
             final ActiviteDAO activiteDAO = new ActiviteDAO(dataSource);
             Activite activite = activiteDAO.getActivite(Integer.parseInt(idActivite));
