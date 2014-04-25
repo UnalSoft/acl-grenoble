@@ -17,7 +17,7 @@
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="#">ACL Grenoble</a>
+                    <a class="navbar-brand" href="index.jsp">ACL Grenoble</a>
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">

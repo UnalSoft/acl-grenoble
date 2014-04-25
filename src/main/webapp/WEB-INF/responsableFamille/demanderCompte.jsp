@@ -45,19 +45,19 @@
                 <div class="form-group">
                     <label for="prenomR" class="col-sm-1 control-label">Prenom:</label>
                     <div class="col-sm-4">
-                        <input type="text" name="prenomR" class="form-control" value="" />
+                        <input type="text" name="prenomR" class="form-control" required value="" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="nomR" class="col-sm-1 control-label">Nom:</label>
                     <div class="col-sm-4">
-                        <input type="text" name="nomR" class="form-control" value="" />
+                        <input type="text" name="nomR" class="form-control" required value="" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="emailR" class="col-sm-1 control-label">Email:</label>
                     <div class="col-sm-4">
-                        <input type="text" name="emailR" class="form-control"value="" />
+                        <input type="text" name="emailR" class="form-control" required value="" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -65,7 +65,7 @@
                     <div class="form-group">
                         <label for="revenuF" class="col-sm-2 control-label">Revenu Annuel (EUR €):</label>
                         <div class="col-sm-3">
-                            <input type="text" name="revenuF" class="form-control"value="" />
+                            <input type="text" name="revenuF" class="form-control" required value="" />
                         </div>
                     </div>
                 </div>
@@ -74,7 +74,7 @@
                     <div class="form-group">
                         <label for="nombreE" class="col-sm-2 control-label">Nombre d'enfants:</label>
                         <div class="col-sm-3">
-                            <input type="text" name="revenuF" class="form-control"value="" />
+                            <input type="text" name="nombreE" class="form-control" required value="" />
                         </div>
                     </div>
                 </div>
