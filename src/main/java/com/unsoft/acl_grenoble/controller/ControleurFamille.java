@@ -240,9 +240,8 @@ public class ControleurFamille extends HttpServlet {
 
     private void afficherActivites(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DAOException {
         try {
-            //request.setCharacterEncoding("UTF-8");            
-            ActiviteDAO activiteDAO = new ActiviteDAO(ds);
-            List<Activite> listeActivites = activiteDAO.getAllActivites();
+            //request.setCharacterEncoding("UTF-8");
+            verifierActivitesPreconfirmees();
             EtatDAO etatDAO = new EtatDAO(ds);
             List<Etat> listeEtat = etatDAO.getActivitesParEtat((EtatEnum.OUVERTE).getName());
             EnfantDAO enfantDAO = new EnfantDAO(ds);
@@ -389,6 +388,16 @@ public class ControleurFamille extends HttpServlet {
         }
 
         return listePropre;
+    }
+    
+    private EtatDAO verifierActivitesPreconfirmees() throws DAOException {
+        EtatDAO etatDAO = new EtatDAO(ds);
+        List<Etat> activitesPourPreConfirmer = etatDAO.getActivitesPourPreConfirmer();
+        ActiviteDAO activiteDAO = new ActiviteDAO(ds);
+        for(Etat appc : activitesPourPreConfirmer) {
+            activiteDAO.changerEtat(appc.getActivite().getIdActivite(), appc.getPeriode().nomPeriode(), EtatEnum.PRE_CONFIRMEE);
+        }
+        return etatDAO;
     }
 
     /**

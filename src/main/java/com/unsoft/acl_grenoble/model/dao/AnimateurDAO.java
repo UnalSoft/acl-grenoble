@@ -75,7 +75,7 @@ public class AnimateurDAO extends AbstractDataBaseDAO {
         }
         return periodes;
     }
-    
+
     public List<Periode> getPeriodesDispExtern(String nomAnim, String prenomAnim) throws DAOException {
         List<Periode> periodes = new ArrayList<Periode>();
         Connection conn = null;
@@ -104,7 +104,7 @@ public class AnimateurDAO extends AbstractDataBaseDAO {
         }
         return periodes;
     }
-    
+
     public List<Animateur> getAnimateursDisp(String periode, boolean estInterne) throws DAOException {
         List<Animateur> animateurs = new ArrayList<Animateur>();
         Connection conn = null;
@@ -123,7 +123,7 @@ public class AnimateurDAO extends AbstractDataBaseDAO {
 
             while (rs.next()) {
                 Animateur animateur = new Animateur(rs.getString("nomAnimateur"), rs.getString("prenomAnimateur"),
-                rs.getString("email"), rs.getBoolean("estInterne"));
+                        rs.getString("email"), rs.getBoolean("estInterne"));
                 animateurs.add(animateur);
             }
         } catch (SQLException e) {
@@ -147,7 +147,7 @@ public class AnimateurDAO extends AbstractDataBaseDAO {
             ResultSet rset = stmt.executeQuery();
 
             if (rset.next()) {
-                animateur = new Animateur(rset.getString("nomAnimateur"), rset.getString("prenomAnimateur"), 
+                animateur = new Animateur(rset.getString("nomAnimateur"), rset.getString("prenomAnimateur"),
                         rset.getString("email"), rset.getBoolean("estInterne"));
             }
             rset.close();
@@ -160,28 +160,63 @@ public class AnimateurDAO extends AbstractDataBaseDAO {
         return animateur;
     }
 
-    public Animateur addAnimateur(String nomAnimateur, String prenomAnimateur, String email, boolean isIntern) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void addAnimateur(String nomAnimateur, String prenomAnimateur, String email, boolean estIntern) throws DAOException {
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            String requeteSQL = "INSERT INTO ANIMATEUR VALUES(?,?,?,?)";
+            PreparedStatement stmt = conn.prepareStatement(requeteSQL);
+            stmt.setString(1, nomAnimateur);
+            stmt.setString(2, prenomAnimateur);
+            stmt.setString(3, email);
+            stmt.setBoolean(4, estIntern);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        } finally {
+            closeConnection(conn);
+        }
     }
 
-    public boolean makeIntern(String nomAnimateur, String prenomAnimateur) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void lierCompetences(String nomAnimateur, String prenomAnimateur, List<Competence> competences) throws DAOException {
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            for (Competence competence : competences) {
+
+                String requeteSQL = "INSERT INTO COMPETENCEANIMATEUR VALUES(?,?,?)";
+                PreparedStatement stmt = conn.prepareStatement(requeteSQL);
+                stmt.setString(1, nomAnimateur);
+                stmt.setString(2, prenomAnimateur);
+                stmt.setString(3, competence.getName());
+                stmt.executeUpdate();
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Erreur BD " + ex.getMessage(), ex);
+        } finally {
+            closeConnection(conn);
+        }
     }
 
-    public List<Competence> getAllCompetences() throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void lierPeriodes(String nomAnimateur, String prenomAnimateur, List<Periode> periodes) throws DAOException {
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            for (Periode periode : periodes) {
+                String requeteSQL = "INSERT INTO EST_DISPONIBLE "
+                        + "VALUES(?,?,?)";
+                PreparedStatement stmt = conn.prepareStatement(requeteSQL);
+                stmt.setString(1, nomAnimateur);
+                stmt.setString(2, prenomAnimateur);
+                System.out.println("Periode = " + periode.nomPeriode());
+                stmt.setString(3, periode.nomPeriode());
+                stmt.executeUpdate();
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Erreur BD " + ex.getMessage(), ex);
+        } finally {
+            closeConnection(conn);
+        }
     }
-
-    public boolean lierCompetences(String nomAnimateur, String prenomAnimateur, List<Competence> competences) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public List<Periode> getAllDefaultPeriodes() throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public boolean lierPeriodes(String nomAnimateur, String prenomAnimateur, Date dateDebut, Date dateFin) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
 }
+

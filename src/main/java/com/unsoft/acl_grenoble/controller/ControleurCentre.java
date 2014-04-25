@@ -10,6 +10,7 @@ import com.unsoft.acl_grenoble.model.centre.ThemeEnum;
 import com.unsoft.acl_grenoble.model.dao.ActiviteDAO;
 import com.unsoft.acl_grenoble.model.dao.CentreDAO;
 import com.unsoft.acl_grenoble.model.dao.DAOException;
+import com.unsoft.acl_grenoble.model.dao.PeriodeDAO;
 import com.unsoft.acl_grenoble.model.dao.ResponsableDAO;
 import java.io.IOException;
 import java.text.ParseException;
@@ -78,7 +79,7 @@ public class ControleurCentre extends HttpServlet {
     private HttpServletRequest listPeriodes(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         List<Periode> periodes = null;
         try {
-            periodes = new ResponsableDAO(dataSource).getPeriodesDisponibilite();
+            periodes = new PeriodeDAO(dataSource).getPeriodesDisponibilite();
         } catch (DAOException ex) {
             getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp")
                     .forward(request, response);
@@ -224,7 +225,7 @@ public class ControleurCentre extends HttpServlet {
                 // Obtenir periode pere
                 Periode periodePere = new Periode(null, new Date(), new Date());
                 try {
-                    periodePere = new ResponsableDAO(dataSource).getPeriode(periode);
+                    periodePere = new PeriodeDAO(dataSource).getPeriode(periode);
                 } catch (DAOException ex) {
                     request.setAttribute("message", ex.getMessage());
                     getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp").forward(request, response);

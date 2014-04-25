@@ -6,7 +6,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.sql.DataSource;
 
@@ -20,6 +22,13 @@ public class PeriodeDAO extends AbstractDataBaseDAO {
         super(ds);
     }
 
+    /**
+     * Obtient un periode a partir de son nom
+     *
+     * @param nomPeriode
+     * @return
+     * @throws DAOException
+     */
     public Periode getPeriode(String nomPeriode) throws DAOException {
         Periode periode = null;
         Connection conn = null;
@@ -91,5 +100,31 @@ public class PeriodeDAO extends AbstractDataBaseDAO {
         }
         return periodes;
     }
+    
+    /**
+    * Obtient une liste avec les periodes les plus generales
+    *
+    * @return @throws DAOException
+    */
+   public List<Periode> getPeriodesDisponibilite() throws DAOException {
+      List<Periode> periodes = new ArrayList<Periode>();
+      Connection conn = null;
+      try {
+         conn = getConnection();
+         Statement st = conn.createStatement();
+         String requeteSQL = "SELECT * FROM PERIODE WHERE SUPERPERIODE IS NULL";
+         ResultSet rs = st.executeQuery(requeteSQL);
+         while (rs.next()) {
+            Periode periode = new Periode(rs.getString("PERIODE"), rs.getDate("DATEDEBUT"), rs.getDate("DATEFIN"));
+            if (periode.getDateDebut().after(new Date()))
+               periodes.add(periode);
+         }
+      } catch (SQLException e) {
+         throw new DAOException("Erreur BD " + e.getMessage(), e);
+      } finally {
+         closeConnection(conn);
+      }
+      return periodes;
+   }
 
 }

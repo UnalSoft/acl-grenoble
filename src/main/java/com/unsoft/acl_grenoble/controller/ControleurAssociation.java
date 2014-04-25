@@ -3,6 +3,7 @@ package com.unsoft.acl_grenoble.controller;
 import com.unsoft.acl_grenoble.model.centre.Animateur;
 import com.unsoft.acl_grenoble.model.centre.Competence;
 import com.unsoft.acl_grenoble.model.centre.Periode;
+import com.unsoft.acl_grenoble.model.dao.AnimateurDAO;
 import com.unsoft.acl_grenoble.model.dao.CompteDAO;
 import com.unsoft.acl_grenoble.model.dao.DAOException;
 import com.unsoft.acl_grenoble.model.dao.EnfantDAO;
@@ -250,7 +251,7 @@ public class ControleurAssociation extends HttpServlet {
     private HttpServletRequest listPeriodes(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         List<Periode> periodes = null;
         try {
-            periodes = new ResponsableDAO(dataSource).getPeriodesDisponibilite();
+            periodes = new PeriodeDAO(dataSource).getPeriodesDisponibilite();
         } catch (DAOException ex) {
             getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp")
                     .forward(request, response);
@@ -276,7 +277,10 @@ public class ControleurAssociation extends HttpServlet {
      */
     private void insererAnimateur(Animateur animateur, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            new ResponsableDAO(dataSource).insererAnimateur(animateur);
+            AnimateurDAO animateurDAO = new AnimateurDAO(dataSource);
+            animateurDAO.addAnimateur(animateur.getNomAnimateur(), animateur.getPrenomAnimateur(), animateur.getEmail(), animateur.estInterne());
+            animateurDAO.lierCompetences(animateur.getNomAnimateur(), animateur.getPrenomAnimateur(), animateur.getCompetences());
+            animateurDAO.lierPeriodes(animateur.getNomAnimateur(), animateur.getPrenomAnimateur(), animateur.getPeriodes());
         } catch (DAOException ex) {
             getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp")
                     .forward(request, response);
@@ -291,10 +295,10 @@ public class ControleurAssociation extends HttpServlet {
      */
     private List<Periode> listPeriodes(String[] periodes, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Periode> thePeriodes = new ArrayList<Periode>(periodes.length);
-        ResponsableDAO responsableDAO = new ResponsableDAO(dataSource);
+        PeriodeDAO periodeDAO = new PeriodeDAO(dataSource);
         for (String periode : periodes) {
             try {
-                thePeriodes.add(responsableDAO.getPeriode(periode));
+                thePeriodes.add(periodeDAO.getPeriode(periode));
             } catch (DAOException ex) {
                 getServletContext().getRequestDispatcher("/WEB-INF/erreur/erreurBD.jsp")
                         .forward(request, response);

@@ -77,7 +77,7 @@
                     </c:forEach>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-default" name="action" value="insererAnimateur">Recruter</button>
+                    <button type="submit" class="btn btn-default" name="action" value="insererAnimateur">S'Inscrire</button>
                     <button type="reset" class="btn"  name="reinitialiser">Reinitialiser</button>
                     <input type="hidden" name="action" value="insererAnimateur" />
                 </div>

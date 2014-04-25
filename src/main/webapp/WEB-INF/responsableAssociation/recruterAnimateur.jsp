@@ -32,6 +32,7 @@
                     <ul class="nav navbar-nav">
                         <li><a href="ControleurAssociation">Administrer Demandes de Compte</a></li>
                         <li class="active"><a href="#">Recruter animateur permanent</a></li>
+                        <li><a href="ControleurAssociation?action=genererFactures">Generer Factures</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a>${utilisateur}</a></li>

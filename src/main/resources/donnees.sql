@@ -209,4 +209,3 @@ SELECT * FROM dual;
 
 commit;
 
-DESC INSCRIPTION;
