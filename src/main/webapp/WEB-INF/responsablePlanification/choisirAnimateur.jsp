@@ -160,7 +160,7 @@
                             </c:if>
                             <c:if test="${impossible == true}">
                                 <p>Il n'y a pas suffiçants animateurs pour l'activité.</p>
-                                <p>Vous pouvez la canceler ou essayer plus tard.</p>
+                                <p>Vous pouvez la annuler ou essayer plus tard.</p>
                             </c:if>    
                         </div>
                     </div>

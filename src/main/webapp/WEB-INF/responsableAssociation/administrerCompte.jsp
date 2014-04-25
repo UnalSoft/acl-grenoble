@@ -83,7 +83,7 @@
                                 <textarea class="form-control" rows="10">${message}</textarea>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Canceler</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
                                 <c:if test="${demande == true}">
                                     <input type="submit" value="Accepter" class="btn btn-primary"/>
                                     <input type="hidden" name="action" value="accepter" />
