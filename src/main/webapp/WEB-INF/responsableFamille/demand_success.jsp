@@ -22,7 +22,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">ACL Grenoble</a>
+                <a class="navbar-brand" href="index.jsp">ACL Grenoble</a>
             </div>
             <div class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
                 <ul class="nav navbar-nav">
