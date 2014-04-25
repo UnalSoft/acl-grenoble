@@ -232,7 +232,7 @@ public class ControleurCentre extends HttpServlet {
 
                 Date dateDebut = parseDate(dDebut);
                 Date dateFin = parseDate(dFin);
-                String nomP = periode + " " + dDebut + " " + dFin;
+                String nomP = nom + " " + dDebut + " " + dFin;
                 boolean dateReelle = dateDebut.after(new Date()) && dateDebut.before(dateFin);
                 boolean periodeValide = dateDebut.after(periodePere.getDateDebut()) && dateFin.before(periodePere.getDateFin());
                 boolean nomPeriodeValide = nomP.length() < LONG_NOM_PERIODE;
@@ -254,7 +254,7 @@ public class ControleurCentre extends HttpServlet {
                         // Creer un periode et lier l'etat
                         Periode lePeriode = new Periode(nomP, dateDebut, dateFin, periodePere.nomPeriode());
                         activiteDAO.creerPeriode(lePeriode);
-                        activiteDAO.lierEtat(idActivite, periode, EtatEnum.OUVERTE.getName());
+                        activiteDAO.lierEtat(idActivite, lePeriode.nomPeriode(), EtatEnum.OUVERTE.getName());
                         request.setAttribute("creationReussi", true);
                     } catch (DAOException ex) {
                         request.setAttribute("message", ex.getMessage());
