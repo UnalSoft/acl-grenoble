@@ -155,7 +155,7 @@ public class EtatDAO extends AbstractDataBaseDAO {
                     + "FROM ACTIVITE A, ETAT E, PERIODE P "
                     + "WHERE A.IDACTIVITE = E.IDACTIVITE "
                     + "AND P.PERIODE = E.PERIODE "
-                    + "AND p.dateFin < SYSDATE  and (e.etat == 'CONFIRMEE')");
+                    + "AND p.dateFin < SYSDATE  and (e.etat = 'CONFIRMEE')");
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
