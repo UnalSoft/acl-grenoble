@@ -209,13 +209,14 @@ public class ControleurPlanification extends HttpServlet {
             List<Animateur> animateursDisponibles = obtenirAnimateursDisponibles(periode, activite, estInterne);
             int nbInscris = activiteDAO.getnbInscris(activite.getIdActivite(), periode.nomPeriode());
             int nbMinAnim = (int) Math.ceil((double) nbInscris / MAX_ENFANT_ANIMATEUR);
-            int nbMaxAnim = nbInscris / MIN_ENFANT_ANIMATEUR;
+            int nbMaxAnim = Math.max(nbMinAnim, nbInscris / MIN_ENFANT_ANIMATEUR);
             request.setAttribute("nbMinAnim", nbMinAnim);
             request.setAttribute("nbMaxAnim", nbMaxAnim);
             request.setAttribute("nbInscris", nbInscris);
             request.setAttribute("activite", activite);
             request.setAttribute("periode", periode);
             request.setAttribute("animateurs", animateursDisponibles);
+            request.setAttribute("competences", activiteDAO.getCompetences(activite.getIdActivite()));
             getServletContext().getRequestDispatcher("/WEB-INF/responsablePlanification/choisirAnimateur.jsp").forward(request, response);
         } catch (DAOException ex) {
             request.setAttribute("message", ex.getMessage());

@@ -49,6 +49,11 @@
                 <h2>Activite: ${periode.nomPeriode()}</h2>
                 <h3>Enfants inscris: ${nbInscris}</h3>
                 <h3>Animateurs necessaires =  Min:${nbMinAnim} - Max: ${nbMaxAnim}</h3>
+                <h3>Competences requis: 
+                    <c:forEach items="${competences}" var="comp">
+                        ${comp.getName()},
+                    </c:forEach>
+                </h3>
                 <hr>
 
                 <c:if test="${besoinExtern !=null}">
