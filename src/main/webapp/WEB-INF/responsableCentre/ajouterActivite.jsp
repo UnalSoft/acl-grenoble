@@ -81,13 +81,13 @@
                 <div class="form-group">
                     <label for="dateDebut" class="col-sm-4 control-label">Date de Debut</label>
                     <div class="col-sm-8">
-                        <input type="date" class="form-control" id="dateDebut" placeholder="jj/mm/aa" name="dateDebut" required>
+                        <input type="date" class="form-control" id="dateDebut" placeholder="aaaa-mm-dd" name="dateDebut" required>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="dateFin" class="col-sm-4 control-label">Date de Fin</label>
                     <div class="col-sm-8">
-                        <input type="date" class="form-control" id="dateFin" placeholder="jj/mm/aa" name="dateFin" required>
+                        <input type="date" class="form-control" id="dateFin" placeholder="aaaa-mm-dd" name="dateFin" required>
                     </div>
                 </div>
                 <div class="form-group">
