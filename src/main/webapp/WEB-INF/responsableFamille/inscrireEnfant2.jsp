@@ -47,7 +47,7 @@
         </div>
         <div class="form-table col-lg-8 col-lg-offset-2">
             <table class="table table-striped">
-                
+
                 <tr>
                     <th>ID</th>
                     <th>Nom Centre</th>

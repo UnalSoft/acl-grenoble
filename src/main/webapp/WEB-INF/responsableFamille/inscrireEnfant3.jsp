@@ -49,7 +49,7 @@
         </div>
         <div class="form-table col-lg-8 col-lg-offset-2">
             <table class="table table-striped">
-                
+
                 <tr>
                     <th>Periode</th>
                     <th>Date Debut</th>
@@ -64,7 +64,7 @@
                         <td>${per.getDateDebut()}</td>
                         <td>${per.getDateFin()}</td>
                         <td>${per.getSuperPeriode()}</td>
-                        
+
                         <td><a href="ControleurFamille?action=verifInscrire&nom=${nom}&prenom=${prenom}&idActivite=${idActivite}&periode=${per.nomPeriode()}&prix=${prix}" class="btn btn-success">Confirmer Inscription</a></td>
                         <!-- Code pour montrer l'information de chaque activite dans lequel il est present -->
 

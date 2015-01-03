@@ -47,7 +47,7 @@
         </div>
         <div class="form-table col-lg-8 col-lg-offset-2">
             <table class="table table-striped">
-                
+
                 <tr>
                     <th>ID</th>
                     <th>Nom Activite</th>
@@ -60,7 +60,7 @@
                         <td>${act.getActivite().getIdActivite()}</td>
                         <td>${act.getActivite().getNomActivite()}</td>
                         <td>${act.getPeriode().nomPeriode()}</td>
-                        
+
                         <td><a href="ControleurFamille?action=verifEffacer&nom=${nom}&prenom=${prenom}&idActivite=${act.getActivite().getIdActivite()}&periode=${act.getPeriode().nomPeriode()}" class="btn btn-warning">Desinscrire</a></td>
                         <!-- Code pour montrer l'information de chaque activite dans lequel il est present -->
 

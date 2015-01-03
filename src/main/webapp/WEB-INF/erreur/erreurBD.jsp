@@ -10,18 +10,18 @@
         <link href="css/style.css" rel="stylesheet" type="text/css">
     </head>
     <body>
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                  <a class="navbar-brand" href="./index.jsp">ACL Grenoble</a>
-                </div>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="./index.jsp">ACL Grenoble</a>
             </div>
-        </nav>
-        
-        <h1 class="text-center">Capitaine le navire coule!</h1>
-        <div class="alert alert-danger">ACL Grenoble connaît actuellement quelques difficultés
+        </div>
+    </nav>
+
+    <h1 class="text-center">Capitaine le navire coule!</h1>
+    <div class="alert alert-danger">ACL Grenoble connaît actuellement quelques difficultés
         avec sa base de données. S'il vous plaît revenez plus tard.
         <p>${message}</p>
-        </div>
-    </body>
+    </div>
+</body>
 </html>

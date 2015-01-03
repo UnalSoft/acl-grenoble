@@ -63,7 +63,7 @@
                 <div class="form-group">
                     <h2>Competences</h2>
                     <c:forEach items="${competences}" var="competence">
-                            <input type="checkbox" name="competences" value="${competence.toString()}" />${competence.getName()}<br>   
+                        <input type="checkbox" name="competences" value="${competence.toString()}" />${competence.getName()}<br>   
                     </c:forEach>
                 </div>
                 <div class="form-group">

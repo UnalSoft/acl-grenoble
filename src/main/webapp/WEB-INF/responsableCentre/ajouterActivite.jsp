@@ -139,7 +139,7 @@
                                 <p>L'information donnée est incorrect, veuillez 
                                     verifier que les données soient valides et 
                                     que les dates correspondent aux periodes</p>
-                            </c:if>
+                                </c:if>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         </div>
                     </div>

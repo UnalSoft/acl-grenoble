@@ -39,13 +39,13 @@
 
         <h2>Succès!</h2>
 
-        
+
         <div class="alert alert-success">Votre compte a été demandée avec succés.
             S'il vous plait, restez atteint à votre compte d'email. 
             On vous envoyera votre information d'authentication dans les 
             prochaines jours.
         </div>
     </div>
-   
+
 </body>
 </html>
